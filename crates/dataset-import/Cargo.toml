@@ -1,0 +1,12 @@
+[package]
+name = "polarbear-vocab-dataset-import"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+csv = "1"
+polarbear-vocab-application = { path = "../application" }
+polarbear-vocab-domain = { path = "../domain" }
+

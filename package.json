@@ -1,0 +1,21 @@
+{
+  "name": "polarbear-vocab",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.19.0",
+  "workspaces": [
+    "app-ui"
+  ],
+  "scripts": {
+    "lexicon:build": "cargo run -p polarbear-lexicon-builder -- data/source data/generated/content.db",
+    "dev": "pnpm run lexicon:build && pnpm --filter @polarbear/vocab-ui run dev",
+    "build": "pnpm run lexicon:build && pnpm --filter @polarbear/vocab-ui run build",
+    "typecheck": "pnpm --filter @polarbear/vocab-ui run typecheck",
+    "test": "cargo test --workspace && pnpm --filter @polarbear/vocab-ui run test",
+    "check": "pnpm run typecheck && pnpm run test && cargo fmt --all --check && cargo clippy --workspace --all-targets --all-features -- -D warnings",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0"
+  }
+}

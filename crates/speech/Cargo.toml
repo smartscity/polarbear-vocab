@@ -1,0 +1,15 @@
+[package]
+name = "polarbear-vocab-speech"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+polarbear-vocab-application = { path = "../application" }
+polarbear-vocab-domain = { path = "../domain" }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+objc2-avf-audio = { version = "0.3", features = ["AVSpeechSynthesis"] }
+objc2-foundation = "0.3"

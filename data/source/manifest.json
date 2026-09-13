@@ -1,0 +1,16 @@
+{
+  "source": {
+    "name": "Polarbear Vocab Project-authored Starter Lexicon",
+    "license": "CC0-1.0",
+    "url": null,
+    "attribution": "Original definitions, prompts, and examples authored for Polarbear Vocab. Word spellings and basic lexical facts are not sourced from a commercial dictionary."
+  },
+  "datasets": [
+    { "id": "primary-school", "name": "小学" },
+    { "id": "junior-high", "name": "初中" },
+    { "id": "senior-high", "name": "高中" },
+    { "id": "cet4", "name": "大学英语四级" },
+    { "id": "cet6", "name": "大学英语六级" },
+    { "id": "ielts", "name": "雅思" }
+  ]
+}

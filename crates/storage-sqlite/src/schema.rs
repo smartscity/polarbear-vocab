@@ -1,0 +1,189 @@
+use rusqlite::{Connection, Transaction, TransactionBehavior};
+
+pub fn initialize_user_schema(connection: &mut Connection) -> rusqlite::Result<()> {
+    connection.execute_batch(
+        "CREATE TABLE IF NOT EXISTS schema_meta (
+            key TEXT PRIMARY KEY,
+            value TEXT NOT NULL
+        );
+        INSERT OR IGNORE INTO schema_meta(key, value) VALUES ('version', '2');
+
+        CREATE TABLE IF NOT EXISTS word_stat (
+            sense_uid TEXT PRIMARY KEY,
+            attempt_count INTEGER NOT NULL DEFAULT 0 CHECK(attempt_count >= 0),
+            correct_count INTEGER NOT NULL DEFAULT 0 CHECK(correct_count >= 0),
+            wrong_count INTEGER NOT NULL DEFAULT 0 CHECK(wrong_count >= 0),
+            last_result TEXT CHECK(last_result IN ('correct', 'wrong')),
+            first_answered_at INTEGER,
+            last_answered_at INTEGER,
+            last_correct_at INTEGER,
+            last_wrong_at INTEGER
+        );
+
+        CREATE TABLE IF NOT EXISTS study_session (
+            id TEXT PRIMARY KEY,
+            dataset_id TEXT,
+            collection_type TEXT NOT NULL,
+            collection_spec_json TEXT NOT NULL,
+            started_at INTEGER NOT NULL,
+            ended_at INTEGER,
+            attempt_count INTEGER NOT NULL DEFAULT 0,
+            correct_count INTEGER NOT NULL DEFAULT 0,
+            wrong_count INTEGER NOT NULL DEFAULT 0
+        );
+
+        CREATE TABLE IF NOT EXISTS session_item (
+            session_id TEXT NOT NULL REFERENCES study_session(id) ON DELETE CASCADE,
+            ordinal INTEGER NOT NULL,
+            sense_uid TEXT NOT NULL,
+            answered INTEGER NOT NULL DEFAULT 0 CHECK(answered IN (0, 1)),
+            PRIMARY KEY(session_id, ordinal),
+            UNIQUE(session_id, sense_uid)
+        );
+
+        CREATE TABLE IF NOT EXISTS review_event (
+            id TEXT PRIMARY KEY,
+            session_id TEXT NOT NULL REFERENCES study_session(id),
+            dataset_id TEXT,
+            sense_uid TEXT NOT NULL,
+            collection_type TEXT NOT NULL,
+            answered_at INTEGER NOT NULL,
+            correct INTEGER NOT NULL CHECK(correct IN (0, 1)),
+            selected_sense_uid TEXT,
+            latency_ms INTEGER,
+            options_json TEXT NOT NULL
+        );
+        CREATE INDEX IF NOT EXISTS idx_review_event_time ON review_event(answered_at);
+        CREATE INDEX IF NOT EXISTS idx_review_event_sense
+            ON review_event(sense_uid, answered_at DESC);
+
+        CREATE TABLE IF NOT EXISTS daily_stat (
+            local_date TEXT PRIMARY KEY,
+            attempt_count INTEGER NOT NULL DEFAULT 0,
+            correct_count INTEGER NOT NULL DEFAULT 0,
+            wrong_count INTEGER NOT NULL DEFAULT 0,
+            unique_word_count INTEGER NOT NULL DEFAULT 0,
+            last_activity_at INTEGER NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS setting (
+            key TEXT PRIMARY KEY,
+            value_json TEXT NOT NULL,
+            updated_at INTEGER NOT NULL
+        );",
+    )?;
+    migrate_v1_dataset_columns(connection)?;
+    connection.execute(
+        "INSERT INTO schema_meta(key, value) VALUES ('version', '2')
+         ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        [],
+    )?;
+    Ok(())
+}
+
+fn migrate_v1_dataset_columns(connection: &mut Connection) -> rusqlite::Result<()> {
+    let session_legacy = has_column(connection, LegacyTable::StudySession, "dataset_uid")?;
+    let event_legacy = has_column(connection, LegacyTable::ReviewEvent, "dataset_uid")?;
+    if !session_legacy && !event_legacy {
+        return Ok(());
+    }
+    in_immediate_transaction(connection, |transaction| {
+        if session_legacy {
+            transaction.execute(
+                "ALTER TABLE study_session RENAME COLUMN dataset_uid TO dataset_id",
+                [],
+            )?;
+        }
+        if event_legacy {
+            transaction.execute(
+                "ALTER TABLE review_event RENAME COLUMN dataset_uid TO dataset_id",
+                [],
+            )?;
+        }
+        Ok(())
+    })
+}
+
+enum LegacyTable {
+    StudySession,
+    ReviewEvent,
+}
+
+fn has_column(connection: &Connection, table: LegacyTable, column: &str) -> rusqlite::Result<bool> {
+    let query = match table {
+        LegacyTable::StudySession => "PRAGMA table_info(study_session)",
+        LegacyTable::ReviewEvent => "PRAGMA table_info(review_event)",
+    };
+    let mut statement = connection.prepare(query)?;
+    let columns = statement.query_map([], |row| row.get::<_, String>(1))?;
+    for candidate in columns {
+        if candidate? == column {
+            return Ok(true);
+        }
+    }
+    Ok(false)
+}
+
+pub fn in_immediate_transaction<T>(
+    connection: &mut Connection,
+    action: impl FnOnce(&Transaction<'_>) -> rusqlite::Result<T>,
+) -> rusqlite::Result<T> {
+    let transaction = connection.transaction_with_behavior(TransactionBehavior::Immediate)?;
+    match action(&transaction) {
+        Ok(value) => {
+            transaction.commit()?;
+            Ok(value)
+        }
+        Err(error) => {
+            transaction.rollback()?;
+            Err(error)
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use rusqlite::Connection;
+
+    use super::in_immediate_transaction;
+
+    #[test]
+    fn immediate_transaction_commits_successful_changes() {
+        let mut connection = fixture();
+
+        in_immediate_transaction(&mut connection, |transaction| {
+            transaction.execute("INSERT INTO value(id) VALUES (1)", [])?;
+            Ok(())
+        })
+        .expect("transaction should commit");
+
+        assert_eq!(count(&connection), 1);
+    }
+
+    #[test]
+    fn immediate_transaction_rolls_back_failed_changes() {
+        let mut connection = fixture();
+
+        let result = in_immediate_transaction(&mut connection, |transaction| {
+            transaction.execute("INSERT INTO value(id) VALUES (1)", [])?;
+            Err::<(), _>(rusqlite::Error::InvalidQuery)
+        });
+
+        assert!(result.is_err());
+        assert_eq!(count(&connection), 0);
+    }
+
+    fn fixture() -> Connection {
+        let connection = Connection::open_in_memory().expect("in-memory database should open");
+        connection
+            .execute("CREATE TABLE value(id INTEGER PRIMARY KEY)", [])
+            .expect("fixture schema should be valid");
+        connection
+    }
+
+    fn count(connection: &Connection) -> u32 {
+        connection
+            .query_row("SELECT COUNT(*) FROM value", [], |row| row.get(0))
+            .expect("fixture query should work")
+    }
+}

@@ -1,0 +1,10 @@
+[package]
+name = "polarbear-vocab-quiz-engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+polarbear-vocab-domain = { path = "../domain" }
+

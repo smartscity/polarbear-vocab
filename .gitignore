@@ -1,0 +1,15 @@
+.idea
+node_modules/
+dist/
+target/
+app-ui/dist/
+*.db
+*.db-shm
+*.db-wal
+data/generated/*
+!data/generated/.gitkeep
+.DS_Store
+.env
+.env.*
+!.env.example
+

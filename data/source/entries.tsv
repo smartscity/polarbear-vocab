@@ -1,0 +1,101 @@
+sense_uid	lemma	pos	quiz_prompt_zh	zh_gloss	definition_en	cefr	ipa_us	ipa_uk	example_en	example_zh	datasets
+apple.n.01	apple	noun	苹果（一种水果）	苹果	a round fruit with red or green skin	A1	/ˈæpəl/	/ˈæpəl/	She ate an apple.	她吃了一个苹果。	primary-school|junior-high
+book.n.01	book	noun	书（装订成册的读物）	书	a set of printed pages bound together	A1	/bʊk/	/bʊk/	This book is short.	这本书很短。	primary-school|junior-high
+bright.adj.01	bright	adjective	明亮的（光线充足）	明亮的	full of light	A2	/braɪt/	/braɪt/	The room is bright.	这个房间很明亮。	primary-school|junior-high
+carry.v.01	carry	verb	携带（拿着移动）	携带；搬运	to hold something while moving it	A1	/ˈkæri/	/ˈkæri/	I carry a small bag.	我带着一个小包。	primary-school|junior-high
+choose.v.01	choose	verb	选择（从多个选项中挑选）	选择	to decide which thing you want	A1	/tʃuːz/	/tʃuːz/	Choose one answer.	选择一个答案。	primary-school|junior-high
+clean.adj.01	clean	adjective	干净的（没有污垢）	干净的	not dirty	A1	/kliːn/	/kliːn/	The cup is clean.	这个杯子很干净。	primary-school|junior-high
+family.n.01	family	noun	家庭（有亲属关系的人）	家庭；家人	a group of related people	A1	/ˈfæməli/	/ˈfæməli/	Her family lives here.	她的家人住在这里。	primary-school|junior-high
+friend.n.01	friend	noun	朋友（彼此喜欢和信任的人）	朋友	a person you like and trust	A1	/frend/	/frend/	Tom is my friend.	汤姆是我的朋友。	primary-school|junior-high
+happy.adj.01	happy	adjective	高兴的（感到愉快）	高兴的	feeling pleased	A1	/ˈhæpi/	/ˈhæpi/	They look happy.	他们看起来很高兴。	primary-school|junior-high
+listen.v.01	listen	verb	倾听（注意声音）	听；倾听	to pay attention to sound	A1	/ˈlɪsən/	/ˈlɪsən/	Please listen to me.	请听我说。	primary-school|junior-high
+morning.n.01	morning	noun	早晨（一天开始的时段）	早晨	the early part of the day	A1	/ˈmɔːrnɪŋ/	/ˈmɔːnɪŋ/	We walk every morning.	我们每天早晨散步。	primary-school|junior-high
+question.n.01	question	noun	问题（需要回答的话）	问题	a sentence that asks for information	A1	/ˈkwestʃən/	/ˈkwestʃən/	I have a question.	我有一个问题。	primary-school|junior-high
+river.n.01	river	noun	河流（流动的天然水道）	河流	a natural stream of water	A1	/ˈrɪvər/	/ˈrɪvə/	The river is wide.	这条河很宽。	primary-school|junior-high
+school.n.01	school	noun	学校（学习的场所）	学校	a place where students learn	A1	/skuːl/	/skuːl/	The school opens at eight.	学校八点开门。	primary-school|junior-high
+simple.adj.01	simple	adjective	简单的（容易理解）	简单的	easy to understand or do	A2	/ˈsɪmpəl/	/ˈsɪmpəl/	The rule is simple.	这条规则很简单。	primary-school|junior-high
+speak.v.01	speak	verb	说话（用语言表达）	说；讲话	to use your voice to say words	A1	/spiːk/	/spiːk/	She can speak English.	她会说英语。	primary-school|junior-high
+strong.adj.01	strong	adjective	强壮的（有很大力量）	强壮的；有力的	having much physical power	A1	/strɔːŋ/	/strɒŋ/	The bridge is strong.	这座桥很坚固。	primary-school|junior-high
+travel.v.01	travel	verb	旅行（去往别处）	旅行	to go from one place to another	A1	/ˈtrævəl/	/ˈtrævəl/	We travel by train.	我们乘火车旅行。	primary-school|junior-high
+water.n.01	water	noun	水（可饮用的透明液体）	水	the clear liquid people drink	A1	/ˈwɔːtər/	/ˈwɔːtə/	Drink some water.	喝点水。	primary-school|junior-high
+write.v.01	write	verb	书写（用文字记录）	写；书写	to make words on a surface	A1	/raɪt/	/raɪt/	Write your name here.	在这里写下你的名字。	primary-school|junior-high
+answer.v.01	answer	verb	回答（对问题作出回应）	回答	to respond to a question	A1	/ˈænsər/	/ˈɑːnsə/	Can you answer this question?	你能回答这个问题吗？	primary-school|junior-high
+begin.v.01	begin	verb	开始（着手进行）	开始	to start doing something	A1	/bɪˈɡɪn/	/bɪˈɡɪn/	The lesson will begin soon.	课程很快开始。	primary-school|junior-high
+careful.adj.01	careful	adjective	小心的（注意避免错误）	小心的；仔细的	giving attention to avoid mistakes	A2	/ˈkerfəl/	/ˈkeəfəl/	Be careful with the glass.	小心这个玻璃杯。	primary-school|junior-high
+change.v.01	change	verb	改变（使变得不同）	改变	to make something different	A1	/tʃeɪndʒ/	/tʃeɪndʒ/	Plans can change.	计划可能改变。	primary-school|junior-high
+world.n.01	world	noun	世界（地球及其人类社会）	世界	the earth and all its people	A1	/wɜːrld/	/wɜːld/	The world is large.	世界很大。	primary-school|junior-high
+achieve.v.01	achieve	verb	实现（通过努力达到目标）	实现；达到	to succeed in reaching a goal	B1	/əˈtʃiːv/	/əˈtʃiːv/	She achieved her goal.	她实现了目标。	junior-high|senior-high|cet4
+active.adj.01	active	adjective	活跃的（经常活动）	活跃的；积极的	busy and involved in activities	A2	/ˈæktɪv/	/ˈæktɪv/	He stays active after work.	他下班后仍经常活动。	junior-high|senior-high|cet4
+advice.n.01	advice	noun	建议（帮助决策的意见）	建议	an opinion offered to help someone decide	A2	/ədˈvaɪs/	/ədˈvaɪs/	Her advice was useful.	她的建议很有用。	junior-high|senior-high|cet4
+allow.v.01	allow	verb	允许（准许某事发生）	允许	to give permission for something	A2	/əˈlaʊ/	/əˈlaʊ/	They allow pets here.	这里允许带宠物。	junior-high|senior-high|cet4
+arrive.v.01	arrive	verb	到达（来到目的地）	到达	to reach a place	A1	/əˈraɪv/	/əˈraɪv/	We arrived before noon.	我们中午前到了。	junior-high|senior-high|cet4
+believe.v.01	believe	verb	相信（认为某事真实）	相信	to think that something is true	A2	/bɪˈliːv/	/bɪˈliːv/	I believe his story.	我相信他的故事。	junior-high|senior-high|cet4
+borrow.v.01	borrow	verb	借入（暂时使用别人的东西）	借入	to take something for a time and return it	A2	/ˈbɑːroʊ/	/ˈbɒrəʊ/	May I borrow your pen?	我可以借你的笔吗？	junior-high|senior-high|cet4
+build.v.01	build	verb	建造（把材料组成某物）	建造	to make something by joining materials	A2	/bɪld/	/bɪld/	They built a small house.	他们建了一座小房子。	junior-high|senior-high|cet4
+compare.v.01	compare	verb	比较（查看异同）	比较	to examine how things are similar or different	B1	/kəmˈper/	/kəmˈpeə/	Compare the two results.	比较这两个结果。	junior-high|senior-high|cet4
+decide.v.01	decide	verb	决定（作出选择）	决定	to make a choice	A2	/dɪˈsaɪd/	/dɪˈsaɪd/	We decided to wait.	我们决定等待。	junior-high|senior-high|cet4
+describe.v.01	describe	verb	描述（用语言说明特征）	描述	to say what someone or something is like	A2	/dɪˈskraɪb/	/dɪˈskraɪb/	Describe what you saw.	描述一下你看到的东西。	junior-high|senior-high|cet4
+discover.v.01	discover	verb	发现（首次找到或得知）	发现	to find or learn something for the first time	A2	/dɪˈskʌvər/	/dɪˈskʌvə/	They discovered a new path.	他们发现了一条新路。	junior-high|senior-high|cet4
+energy.n.01	energy	noun	能量（做功或活动的能力）	能量；精力	the power needed for activity	A2	/ˈenərdʒi/	/ˈenədʒi/	Walking gives me energy.	散步让我有精力。	junior-high|senior-high|cet4
+example.n.01	example	noun	例子（用于说明的事物）	例子	something that shows what a group or idea is like	A2	/ɪɡˈzæmpəl/	/ɪɡˈzɑːmpəl/	Give me an example.	给我举个例子。	junior-high|senior-high|cet4
+future.n.01	future	noun	未来（尚未到来的时间）	未来	the time that has not happened yet	A2	/ˈfjuːtʃər/	/ˈfjuːtʃə/	We plan for the future.	我们为未来做计划。	junior-high|senior-high|cet4
+improve.v.01	improve	verb	改善（使变得更好）	改善；提高	to make or become better	A2	/ɪmˈpruːv/	/ɪmˈpruːv/	Practice will improve your writing.	练习会提高你的写作水平。	junior-high|senior-high|cet4
+include.v.01	include	verb	包括（作为整体的一部分）	包括	to contain something as a part	A2	/ɪnˈkluːd/	/ɪnˈkluːd/	The price includes breakfast.	价格包括早餐。	junior-high|senior-high|cet4
+language.n.01	language	noun	语言（交流所用的词汇系统）	语言	a system of words used for communication	A1	/ˈlæŋɡwɪdʒ/	/ˈlæŋɡwɪdʒ/	Language connects people.	语言连接人们。	junior-high|senior-high|cet4
+protect.v.01	protect	verb	保护（使免受伤害）	保护	to keep someone or something safe	A2	/prəˈtekt/	/prəˈtekt/	Trees protect the soil.	树木保护土壤。	junior-high|senior-high|cet4
+receive.v.01	receive	verb	收到（得到别人发送的东西）	收到；接收	to get something that is sent or given	A2	/rɪˈsiːv/	/rɪˈsiːv/	I received your message.	我收到了你的消息。	junior-high|senior-high|cet4
+reduce.v.01	reduce	verb	减少（使数量变小）	减少	to make something smaller in amount	B1	/rɪˈduːs/	/rɪˈdjuːs/	We must reduce waste.	我们必须减少浪费。	junior-high|senior-high|cet4
+remember.v.01	remember	verb	记得（在脑中保留或回想）	记得	to keep or bring something back to mind	A1	/rɪˈmembər/	/rɪˈmembə/	Remember to close the door.	记得关门。	junior-high|senior-high|cet4
+return.v.01	return	verb	返回（回到原处）	返回	to go back to a place	A2	/rɪˈtɜːrn/	/rɪˈtɜːn/	She returned home early.	她很早就回家了。	junior-high|senior-high|cet4
+useful.adj.01	useful	adjective	有用的（能帮助实现目的）	有用的	able to help achieve a purpose	A2	/ˈjuːsfəl/	/ˈjuːsfəl/	This map is useful.	这张地图很有用。	junior-high|senior-high|cet4
+wonder.v.01	wonder	verb	想知道（因好奇而思考）	想知道	to think about something with curiosity	B1	/ˈwʌndər/	/ˈwʌndə/	I wonder why she left.	我想知道她为什么离开。	junior-high|senior-high|cet4
+acquire.v.01	acquire	verb	获得（通过学习或购买得到）	获得；习得	to gain something through effort or experience	B2	/əˈkwaɪər/	/əˈkwaɪə/	She acquired new skills.	她掌握了新技能。	senior-high|cet4|cet6
+adapt.v.01	adapt	verb	适应（改变以符合新情况）	适应；改编	to change in order to fit new conditions	B2	/əˈdæpt/	/əˈdæpt/	Animals adapt to their environment.	动物会适应环境。	senior-high|cet4|cet6
+analyze.v.01	analyze	verb	分析（细致研究各部分）	分析	to study something carefully in parts	B2	/ˈænəlaɪz/	/ˈænəlaɪz/	We analyzed the data.	我们分析了数据。	senior-high|cet4|cet6
+approach.n.01	approach	noun	方法（处理问题的方式）	方法；途径	a way of dealing with a problem	B2	/əˈproʊtʃ/	/əˈprəʊtʃ/	This approach saves time.	这种方法节省时间。	senior-high|cet4|cet6
+benefit.n.01	benefit	noun	益处（带来的好处）	益处；优势	a helpful or positive effect	B1	/ˈbenəfɪt/	/ˈbenɪfɪt/	Exercise has many benefits.	锻炼有很多益处。	senior-high|cet4|cet6
+challenge.n.01	challenge	noun	挑战（需要努力解决的难题）	挑战	a difficult task that tests ability	B1	/ˈtʃælɪndʒ/	/ˈtʃælɪndʒ/	The climb was a challenge.	这次攀登是个挑战。	senior-high|cet4|cet6
+complex.adj.01	complex	adjective	复杂的（由许多相关部分组成）	复杂的	made of many connected parts	B2	/kəmˈpleks/	/ˈkɒmpleks/	The system is complex.	这个系统很复杂。	senior-high|cet4|cet6
+confirm.v.01	confirm	verb	确认（证明或核实无误）	确认	to show that something is true or definite	B1	/kənˈfɜːrm/	/kənˈfɜːm/	Please confirm the date.	请确认日期。	senior-high|cet4|cet6
+consider.v.01	consider	verb	考虑（认真思考）	考虑	to think carefully about something	B1	/kənˈsɪdər/	/kənˈsɪdə/	Consider every option.	考虑每个选项。	senior-high|cet4|cet6
+contribute.v.01	contribute	verb	贡献（提供帮助或资源）	贡献；促成	to give something that helps a result	B2	/kənˈtrɪbjuːt/	/kənˈtrɪbjuːt/	Many people contributed ideas.	许多人贡献了想法。	senior-high|cet4|cet6
+create.v.01	create	verb	创造（使新事物产生）	创造	to make something new	A2	/kriˈeɪt/	/kriˈeɪt/	They created a simple tool.	他们创造了一个简单工具。	senior-high|cet4|cet6
+develop.v.01	develop	verb	发展（逐渐成长或完善）	发展；开发	to grow or make something more advanced	B1	/dɪˈveləp/	/dɪˈveləp/	The team developed an app.	团队开发了一个应用。	senior-high|cet4|cet6
+efficient.adj.01	efficient	adjective	高效的（少浪费地完成工作）	高效的	working well without wasting time or energy	B2	/ɪˈfɪʃənt/	/ɪˈfɪʃənt/	The new process is efficient.	新流程很高效。	senior-high|cet4|cet6
+establish.v.01	establish	verb	建立（使组织或制度开始存在）	建立	to start something intended to last	B2	/ɪˈstæblɪʃ/	/ɪˈstæblɪʃ/	They established a research group.	他们建立了一个研究小组。	senior-high|cet4|cet6
+evidence.n.01	evidence	noun	证据（支持结论的事实）	证据	facts that support a conclusion	B2	/ˈevɪdəns/	/ˈevɪdəns/	The evidence supports the claim.	证据支持这一说法。	senior-high|cet4|cet6
+factor.n.01	factor	noun	因素（影响结果的条件）	因素	a condition that influences a result	B1	/ˈfæktər/	/ˈfæktə/	Cost is an important factor.	成本是一个重要因素。	senior-high|cet4|cet6
+identify.v.01	identify	verb	识别（确定身份或性质）	识别；确认	to recognize and name someone or something	B1	/aɪˈdentɪfaɪ/	/aɪˈdentɪfaɪ/	Can you identify the problem?	你能识别这个问题吗？	senior-high|cet4|cet6
+impact.n.01	impact	noun	影响（强烈的作用或效果）	影响	a strong effect on something	B2	/ˈɪmpækt/	/ˈɪmpækt/	The policy had a wide impact.	这项政策影响广泛。	senior-high|cet4|cet6
+indicate.v.01	indicate	verb	表明（显示某种情况）	表明；指示	to show that something exists or is true	B2	/ˈɪndɪkeɪt/	/ˈɪndɪkeɪt/	The results indicate progress.	结果表明取得了进展。	senior-high|cet4|cet6
+maintain.v.01	maintain	verb	维持（使保持同一状态）	维持；维护	to keep something in good condition or at the same level	B2	/meɪnˈteɪn/	/meɪnˈteɪn/	We maintain the equipment.	我们维护设备。	senior-high|cet4|cet6
+method.n.01	method	noun	方法（完成工作的系统方式）	方法	a systematic way of doing something	B1	/ˈmeθəd/	/ˈmeθəd/	This method is reliable.	这种方法很可靠。	senior-high|cet4|cet6
+occur.v.01	occur	verb	发生（事件出现）	发生	to happen	B2	/əˈkɜːr/	/əˈkɜː/	The error occurred twice.	这个错误发生了两次。	senior-high|cet4|cet6
+require.v.01	require	verb	需要（把某物作为必要条件）	需要；要求	to need something as necessary	B1	/rɪˈkwaɪər/	/rɪˈkwaɪə/	The task requires patience.	这项任务需要耐心。	senior-high|cet4|cet6
+respond.v.01	respond	verb	回应（对言行作出反应）	回应	to answer or react to something	B1	/rɪˈspɑːnd/	/rɪˈspɒnd/	She responded quickly.	她很快作出了回应。	senior-high|cet4|cet6
+significant.adj.01	significant	adjective	显著的（重要或明显到值得注意）	显著的；重要的	important or large enough to be noticed	B2	/sɪɡˈnɪfɪkənt/	/sɪɡˈnɪfɪkənt/	We made significant progress.	我们取得了显著进展。	senior-high|cet4|cet6
+abstract.adj.01	abstract	adjective	抽象的（不表示具体实物）	抽象的	existing as an idea rather than a physical thing	C1	/ˈæbstrækt/	/ˈæbstrækt/	Freedom is an abstract idea.	自由是一个抽象概念。	cet4|cet6|ielts
+accurate.adj.01	accurate	adjective	准确的（没有错误）	准确的	correct and free from mistakes	B2	/ˈækjərət/	/ˈækjərət/	The measurement is accurate.	这个测量结果很准确。	cet4|cet6|ielts
+assess.v.01	assess	verb	评估（判断性质或价值）	评估	to judge the quality or value of something	B2	/əˈses/	/əˈses/	Teachers assess student progress.	教师评估学生的进步。	cet4|cet6|ielts
+assume.v.01	assume	verb	假定（在没有证据时认为）	假定	to accept something as true without proof	B2	/əˈsuːm/	/əˈsjuːm/	Do not assume the answer.	不要想当然地认定答案。	cet4|cet6|ielts
+coherent.adj.01	coherent	adjective	连贯的（各部分逻辑一致）	连贯的	logical and well organized	C1	/koʊˈhɪrənt/	/kəʊˈhɪərənt/	She gave a coherent explanation.	她给出了连贯的解释。	cet4|cet6|ielts
+compensate.v.01	compensate	verb	补偿（弥补损失或不足）	补偿	to make up for loss or disadvantage	C1	/ˈkɑːmpənseɪt/	/ˈkɒmpənseɪt/	Extra rest can compensate for lost sleep.	额外休息可以弥补缺失的睡眠。	cet4|cet6|ielts
+comprehensive.adj.01	comprehensive	adjective	全面的（包含所有重要部分）	全面的	including all important parts	C1	/ˌkɑːmprɪˈhensɪv/	/ˌkɒmprɪˈhensɪv/	The report is comprehensive.	这份报告很全面。	cet4|cet6|ielts
+concept.n.01	concept	noun	概念（抽象的思想或原则）	概念	an abstract idea or principle	B2	/ˈkɑːnsept/	/ˈkɒnsept/	The concept is easy to explain.	这个概念很容易解释。	cet4|cet6|ielts
+consistent.adj.01	consistent	adjective	一致的（前后不矛盾）	一致的	remaining the same or agreeing throughout	B2	/kənˈsɪstənt/	/kənˈsɪstənt/	The results are consistent.	结果是一致的。	cet4|cet6|ielts
+demonstrate.v.01	demonstrate	verb	证明（清楚显示某事为真）	证明；演示	to show something clearly with evidence or action	B2	/ˈdemənstreɪt/	/ˈdemənstreɪt/	The test demonstrates the difference.	测试证明了这种差异。	cet4|cet6|ielts
+derive.v.01	derive	verb	获得（从某来源得到）	得到；源自	to obtain something from a source	C1	/dɪˈraɪv/	/dɪˈraɪv/	The word derives from Latin.	这个词源自拉丁语。	cet4|cet6|ielts
+distinguish.v.01	distinguish	verb	区分（识别事物间的差别）	区分	to recognize the difference between things	B2	/dɪˈstɪŋɡwɪʃ/	/dɪˈstɪŋɡwɪʃ/	Can you distinguish the two sounds?	你能区分这两个声音吗？	cet4|cet6|ielts
+emerge.v.01	emerge	verb	出现（从隐藏或未知状态显现）	出现	to become visible or known	B2	/ɪˈmɜːrdʒ/	/ɪˈmɜːdʒ/	A pattern began to emerge.	一种模式开始显现。	cet4|cet6|ielts
+evaluate.v.01	evaluate	verb	评价（判断质量或重要性）	评价；评估	to judge quality or importance	B2	/ɪˈvæljueɪt/	/ɪˈvæljueɪt/	We evaluated three options.	我们评估了三个选项。	cet4|cet6|ielts
+framework.n.01	framework	noun	框架（支撑思想或系统的结构）	框架	a structure that supports a system or idea	B2	/ˈfreɪmwɜːrk/	/ˈfreɪmwɜːk/	The policy provides a framework.	这项政策提供了一个框架。	cet4|cet6|ielts
+imply.v.01	imply	verb	暗示（间接表达）	暗示	to suggest something without saying it directly	B2	/ɪmˈplaɪ/	/ɪmˈplaɪ/	His tone implied doubt.	他的语气暗示了怀疑。	cet4|cet6|ielts
+interpret.v.01	interpret	verb	解释（说明含义）	解释；理解	to explain or understand the meaning of something	B2	/ɪnˈtɜːrprət/	/ɪnˈtɜːprɪt/	People interpret the image differently.	人们对这幅图有不同的理解。	cet4|cet6|ielts
+justify.v.01	justify	verb	证明合理（给出充分理由）	证明合理	to give a good reason for something	C1	/ˈdʒʌstɪfaɪ/	/ˈdʒʌstɪfaɪ/	The results justify the cost.	这些结果证明这笔费用是合理的。	cet4|cet6|ielts
+mechanism.n.01	mechanism	noun	机制（使过程运作的系统）	机制	a system that makes a process work	C1	/ˈmekənɪzəm/	/ˈmekənɪzəm/	The body has a cooling mechanism.	身体有一种降温机制。	cet4|cet6|ielts
+perspective.n.01	perspective	noun	视角（看待问题的方式）	视角；观点	a particular way of viewing something	B2	/pərˈspektɪv/	/pəˈspektɪv/	Try to see her perspective.	试着从她的视角看问题。	cet4|cet6|ielts
+relevant.adj.01	relevant	adjective	相关的（与当前主题有直接联系）	相关的	directly connected with the subject	B2	/ˈreləvənt/	/ˈreləvənt/	Please include relevant details.	请包含相关细节。	cet4|cet6|ielts
+specify.v.01	specify	verb	明确说明（给出确切细节）	明确说明	to state something exactly	B2	/ˈspesɪfaɪ/	/ˈspesɪfaɪ/	Specify the file format.	请明确说明文件格式。	cet4|cet6|ielts
+sufficient.adj.01	sufficient	adjective	充足的（达到所需数量）	充足的	enough for a particular purpose	B2	/səˈfɪʃənt/	/səˈfɪʃənt/	We have sufficient evidence.	我们有充分的证据。	cet4|cet6|ielts
+valid.adj.01	valid	adjective	有效的（有充分根据或被接受）	有效的；合理的	well founded or officially acceptable	B2	/ˈvælɪd/	/ˈvælɪd/	That is a valid concern.	这是一个合理的担忧。	cet4|cet6|ielts
+vary.v.01	vary	verb	变化（在数量或性质上不同）	变化；有所不同	to differ or change in amount or character	B2	/ˈveri/	/ˈveəri/	Prices vary by season.	价格随季节变化。	cet4|cet6|ielts

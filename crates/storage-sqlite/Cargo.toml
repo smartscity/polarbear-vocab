@@ -1,0 +1,17 @@
+[package]
+name = "polarbear-vocab-storage-sqlite"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+polarbear-vocab-application = { path = "../application" }
+polarbear-vocab-domain = { path = "../domain" }
+rusqlite = { version = "0.38", features = ["bundled"] }
+serde_json.workspace = true
+uuid.workspace = true
+
+[dev-dependencies]
+tempfile = "3"
