@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 
 import en from "../locales/en.json";
 import zhCn from "../locales/zh-CN.json";
-import { getSettings, updateSettings, type UiLanguage } from "./commands";
+import { getSettings, updateSettings, type UiLanguage, type UiTheme } from "./commands";
 
 type Parameters = Record<string, string | number>;
 type Translator = (key: string, parameters?: Parameters) => string;
@@ -10,7 +10,10 @@ type Translator = (key: string, parameters?: Parameters) => string;
 interface I18nValue {
   language: UiLanguage;
   resolvedLanguage: "en" | "zh-CN";
+  resolvedTheme: "light" | "dark";
   setLanguage: (language: UiLanguage) => Promise<void>;
+  setTheme: (theme: UiTheme) => Promise<void>;
+  theme: UiTheme;
   t: Translator;
 }
 
@@ -23,12 +26,17 @@ const I18nContext = createContext<I18nValue | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<UiLanguage>("system");
-  const [, setSystemLanguageRevision] = useState(0);
+  const [theme, setThemeState] = useState<UiTheme>("system");
+  const [, setSystemPreferenceRevision] = useState(0);
   const resolvedLanguage = resolveLanguage(language);
+  const resolvedTheme = resolveTheme(theme);
 
   useEffect(() => {
     if (!("__TAURI_INTERNALS__" in window)) return;
-    void getSettings().then((settings) => setLanguageState(settings.uiLanguage));
+    void getSettings().then((settings) => {
+      setLanguageState(settings.uiLanguage);
+      setThemeState(settings.uiTheme);
+    }).catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -36,24 +44,48 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, [resolvedLanguage]);
 
   useEffect(() => {
-    const handleLanguageChange = () => setSystemLanguageRevision((revision) => revision + 1);
-    window.addEventListener("languagechange", handleLanguageChange);
-    return () => window.removeEventListener("languagechange", handleLanguageChange);
+    document.documentElement.dataset.theme = resolvedTheme;
+    document.documentElement.style.colorScheme = resolvedTheme;
+  }, [resolvedTheme]);
+
+  useEffect(() => {
+    const handleSystemPreferenceChange = () => setSystemPreferenceRevision((revision) => revision + 1);
+    const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+    window.addEventListener("languagechange", handleSystemPreferenceChange);
+    colorScheme.addEventListener("change", handleSystemPreferenceChange);
+    return () => {
+      window.removeEventListener("languagechange", handleSystemPreferenceChange);
+      colorScheme.removeEventListener("change", handleSystemPreferenceChange);
+    };
   }, []);
 
   const value = useMemo<I18nValue>(() => ({
     language,
     resolvedLanguage,
+    resolvedTheme,
     setLanguage: async (nextLanguage) => {
       setLanguageState(nextLanguage);
       if ("__TAURI_INTERNALS__" in window) {
-        await updateSettings({ uiLanguage: nextLanguage });
+        await updateSettings({ uiLanguage: nextLanguage, uiTheme: theme });
       }
     },
+    setTheme: async (nextTheme) => {
+      setThemeState(nextTheme);
+      if ("__TAURI_INTERNALS__" in window) {
+        await updateSettings({ uiLanguage: language, uiTheme: nextTheme });
+      }
+    },
+    theme,
     t: (key, parameters) => translate(resources[resolvedLanguage], key, parameters),
-  }), [language, resolvedLanguage]);
+  }), [language, resolvedLanguage, resolvedTheme, theme]);
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
+}
+
+function resolveTheme(theme: UiTheme): "light" | "dark" {
+  if (theme !== "system") return theme;
+  if (typeof window === "undefined") return "light";
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 export function useI18n(): I18nValue {

@@ -1,5 +1,5 @@
-use polarbear_vocab_application::{HomeQueryPort, MistakeQueryPort, StudyPort};
-use polarbear_vocab_domain::CollectionSpec;
+use polarbear_vocab_application::{HomeQueryPort, MistakeQueryPort, SettingsPort, StudyPort};
+use polarbear_vocab_domain::{CollectionSpec, SettingsDto};
 use polarbear_vocab_storage_sqlite::{DatabasePaths, SqliteStore};
 use rusqlite::{Connection, params};
 use tempfile::TempDir;
@@ -10,7 +10,7 @@ fn answer_updates_history_aggregates_and_dynamic_collections() {
     let store = fixture.store();
     let session = store
         .start_collection(&CollectionSpec::Unseen {
-            dataset_uid: "test".to_owned(),
+            dataset_id: "test".to_owned(),
         })
         .expect("unseen collection should start");
     let question = store
@@ -39,7 +39,7 @@ fn answer_updates_history_aggregates_and_dynamic_collections() {
     assert_eq!(home.daily_activity.last().unwrap().attempt_count, 1);
     let wrong = store
         .start_collection(&CollectionSpec::Wrong {
-            dataset_uid: Some("test".to_owned()),
+            dataset_id: Some("test".to_owned()),
             min_wrong_count: 1,
         })
         .expect("mistake collection should start");
@@ -59,7 +59,7 @@ fn invalid_option_does_not_write_answer_history() {
     let store = fixture.store();
     let session = store
         .start_collection(&CollectionSpec::Dataset {
-            dataset_uid: "test".to_owned(),
+            dataset_id: "test".to_owned(),
         })
         .expect("dataset collection should start");
     let question = store
@@ -80,6 +80,74 @@ fn invalid_option_does_not_write_answer_history() {
     let home = store.get_home("test").expect("home query should work");
     assert_eq!(home.totals.explored, 0);
     assert_eq!(home.daily_activity.last().unwrap().attempt_count, 0);
+}
+
+#[test]
+fn stale_question_cannot_create_a_duplicate_history_event() {
+    let fixture = Fixture::new();
+    let store = fixture.store();
+    let session = store
+        .start_collection(&CollectionSpec::Dataset {
+            dataset_id: "test".to_owned(),
+        })
+        .unwrap();
+    let question = store
+        .next_question(&session.collection_id)
+        .unwrap()
+        .unwrap();
+    let correct_option = question
+        .options
+        .iter()
+        .find(|option| option.sense_uid == question.sense_uid)
+        .unwrap();
+    store
+        .submit_answer(
+            &session.collection_id,
+            &question.question_id,
+            &correct_option.option_id,
+            None,
+        )
+        .unwrap();
+
+    assert!(
+        store
+            .submit_answer(
+                &session.collection_id,
+                &question.question_id,
+                &correct_option.option_id,
+                None,
+            )
+            .is_err()
+    );
+    let home = store.get_home("test").unwrap();
+    assert_eq!(home.daily_activity.last().unwrap().attempt_count, 1);
+}
+
+#[test]
+fn settings_round_trip_language_and_theme_together() {
+    let fixture = Fixture::new();
+    let store = fixture.store();
+    assert_eq!(store.get_settings().unwrap(), SettingsDto::default());
+    let settings = SettingsDto {
+        ui_language: "zh-CN".to_owned(),
+        ui_theme: "dark".to_owned(),
+    };
+
+    store.update_settings(&settings).unwrap();
+
+    assert_eq!(store.get_settings().unwrap(), settings);
+}
+
+#[test]
+fn sqlite_store_exposes_the_lexicon_read_model() {
+    let fixture = Fixture::new();
+    let store = fixture.store();
+
+    let sense = store.sense("word1.n.01").unwrap().unwrap();
+
+    assert_eq!(sense.lemma, "word1");
+    assert_eq!(sense.part_of_speech, "noun");
+    assert_eq!(sense.quiz_prompt_zh, "提示1");
 }
 
 struct Fixture {
@@ -106,14 +174,16 @@ fn create_content(path: &std::path::Path) {
     let connection = Connection::open(path).expect("content fixture should open");
     connection
         .execute_batch(
-            "CREATE TABLE dataset(id INTEGER PRIMARY KEY, uid TEXT, name TEXT, category TEXT, description TEXT, sort_order INTEGER, active INTEGER);
-             CREATE TABLE word(id INTEGER PRIMARY KEY, uid TEXT, lemma TEXT, frequency_rank INTEGER);
-             CREATE TABLE sense(id INTEGER PRIMARY KEY, uid TEXT, word_id INTEGER, quiz_prompt_zh TEXT, zh_gloss TEXT);
-             CREATE TABLE pronunciation(id INTEGER PRIMARY KEY, sense_id INTEGER, accent TEXT, ipa TEXT);
+            "CREATE TABLE source(id INTEGER PRIMARY KEY, name TEXT, license TEXT, url TEXT, attribution TEXT);
+             CREATE TABLE dataset(id TEXT PRIMARY KEY, name TEXT, created_at INTEGER, preloaded INTEGER);
+             CREATE TABLE word(id INTEGER PRIMARY KEY, uid TEXT UNIQUE, lemma TEXT, frequency_rank INTEGER);
+             CREATE TABLE sense(id INTEGER PRIMARY KEY, uid TEXT UNIQUE, word_id INTEGER, source_id INTEGER, pos TEXT, quiz_prompt_zh TEXT, zh_gloss TEXT, en_definition TEXT, cefr TEXT);
+             CREATE TABLE pronunciation(id INTEGER PRIMARY KEY, sense_id INTEGER, accent TEXT, ipa TEXT, UNIQUE(sense_id, accent));
              CREATE TABLE example(id INTEGER PRIMARY KEY, sense_id INTEGER, sentence_en TEXT, sentence_zh TEXT, is_primary INTEGER);
-             CREATE TABLE dataset_item(dataset_id INTEGER, sense_id INTEGER, sequence INTEGER, importance INTEGER);
+             CREATE TABLE dataset_item(dataset_id TEXT, sense_uid TEXT, sequence INTEGER, PRIMARY KEY(dataset_id, sense_uid));
              CREATE TABLE distractor_edge(prompt_sense_uid TEXT, candidate_sense_uid TEXT, score REAL, reason TEXT);
-             INSERT INTO dataset VALUES (1, 'test', 'Test', 'Tests', 'Fixture', 1, 1);",
+             INSERT INTO source VALUES (1, 'Fixture', 'CC0-1.0', NULL, 'Fixture');
+             INSERT INTO dataset VALUES ('test', 'Test', 0, 1);",
         )
         .expect("fixture schema should be valid");
     for index in 0..5 {
@@ -128,7 +198,7 @@ fn create_content(path: &std::path::Path) {
             .unwrap();
         connection
             .execute(
-                "INSERT INTO sense VALUES (?1, ?2, ?1, ?3, ?4)",
+                "INSERT INTO sense VALUES (?1, ?2, ?1, 1, 'noun', ?3, ?4, '', 'A1')",
                 params![id, uid, format!("提示{id}"), format!("释义{id}")],
             )
             .unwrap();
@@ -145,7 +215,10 @@ fn create_content(path: &std::path::Path) {
             )
             .unwrap();
         connection
-            .execute("INSERT INTO dataset_item VALUES (1, ?1, ?1, 0)", [id])
+            .execute(
+                "INSERT INTO dataset_item VALUES ('test', ?1, ?2)",
+                params![uid, id],
+            )
             .unwrap();
     }
     for prompt in 1..=5 {
@@ -164,3 +237,4 @@ fn create_content(path: &std::path::Path) {
         }
     }
 }
+use polarbear_lexicon::LexiconReader;

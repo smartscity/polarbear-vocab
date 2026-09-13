@@ -145,7 +145,7 @@ pub fn in_immediate_transaction<T>(
 mod tests {
     use rusqlite::Connection;
 
-    use super::in_immediate_transaction;
+    use super::{in_immediate_transaction, initialize_user_schema};
 
     #[test]
     fn immediate_transaction_commits_successful_changes() {
@@ -173,6 +173,37 @@ mod tests {
         assert_eq!(count(&connection), 0);
     }
 
+    #[test]
+    fn version_one_dataset_uid_columns_are_migrated() {
+        let mut connection = Connection::open_in_memory().unwrap();
+        connection
+            .execute_batch(
+                "CREATE TABLE study_session(
+                    id TEXT PRIMARY KEY, dataset_uid TEXT, collection_type TEXT NOT NULL,
+                    collection_spec_json TEXT NOT NULL, started_at INTEGER NOT NULL,
+                    ended_at INTEGER, attempt_count INTEGER NOT NULL DEFAULT 0,
+                    correct_count INTEGER NOT NULL DEFAULT 0, wrong_count INTEGER NOT NULL DEFAULT 0
+                 );
+                 CREATE TABLE review_event(
+                    id TEXT PRIMARY KEY, session_id TEXT NOT NULL, dataset_uid TEXT,
+                    sense_uid TEXT NOT NULL, collection_type TEXT NOT NULL,
+                    answered_at INTEGER NOT NULL, correct INTEGER NOT NULL,
+                    selected_sense_uid TEXT, latency_ms INTEGER, options_json TEXT NOT NULL
+                 );",
+            )
+            .unwrap();
+
+        initialize_user_schema(&mut connection).unwrap();
+
+        assert!(has_named_column(&connection, "study_session", "dataset_id"));
+        assert!(has_named_column(&connection, "review_event", "dataset_id"));
+        assert!(!has_named_column(
+            &connection,
+            "study_session",
+            "dataset_uid"
+        ));
+    }
+
     fn fixture() -> Connection {
         let connection = Connection::open_in_memory().expect("in-memory database should open");
         connection
@@ -185,5 +216,15 @@ mod tests {
         connection
             .query_row("SELECT COUNT(*) FROM value", [], |row| row.get(0))
             .expect("fixture query should work")
+    }
+
+    fn has_named_column(connection: &Connection, table: &str, expected: &str) -> bool {
+        let mut statement = connection
+            .prepare(&format!("PRAGMA table_info({table})"))
+            .unwrap();
+        statement
+            .query_map([], |row| row.get::<_, String>(1))
+            .unwrap()
+            .any(|column| column.unwrap() == expected)
     }
 }

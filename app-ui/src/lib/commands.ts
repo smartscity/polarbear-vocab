@@ -108,9 +108,11 @@ export interface CsvImportResult {
 }
 
 export type UiLanguage = "system" | "en" | "zh-CN";
+export type UiTheme = "system" | "light" | "dark";
 
 export interface SettingsDto {
   uiLanguage: UiLanguage;
+  uiTheme: UiTheme;
 }
 
 export const getAppInfo = () => invoke<AppInfo>("get_app_info");

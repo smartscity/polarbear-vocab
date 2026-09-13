@@ -13,9 +13,9 @@
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "tsBuildInfoFile": "../node_modules/.cache/polarbear-ui-app.tsbuildinfo",
     "noEmit": true,
     "jsx": "react-jsx"
   },
   "include": ["src"]
 }
-

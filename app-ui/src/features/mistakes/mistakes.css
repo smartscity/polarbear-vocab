@@ -1,0 +1,48 @@
+.word-list {
+  margin-top: var(--pb-space-4);
+  border-top: 1px solid var(--pb-border);
+}
+
+.word-list article {
+  padding: var(--pb-space-4) var(--pb-space-2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pb-space-4);
+  border-bottom: 1px solid var(--pb-border);
+}
+
+.word-list article > div {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(100px, 0.7fr) minmax(100px, 0.7fr) minmax(130px, 1.6fr);
+  align-items: baseline;
+  gap: var(--pb-space-4);
+}
+
+.word-list article span,
+.word-list article small { color: var(--pb-text-muted); }
+
+.word-list article p {
+  display: flex;
+  gap: var(--pb-space-3);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.practice-button {
+  margin-top: var(--pb-space-5);
+  float: right;
+}
+
+@media (max-width: 639px) {
+  .word-list article {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .word-list article > div {
+    width: 100%;
+    grid-template-columns: 1fr auto;
+  }
+  .word-list article > div small { grid-column: 1 / -1; }
+}

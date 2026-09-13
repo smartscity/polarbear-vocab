@@ -3,6 +3,12 @@ node_modules/
 dist/
 target/
 app-ui/dist/
+app-ui/storybook-static/
+playwright-report/
+test-results/
+*.tsbuildinfo
+app-ui/vite.config.js
+app-ui/vite.config.d.ts
 *.db
 *.db-shm
 *.db-wal
@@ -12,4 +18,3 @@ data/generated/*
 .env
 .env.*
 !.env.example
-

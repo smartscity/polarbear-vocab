@@ -1,18 +1,8 @@
 use std::collections::HashMap;
 
+use polarbear_lexicon::SenseDetail;
 use polarbear_vocab_domain::{DatasetSummary, QuestionOption, QuizQuestionDto};
 use rusqlite::{Connection, OptionalExtension};
-
-#[derive(Clone, Debug)]
-pub struct SenseDetail {
-    pub sense_uid: String,
-    pub lemma: String,
-    pub prompt_zh: String,
-    pub zh_gloss: String,
-    pub ipa: String,
-    pub example_en: String,
-    pub example_zh: String,
-}
 
 pub fn list_datasets(connection: &Connection) -> rusqlite::Result<Vec<DatasetSummary>> {
     let mut statement = connection.prepare(
@@ -84,7 +74,7 @@ pub fn all_sense_details(
     connection: &Connection,
 ) -> rusqlite::Result<HashMap<String, SenseDetail>> {
     let mut statement = connection.prepare(
-        "SELECT s.uid, w.lemma, s.quiz_prompt_zh, s.zh_gloss,
+        "SELECT s.uid, w.lemma, s.pos, s.quiz_prompt_zh, s.zh_gloss,
                 COALESCE(p.ipa, ''), e.sentence_en, e.sentence_zh
          FROM sense s
          JOIN word w ON w.id = s.word_id
@@ -106,7 +96,7 @@ pub fn sense_detail(
 ) -> rusqlite::Result<Option<SenseDetail>> {
     connection
         .query_row(
-            "SELECT s.uid, w.lemma, s.quiz_prompt_zh, s.zh_gloss,
+            "SELECT s.uid, w.lemma, s.pos, s.quiz_prompt_zh, s.zh_gloss,
                     COALESCE(p.ipa, ''), e.sentence_en, e.sentence_zh
              FROM sense s
              JOIN word w ON w.id = s.word_id
@@ -173,10 +163,11 @@ fn map_sense_detail(row: &rusqlite::Row<'_>) -> rusqlite::Result<SenseDetail> {
     Ok(SenseDetail {
         sense_uid: row.get(0)?,
         lemma: row.get(1)?,
-        prompt_zh: row.get(2)?,
-        zh_gloss: row.get(3)?,
-        ipa: row.get(4)?,
-        example_en: row.get::<_, Option<String>>(5)?.unwrap_or_default(),
-        example_zh: row.get::<_, Option<String>>(6)?.unwrap_or_default(),
+        part_of_speech: row.get(2)?,
+        prompt_zh: row.get(3)?,
+        zh_gloss: row.get(4)?,
+        ipa: row.get(5)?,
+        example_en: row.get::<_, Option<String>>(6)?.unwrap_or_default(),
+        example_zh: row.get::<_, Option<String>>(7)?.unwrap_or_default(),
     })
 }

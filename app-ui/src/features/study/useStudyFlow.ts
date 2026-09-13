@@ -20,6 +20,7 @@ interface StudyFlowOptions {
 }
 
 export function useStudyFlow(options: StudyFlowOptions) {
+  const { collectionEmptyMessage, onError, onExit, onStart } = options;
   const [session, setSession] = useState<CollectionSession | null>(null);
   const [question, setQuestion] = useState<QuizQuestion | null>(null);
   const [result, setResult] = useState<AnswerResult | null>(null);
@@ -30,22 +31,28 @@ export function useStudyFlow(options: StudyFlowOptions) {
     try {
       const nextSession = await startCollection(spec);
       if (nextSession.totalCount === 0) {
-        options.onError(options.collectionEmptyMessage);
+        onError(collectionEmptyMessage);
+        return;
+      }
+      const firstQuestion = await nextQuestion(nextSession.collectionId);
+      if (!firstQuestion) {
+        await finishSession(nextSession.sessionId).catch(() => undefined);
+        onError(collectionEmptyMessage);
         return;
       }
       setSession(nextSession);
-      setQuestion(await nextQuestion(nextSession.collectionId));
+      setQuestion(firstQuestion);
       setQuestionStarted(Date.now());
       setResult(null);
       setComplete(false);
-      options.onStart();
+      onStart();
     } catch (error) {
-      options.onError(error);
+      onError(error);
     }
-  }, [options]);
+  }, [collectionEmptyMessage, onError, onStart]);
 
   const answer = useCallback(async (optionId: string) => {
-    if (!session || !question || result) return;
+    if (!session || !question || result) return false;
     try {
       const answerResult = await submitAnswer(
         session.collectionId,
@@ -55,10 +62,12 @@ export function useStudyFlow(options: StudyFlowOptions) {
       );
       setResult(answerResult);
       void speak(answerResult.lemma).catch(() => undefined);
+      return true;
     } catch (error) {
-      options.onError(error);
+      onError(error);
+      return false;
     }
-  }, [options, question, questionStarted, result, session]);
+  }, [onError, question, questionStarted, result, session]);
 
   const advance = useCallback(async () => {
     if (!session) return;
@@ -69,17 +78,17 @@ export function useStudyFlow(options: StudyFlowOptions) {
       setQuestionStarted(Date.now());
       setComplete(upcoming === null);
     } catch (error) {
-      options.onError(error);
+      onError(error);
     }
-  }, [options, session]);
+  }, [onError, session]);
 
   const exit = useCallback(async () => {
     if (session) await finishSession(session.sessionId).catch(() => undefined);
     setSession(null);
     setQuestion(null);
     setResult(null);
-    await options.onExit();
-  }, [options, session]);
+    await onExit();
+  }, [onExit, session]);
 
   return { advance, answer, begin, complete, exit, question, result };
 }

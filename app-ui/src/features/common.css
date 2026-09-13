@@ -1,0 +1,17 @@
+.datasets-page,
+.settings-page,
+.mistakes-page {
+  width: min(100%, var(--pb-content-normal));
+  min-height: 60dvh;
+  margin: 0 auto;
+}
+
+.loading-panel {
+  width: min(100%, var(--pb-content-narrow));
+  margin: auto;
+  padding: clamp(var(--pb-space-8), 10vw, 80px);
+  border-radius: var(--pb-radius-xl);
+  color: var(--pb-text-muted);
+  background: var(--pb-surface);
+  text-align: center;
+}

@@ -2444,6 +2444,7 @@ dependencies = [
  "csv",
  "polarbear-vocab-application",
  "polarbear-vocab-domain",
+ "tempfile",
 ]
 
 [[package]]
@@ -2451,6 +2452,7 @@ name = "polarbear-vocab-domain"
 version = "0.1.0"
 dependencies = [
  "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -2474,14 +2476,20 @@ dependencies = [
 [[package]]
 name = "polarbear-vocab-statistics-engine"
 version = "0.1.0"
+dependencies = [
+ "polarbear-vocab-domain",
+]
 
 [[package]]
 name = "polarbear-vocab-storage-sqlite"
 version = "0.1.0"
 dependencies = [
  "chrono",
+ "polarbear-lexicon",
  "polarbear-vocab-application",
+ "polarbear-vocab-collection-engine",
  "polarbear-vocab-domain",
+ "polarbear-vocab-statistics-engine",
  "rusqlite",
  "serde_json",
  "tempfile",

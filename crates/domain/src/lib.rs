@@ -253,19 +253,21 @@ pub struct ImportedSense {
 #[serde(rename_all = "camelCase")]
 pub struct SettingsDto {
     pub ui_language: String,
+    pub ui_theme: String,
 }
 
 impl Default for SettingsDto {
     fn default() -> Self {
         Self {
             ui_language: "system".to_owned(),
+            ui_theme: "system".to_owned(),
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{AppInfo, KNOWLEDGE_MODULE_NAME, PRODUCT_NAME};
+    use super::{AppInfo, CollectionSpec, KNOWLEDGE_MODULE_NAME, PRODUCT_NAME, SettingsDto};
 
     #[test]
     fn app_info_uses_canonical_product_names() {
@@ -274,5 +276,30 @@ mod tests {
         assert_eq!(info.name, PRODUCT_NAME);
         assert_eq!(info.knowledge_module, KNOWLEDGE_MODULE_NAME);
         assert_eq!(info.version, "0.1.0");
+    }
+
+    #[test]
+    fn collection_contract_serializes_camel_case_dataset_id() {
+        let json = serde_json::to_value(CollectionSpec::Wrong {
+            dataset_id: Some("core".to_owned()),
+            min_wrong_count: 3,
+        })
+        .unwrap();
+
+        assert_eq!(json["type"], "wrong");
+        assert_eq!(json["datasetId"], "core");
+        assert_eq!(json["minWrongCount"], 3);
+        assert!(json.get("dataset_uid").is_none());
+    }
+
+    #[test]
+    fn settings_default_to_system_preferences() {
+        assert_eq!(
+            SettingsDto::default(),
+            SettingsDto {
+                ui_language: "system".to_owned(),
+                ui_theme: "system".to_owned(),
+            }
+        );
     }
 }

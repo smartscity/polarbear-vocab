@@ -1,6 +1,8 @@
+mod answer_history;
 mod datasets;
 mod distractor_index;
 mod home;
+mod lexicon_adapter;
 mod mistakes;
 mod read_model;
 mod schema;

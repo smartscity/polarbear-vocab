@@ -71,7 +71,7 @@ fn parse_file(path: &str) -> Result<ParsedCsv, ApplicationError> {
         let row = index as u32 + 2;
         match record
             .map_err(import_error)
-            .and_then(|record| columns.entry(&record, row))
+            .and_then(|record| columns.entry(&record))
         {
             Ok(entry) if seen.insert(entry.sense_uid.clone()) => entries.push(entry),
             Ok(entry) => issues.push(CsvImportIssue {
@@ -137,13 +137,9 @@ impl Columns {
         })
     }
 
-    fn entry(
-        &self,
-        record: &csv::StringRecord,
-        row: u32,
-    ) -> Result<ImportedSense, ApplicationError> {
-        let lemma = required(record, self.lemma, "lemma", row)?;
-        let prompt = required(record, self.quiz_prompt_zh, "quiz_prompt_zh", row)?;
+    fn entry(&self, record: &csv::StringRecord) -> Result<ImportedSense, ApplicationError> {
+        let lemma = required(record, self.lemma, "lemma")?;
+        let prompt = required(record, self.quiz_prompt_zh, "quiz_prompt_zh")?;
         let part_of_speech = optional(record, self.pos).unwrap_or("unknown");
         let sense_uid = optional(record, self.sense_uid)
             .map(str::to_owned)
@@ -172,10 +168,9 @@ fn required<'a>(
     record: &'a csv::StringRecord,
     index: usize,
     name: &str,
-    row: u32,
 ) -> Result<&'a str, ApplicationError> {
     optional(record, Some(index))
-        .ok_or_else(|| ApplicationError::InvalidInput(format!("row {row}: {name} is required")))
+        .ok_or_else(|| ApplicationError::InvalidInput(format!("{name} is required")))
 }
 
 fn optional(record: &csv::StringRecord, index: Option<usize>) -> Option<&str> {
@@ -190,7 +185,7 @@ fn generated_uid(lemma: &str, part_of_speech: &str) -> String {
         .to_lowercase()
         .chars()
         .map(|character| {
-            if character.is_ascii_alphanumeric() {
+            if character.is_alphanumeric() {
                 character
             } else {
                 '-'
@@ -227,4 +222,79 @@ fn file_name(path: &str) -> String {
         .and_then(|name| name.to_str())
         .unwrap_or("dataset.csv")
         .to_owned()
+}
+
+#[cfg(test)]
+mod tests {
+    use std::fs;
+
+    use polarbear_vocab_application::{ApplicationError, CsvImportPort};
+
+    use super::CsvDatasetImporter;
+
+    #[test]
+    fn preview_reports_valid_rows_and_deterministic_generated_uids() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("travel.csv");
+        fs::write(
+            &path,
+            "lemma,pos,quiz_prompt_zh,ipa_us\nResilient,adjective,有韧性的,/rɪˈzɪliənt/\n",
+        )
+        .unwrap();
+
+        let preview = CsvDatasetImporter.preview(path.to_str().unwrap()).unwrap();
+
+        assert_eq!(preview.file_name, "travel.csv");
+        assert_eq!(preview.total_rows, 1);
+        assert_eq!(preview.valid_rows, 1);
+        assert_eq!(preview.sample[0].sense_uid, "en:resilient:adjective:1");
+        assert!(preview.issues.is_empty());
+    }
+
+    #[test]
+    fn preview_collects_row_issues_and_parse_rejects_the_file() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("invalid.csv");
+        fs::write(
+            &path,
+            "sense_uid,lemma,quiz_prompt_zh\nsame,first,第一个\nsame,second,第二个\nthird,,第三个\n",
+        )
+        .unwrap();
+        let importer = CsvDatasetImporter;
+
+        let preview = importer.preview(path.to_str().unwrap()).unwrap();
+
+        assert_eq!(preview.total_rows, 3);
+        assert_eq!(preview.valid_rows, 1);
+        assert_eq!(preview.issues[0].row, 3);
+        assert!(preview.issues[0].message.contains("duplicate sense_uid"));
+        assert_eq!(preview.issues[1].message, "lemma is required");
+        assert!(matches!(
+            importer.parse(path.to_str().unwrap()),
+            Err(ApplicationError::InvalidInput(message)) if message.contains("2 invalid row")
+        ));
+    }
+
+    #[test]
+    fn required_columns_are_enforced_before_rows_are_read() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("missing-column.csv");
+        fs::write(&path, "lemma\nword\n").unwrap();
+
+        assert!(matches!(
+            CsvDatasetImporter.preview(path.to_str().unwrap()),
+            Err(ApplicationError::InvalidInput(message)) if message.contains("quiz_prompt_zh")
+        ));
+    }
+
+    #[test]
+    fn unicode_lemma_does_not_generate_an_empty_uid_segment() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("unicode.csv");
+        fs::write(&path, "lemma,pos,quiz_prompt_zh\n你好,phrase,问候语\n").unwrap();
+
+        let preview = CsvDatasetImporter.preview(path.to_str().unwrap()).unwrap();
+
+        assert_eq!(preview.sample[0].sense_uid, "en:你好:phrase:1");
+    }
 }

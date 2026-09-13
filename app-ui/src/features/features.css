@@ -1,0 +1,5 @@
+@import "./common.css";
+@import "./home/home.css";
+@import "./datasets/datasets.css";
+@import "./study/study.css";
+@import "./mistakes/mistakes.css";

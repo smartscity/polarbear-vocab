@@ -2,19 +2,10 @@ use std::collections::{HashMap, HashSet};
 
 use chrono::{Duration, Local};
 use polarbear_vocab_application::{ApplicationError, HomeQueryPort};
-use polarbear_vocab_domain::{
-    AnswerTotals, DailyActivity, DatasetProgress, DatasetSummary, HomeDto, MistakeBuckets,
-};
+use polarbear_vocab_domain::{DailyActivity, DatasetProgress, DatasetSummary, HomeDto};
+use polarbear_vocab_statistics_engine::{WordStat, summarize};
 
 use crate::{SqliteStore, database_error, read_model};
-
-#[derive(Clone, Debug, Default)]
-struct WordStat {
-    attempt_count: u32,
-    correct_count: u32,
-    wrong_count: u32,
-    last_result: Option<String>,
-}
 
 impl HomeQueryPort for SqliteStore {
     fn list_datasets(&self) -> Result<Vec<DatasetSummary>, ApplicationError> {
@@ -116,35 +107,16 @@ fn build_home(
         .filter(|(uid, _)| included.contains(uid.as_str()))
         .map(|(_, stat)| stat)
         .collect();
-    let answered = relevant
-        .iter()
-        .filter(|stat| stat.attempt_count > 0)
-        .count() as u32;
+    let summary = summarize(&relevant);
     HomeDto {
         progress: DatasetProgress {
             total: sense_uids.len() as u32,
-            answered,
-            unseen: sense_uids.len() as u32 - answered,
+            answered: summary.answered,
+            unseen: sense_uids.len() as u32 - summary.answered,
         },
-        totals: AnswerTotals {
-            explored: answered,
-            correct: count(&relevant, |stat| stat.correct_count > 0),
-            mistakes: count(&relevant, |stat| stat.wrong_count > 0),
-        },
-        mistake_buckets: MistakeBuckets {
-            at_least_one: count(&relevant, |stat| stat.wrong_count >= 1),
-            at_least_two: count(&relevant, |stat| stat.wrong_count >= 2),
-            at_least_three: count(&relevant, |stat| stat.wrong_count >= 3),
-            at_least_five: count(&relevant, |stat| stat.wrong_count >= 5),
-            last_wrong: count(&relevant, |stat| {
-                stat.last_result.as_deref() == Some("wrong")
-            }),
-        },
+        totals: summary.totals,
+        mistake_buckets: summary.mistake_buckets,
         dataset,
         daily_activity,
     }
-}
-
-fn count(stats: &[&WordStat], predicate: impl Fn(&WordStat) -> bool) -> u32 {
-    stats.iter().filter(|stat| predicate(stat)).count() as u32
 }

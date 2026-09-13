@@ -268,6 +268,11 @@ impl SettingsService {
                 "unsupported UI language".to_owned(),
             ));
         }
+        if !["system", "light", "dark"].contains(&settings.ui_theme.as_str()) {
+            return Err(ApplicationError::InvalidInput(
+                "unsupported UI theme".to_owned(),
+            ));
+        }
         self.repository.update_settings(settings)
     }
 }

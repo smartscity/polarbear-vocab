@@ -185,6 +185,39 @@ jobs:
         run: cargo test --workspace --all-features
 
 
+  visual:
+    name: UI Visual Gate
+    needs: gate
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Activate pnpm
+        run: corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium
+
+      - name: Storybook build
+        run: pnpm --filter @polarbear/vocab-ui run storybook:build
+
+      - name: Screenshot and accessibility gates
+        run: pnpm run test:visual
+
+
   # ------------------------------------------------------------
   # 2. macOS
   # Universal binary: Apple Silicon + Intel
@@ -192,7 +225,7 @@ jobs:
   # ------------------------------------------------------------
   build-macos:
     name: macOS Universal
-    needs: gate
+    needs: [gate, visual]
     runs-on: macos-latest
 
     env:
@@ -250,7 +283,7 @@ jobs:
           mkdir -p dist
 
           DMG_PATH="$(
-            find src-tauri/target/universal-apple-darwin/release/bundle/dmg \
+            find target/universal-apple-darwin/release/bundle/dmg \
               -maxdepth 1 \
               -type f \
               -name '*.dmg' \
@@ -259,7 +292,7 @@ jobs:
           )"
 
           APP_PATH="$(
-            find src-tauri/target/universal-apple-darwin/release/bundle/macos \
+            find target/universal-apple-darwin/release/bundle/macos \
               -maxdepth 1 \
               -type d \
               -name '*.app' \
@@ -311,7 +344,7 @@ jobs:
   # ------------------------------------------------------------
   build-ios:
     name: iPhone IPA
-    needs: gate
+    needs: [gate, visual]
     runs-on: macos-latest
 
     env:

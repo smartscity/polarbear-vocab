@@ -12,10 +12,13 @@
     "build": "pnpm run lexicon:build && pnpm --filter @polarbear/vocab-ui run build",
     "typecheck": "pnpm --filter @polarbear/vocab-ui run typecheck",
     "test": "cargo test --workspace && pnpm --filter @polarbear/vocab-ui run test",
+    "test:visual": "playwright test --config tests/visual/playwright.config.ts",
     "check": "pnpm run typecheck && pnpm run test && cargo fmt --all --check && cargo clippy --workspace --all-targets --all-features -- -D warnings",
     "tauri": "tauri"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
     "@tauri-apps/cli": "^2.0.0"
   }
 }

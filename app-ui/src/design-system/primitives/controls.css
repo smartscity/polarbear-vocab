@@ -1,0 +1,108 @@
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+[role="button"],
+input,
+select {
+  min-height: var(--pb-control-height);
+}
+
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--pb-focus) 60%, transparent);
+  outline-offset: 2px;
+}
+
+.pb-button {
+  min-height: var(--pb-control-height);
+  padding: 0 var(--pb-space-4);
+  border: 1px solid var(--pb-border);
+  border-radius: var(--pb-radius-md);
+  color: var(--pb-text);
+  background: var(--pb-surface-raised);
+  cursor: pointer;
+  transition: background var(--pb-motion-fast) var(--pb-ease), border-color var(--pb-motion-fast) var(--pb-ease), color var(--pb-motion-fast) var(--pb-ease), transform var(--pb-motion-fast) var(--pb-ease);
+}
+
+.pb-button:hover:not(:disabled) {
+  border-color: var(--pb-accent);
+  background: var(--pb-accent-soft);
+}
+
+.pb-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.pb-button:disabled {
+  cursor: default;
+  opacity: 0.48;
+}
+
+.pb-button--primary {
+  border-color: var(--pb-accent-strong);
+  color: var(--pb-on-accent);
+  background: var(--pb-accent-strong);
+}
+
+.pb-button--danger {
+  color: var(--pb-danger);
+}
+
+.pb-input {
+  min-width: 0;
+  padding: 0 var(--pb-space-3);
+  border: 1px solid var(--pb-border);
+  border-radius: var(--pb-radius-md);
+  color: var(--pb-text);
+  background: var(--pb-surface-raised);
+}
+
+.pb-select-trigger {
+  width: min(100%, 250px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pb-space-4);
+}
+
+.pb-select-content {
+  z-index: 30;
+  min-width: var(--radix-select-trigger-width);
+  padding: var(--pb-space-1);
+  border: 1px solid var(--pb-border);
+  border-radius: var(--pb-radius-md);
+  color: var(--pb-text);
+  background: var(--pb-surface-raised);
+  box-shadow: var(--pb-shadow);
+}
+
+.pb-select-item {
+  padding: 10px var(--pb-space-3);
+  border-radius: var(--pb-radius-sm);
+  cursor: default;
+  outline: none;
+}
+
+.pb-select-item[data-highlighted] {
+  color: var(--pb-on-accent);
+  background: var(--pb-accent-strong);
+}
+
+kbd {
+  padding: 2px 6px;
+  border: 1px solid var(--pb-border);
+  border-radius: 6px;
+  color: var(--pb-text-muted);
+  background: var(--pb-surface-subtle);
+  font-size: 0.72rem;
+}

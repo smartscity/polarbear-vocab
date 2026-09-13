@@ -4,7 +4,7 @@ Polarbear Vocab is an offline-first desktop English vocabulary learning app. It 
 
 The macOS-first app uses a Tauri 2 shell, React/TypeScript UI, and reusable Rust core. The knowledge-base module is named **Polarbear Lexicon**.
 
-Current capabilities include preloaded and user-named datasets, transactional CSV import, four-choice quizzes, correct and mistake collections, 30-day statistics, native offline speech, and immediate English/Simplified Chinese UI switching. It deliberately has no scheduler and no remote dataset source.
+Current capabilities include preloaded and user-named datasets, transactional CSV import, four-choice quizzes, correct and mistake collections, 30-day statistics, native offline speech, adaptive compact/medium/wide layouts, light and dark themes, and immediate English/Simplified Chinese UI switching. It deliberately has no scheduler and no remote dataset source.
 
 ## Architecture
 
@@ -35,6 +35,13 @@ Required change checks:
 ```bash
 pnpm run typecheck
 pnpm test
+```
+
+UI development and the complete screenshot/accessibility gate:
+
+```bash
+pnpm --filter @polarbear/vocab-ui storybook
+pnpm test:visual
 ```
 
 See the [English user guide](docs/user-guide.md) or [中文用户手册](docs/zh-CN/user-guide.md) for running and using the app. See [`docs/architecture.md`](docs/architecture.md) for architecture and naming decisions.

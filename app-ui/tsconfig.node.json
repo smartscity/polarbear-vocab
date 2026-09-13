@@ -5,6 +5,7 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
+    "tsBuildInfoFile": "../node_modules/.cache/polarbear-ui-node.tsbuildinfo",
     "noEmit": true
   },
   "include": ["vite.config.ts"]

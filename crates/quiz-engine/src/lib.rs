@@ -61,4 +61,38 @@ mod tests {
 
         assert!(question.has_valid_options());
     }
+
+    #[test]
+    fn duplicate_options_are_rejected() {
+        let question = QuizQuestion {
+            question_id: "question-1".to_owned(),
+            prompt_zh: "测试".to_owned(),
+            correct_sense_uid: "a".to_owned(),
+            options: [
+                option("a", "alpha"),
+                option("b", "beta"),
+                option("b", "beta again"),
+                option("d", "delta"),
+            ],
+        };
+
+        assert!(!question.has_valid_options());
+    }
+
+    #[test]
+    fn missing_correct_option_is_rejected() {
+        let question = QuizQuestion {
+            question_id: "question-1".to_owned(),
+            prompt_zh: "测试".to_owned(),
+            correct_sense_uid: "missing".to_owned(),
+            options: [
+                option("a", "alpha"),
+                option("b", "beta"),
+                option("c", "charlie"),
+                option("d", "delta"),
+            ],
+        };
+
+        assert!(!question.has_valid_options());
+    }
 }

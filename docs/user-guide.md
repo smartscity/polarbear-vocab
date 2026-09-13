@@ -73,9 +73,11 @@ Open **Mistakes** to filter the current dataset by all mistakes, wrong count thr
 
 Home statistics describe actual activity. Polarbear Vocab has no due dates, daily goals, streaks, spaced-repetition schedule, or learning debt.
 
-## Change the interface language
+## Change language and appearance
 
 Open **Settings**, then choose System, English, or Simplified Chinese. The interface changes immediately and the selection is saved in `user.db`. System mode follows macOS when it uses a supported Chinese locale and otherwise falls back to English. Changing the interface language does not translate dataset content.
+
+Appearance can follow the system or stay in Light or Dark mode. The choice applies immediately and is saved alongside the language setting. Navigation adapts to the window width: a left rail on wide windows, a top bar on medium windows, and bottom navigation on compact windows. Study mode hides global navigation to keep the question stable.
 
 ## Local data
 
