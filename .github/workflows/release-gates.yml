@@ -127,6 +127,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
+          cache-dependency-path: app-ui/package-lock.json
 
       - name: Install frontend dependencies
         run: npm ci
@@ -207,6 +208,7 @@ jobs:
           workspaces: "./src-tauri -> target"
 
       - name: Install dependencies
+        working-directory: app-ui
         run: npm ci
 
       - name: Build signed + notarized macOS Universal app
