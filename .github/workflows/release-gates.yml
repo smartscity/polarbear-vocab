@@ -11,12 +11,21 @@ concurrency:
 
 env:
   NODE_VERSION: "22"
+  PNPM_VERSION: "11.19.0"
   APP_NAME: "Polarbear-Vocab"
 
 jobs:
   # ------------------------------------------------------------
-  # 1. Release gate
-  #    v0.1.0 -> project version must be 0.1.0
+  # 1. Release Gate
+  #
+  # Tag is the single source of truth:
+  #   v0.1.1 -> 0.1.1
+  #
+  # The version is injected into:
+  #   package.json
+  #   app-ui/package.json
+  #   src-tauri/tauri.conf.json
+  #   Cargo.toml [workspace.package]
   # ------------------------------------------------------------
   gate:
     name: Release Gate
@@ -40,7 +49,7 @@ jobs:
 
           if [[ ! "${TAG}" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)(-[0-9A-Za-z.-]+)?$ ]]; then
             echo "::error::Invalid release tag: ${TAG}"
-            echo "::error::Expected vMAJOR.MINOR.PATCH, for example v0.1.0"
+            echo "::error::Expected vMAJOR.MINOR.PATCH, for example v0.1.1"
             exit 1
           fi
 
@@ -49,7 +58,32 @@ jobs:
           echo "tag=${TAG}" >> "${GITHUB_OUTPUT}"
           echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
 
-      - name: Validate package.json and tauri.conf.json versions
+          echo "Release tag: ${TAG}"
+          echo "Release version: ${VERSION}"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Activate pnpm
+        run: corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
+
+      - name: Show tool versions
+        run: |
+          node --version
+          pnpm --version
+
+      - name: Sync release version
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          node scripts/sync-release-version.mjs "${RELEASE_VERSION}"
+
+      - name: Verify release version
         env:
           RELEASE_VERSION: ${{ steps.version.outputs.version }}
         shell: bash
@@ -60,17 +94,14 @@ jobs:
           const fs = require("fs");
 
           const expected = process.env.RELEASE_VERSION;
-          const files = [
+
+          const jsonFiles = [
             "package.json",
+            "app-ui/package.json",
             "src-tauri/tauri.conf.json"
           ];
 
-          for (const file of files) {
-            if (!fs.existsSync(file)) {
-              console.error(`::error::Missing ${file}`);
-              process.exit(1);
-            }
-
+          for (const file of jsonFiles) {
             const json = JSON.parse(fs.readFileSync(file, "utf8"));
             const actual = json.version;
 
@@ -78,19 +109,12 @@ jobs:
 
             if (actual !== expected) {
               console.error(
-                `::error::Version mismatch: ${file}=${actual}, tag=${expected}`
+                `::error::Version mismatch: ${file}=${actual}, expected=${expected}`
               );
               process.exit(1);
             }
           }
           NODE
-
-      - name: Validate Cargo.toml version
-        env:
-          RELEASE_VERSION: ${{ steps.version.outputs.version }}
-        shell: bash
-        run: |
-          set -euo pipefail
 
           python3 <<'PY'
           import os
@@ -98,48 +122,33 @@ jobs:
           import sys
           import tomllib
 
-          path = pathlib.Path("src-tauri/Cargo.toml")
-
-          if not path.exists():
-              print("::error::Missing src-tauri/Cargo.toml")
-              sys.exit(1)
+          expected = os.environ["RELEASE_VERSION"]
+          path = pathlib.Path("Cargo.toml")
 
           data = tomllib.loads(path.read_text(encoding="utf-8"))
-          actual = data.get("package", {}).get("version")
-          expected = os.environ["RELEASE_VERSION"]
+          actual = data.get("workspace", {}).get("package", {}).get("version")
 
-          # Workspace-inherited version is allowed.
-          if isinstance(actual, str):
-              print(f"src-tauri/Cargo.toml: {actual}")
+          print(f"Cargo.toml [workspace.package]: {actual}")
 
-              if actual != expected:
-                  print(
-                      f"::error::Version mismatch: "
-                      f"Cargo.toml={actual}, tag={expected}"
-                  )
-                  sys.exit(1)
-          else:
-              print("Cargo package version inherited from workspace; skipped.")
+          if actual != expected:
+              print(
+                  f"::error::Version mismatch: "
+                  f"Cargo.toml={actual}, expected={expected}"
+              )
+              sys.exit(1)
           PY
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-          cache-dependency-path: app-ui/package-lock.json
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Install frontend dependencies
-        run: npm ci
-
-      - name: Frontend lint
-        run: npm run lint --if-present
+      - name: Frontend typecheck
+        run: pnpm run typecheck
 
       - name: Frontend tests
-        run: npm run test --if-present
+        run: pnpm --filter @polarbear/vocab-ui run test
 
       - name: Frontend build
-        run: npm run build
+        run: pnpm run build
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
@@ -148,26 +157,21 @@ jobs:
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
-        with:
-          workspaces: "./src-tauri -> target"
 
       - name: Rust format gate
-        working-directory: src-tauri
         run: cargo fmt --all -- --check
 
       - name: Rust clippy gate
-        working-directory: src-tauri
-        run: cargo clippy --all-targets --all-features -- -D warnings
+        run: cargo clippy --workspace --all-targets --all-features -- -D warnings
 
       - name: Rust tests
-        working-directory: src-tauri
-        run: cargo test --all-features
+        run: cargo test --workspace --all-features
 
 
   # ------------------------------------------------------------
   # 2. macOS
-  #    Universal binary: Apple Silicon + Intel
-  #    Output: DMG + APP zip
+  # Universal binary: Apple Silicon + Intel
+  # Output: DMG + APP zip
   # ------------------------------------------------------------
   build-macos:
     name: macOS Universal
@@ -175,14 +179,12 @@ jobs:
     runs-on: macos-latest
 
     env:
-      # Developer ID Application certificate, base64 encoded .p12
+      RELEASE_VERSION: ${{ needs.gate.outputs.version }}
+
       APPLE_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
       APPLE_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
-
-      # Optional. Tauri can normally infer this from APPLE_CERTIFICATE.
       APPLE_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
 
-      # Used for Apple notarization.
       APPLE_ID: ${{ secrets.APPLE_ID }}
       APPLE_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
@@ -195,7 +197,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Activate pnpm
+        run: corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
+
+      - name: Sync release version
+        run: |
+          node scripts/sync-release-version.mjs "${RELEASE_VERSION}"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
@@ -204,22 +218,14 @@ jobs:
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
-        with:
-          workspaces: "./src-tauri -> target"
-
-      - name: Install dependencies
-        working-directory: app-ui
-        run: npm ci
 
       - name: Build signed + notarized macOS Universal app
         run: |
-          npm run tauri build -- \
+          pnpm run tauri build -- \
             --target universal-apple-darwin \
             --bundles app,dmg
 
       - name: Collect macOS artifacts
-        env:
-          VERSION: ${{ needs.gate.outputs.version }}
         shell: bash
         run: |
           set -euo pipefail
@@ -228,28 +234,47 @@ jobs:
 
           DMG_PATH="$(
             find src-tauri/target/universal-apple-darwin/release/bundle/dmg \
-              -maxdepth 1 -type f -name '*.dmg' -print -quit
+              -maxdepth 1 \
+              -type f \
+              -name '*.dmg' \
+              -print \
+              -quit
           )"
 
           APP_PATH="$(
             find src-tauri/target/universal-apple-darwin/release/bundle/macos \
-              -maxdepth 1 -type d -name '*.app' -print -quit
+              -maxdepth 1 \
+              -type d \
+              -name '*.app' \
+              -print \
+              -quit
           )"
 
-          test -n "${DMG_PATH}"
-          test -n "${APP_PATH}"
+          if [ -z "${DMG_PATH}" ]; then
+            echo "::error::DMG was not generated."
+            exit 1
+          fi
+
+          if [ -z "${APP_PATH}" ]; then
+            echo "::error::.app bundle was not generated."
+            exit 1
+          fi
 
           cp "${DMG_PATH}" \
-            "dist/${APP_NAME}-${VERSION}-macOS-universal.dmg"
+            "dist/${APP_NAME}-${RELEASE_VERSION}-macOS-universal.dmg"
 
           ditto \
-            -c -k \
+            -c \
+            -k \
             --sequesterRsrc \
             --keepParent \
             "${APP_PATH}" \
-            "dist/${APP_NAME}-${VERSION}-macOS-universal.app.zip"
+            "dist/${APP_NAME}-${RELEASE_VERSION}-macOS-universal.app.zip"
 
-          shasum -a 256 dist/* > dist/SHA256-macOS.txt
+          shasum -a 256 \
+            "dist/${APP_NAME}-${RELEASE_VERSION}-macOS-universal.dmg" \
+            "dist/${APP_NAME}-${RELEASE_VERSION}-macOS-universal.app.zip" \
+            > dist/SHA256-macOS.txt
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
@@ -266,15 +291,6 @@ jobs:
   # 3. iPhone / iOS
   #
   # Current mode: ad-hoc
-  # - Good for your own registered iPhone devices.
-  # - IOS_MOBILE_PROVISION must be an Ad Hoc provisioning profile.
-  #
-  # Later for App Store / TestFlight:
-  # change:
-  #   --export-method ad-hoc
-  # to:
-  #   --export-method app-store-connect
-  # and use an App Store Connect provisioning profile.
   # ------------------------------------------------------------
   build-ios:
     name: iPhone IPA
@@ -282,14 +298,13 @@ jobs:
     runs-on: macos-latest
 
     env:
-      # Apple Distribution certificate exported as base64 .p12.
+      RELEASE_VERSION: ${{ needs.gate.outputs.version }}
+
       IOS_CERTIFICATE: ${{ secrets.IOS_CERTIFICATE }}
       IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
 
-      # Base64 encoded .mobileprovision.
       IOS_MOBILE_PROVISION: ${{ secrets.IOS_MOBILE_PROVISION }}
 
-      # Apple Developer Team ID.
       APPLE_DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
 
     steps:
@@ -300,7 +315,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Activate pnpm
+        run: corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
+
+      - name: Sync release version
+        run: |
+          node scripts/sync-release-version.mjs "${RELEASE_VERSION}"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Setup Rust for iOS
         uses: dtolnay/rust-toolchain@stable
@@ -312,36 +339,34 @@ jobs:
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
-        with:
-          workspaces: "./src-tauri -> target"
-
-      - name: Install dependencies
-        run: npm ci
 
       - name: Ensure CocoaPods is available
         shell: bash
         run: |
+          set -euo pipefail
+
           if ! command -v pod >/dev/null 2>&1; then
             brew install cocoapods
           fi
+
           pod --version
 
       - name: Initialize iOS project if missing
         shell: bash
         run: |
+          set -euo pipefail
+
           if [ ! -d "src-tauri/gen/apple" ]; then
-            npm run tauri ios init -- --ci
+            pnpm run tauri ios init -- --ci
           fi
 
       - name: Build signed iPhone IPA
         run: |
-          npm run tauri ios build -- \
+          pnpm run tauri ios build -- \
             --ci \
             --export-method ad-hoc
 
       - name: Collect iPhone artifact
-        env:
-          VERSION: ${{ needs.gate.outputs.version }}
         shell: bash
         run: |
           set -euo pipefail
@@ -350,8 +375,10 @@ jobs:
 
           IPA_PATH="$(
             find src-tauri/gen/apple/build \
-              -type f -name '*.ipa' \
-              -print -quit
+              -type f \
+              -name '*.ipa' \
+              -print \
+              -quit
           )"
 
           if [ -z "${IPA_PATH}" ]; then
@@ -361,9 +388,11 @@ jobs:
           fi
 
           cp "${IPA_PATH}" \
-            "dist/${APP_NAME}-${VERSION}-iPhone.ipa"
+            "dist/${APP_NAME}-${RELEASE_VERSION}-iPhone.ipa"
 
-          shasum -a 256 dist/*.ipa > dist/SHA256-iPhone.txt
+          shasum -a 256 \
+            "dist/${APP_NAME}-${RELEASE_VERSION}-iPhone.ipa" \
+            > dist/SHA256-iPhone.txt
 
       - name: Upload iPhone artifact
         uses: actions/upload-artifact@v4
@@ -377,7 +406,6 @@ jobs:
 
   # ------------------------------------------------------------
   # 4. GitHub Release
-  #
   # Only created after BOTH macOS and iPhone succeed.
   # ------------------------------------------------------------
   release:
