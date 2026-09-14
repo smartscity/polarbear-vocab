@@ -252,6 +252,8 @@ pub struct ImportedSense {
 #[derive(Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SettingsDto {
+    pub speech_locale: String,
+    pub speech_rate_percent: u16,
     pub ui_language: String,
     pub ui_theme: String,
 }
@@ -259,6 +261,8 @@ pub struct SettingsDto {
 impl Default for SettingsDto {
     fn default() -> Self {
         Self {
+            speech_locale: "en-US".to_owned(),
+            speech_rate_percent: 100,
             ui_language: "system".to_owned(),
             ui_theme: "system".to_owned(),
         }
@@ -297,6 +301,8 @@ mod tests {
         assert_eq!(
             SettingsDto::default(),
             SettingsDto {
+                speech_locale: "en-US".to_owned(),
+                speech_rate_percent: 100,
                 ui_language: "system".to_owned(),
                 ui_theme: "system".to_owned(),
             }

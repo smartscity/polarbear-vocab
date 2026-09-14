@@ -30,7 +30,7 @@ Artifacts are written to `target/release/bundle/`.
 - Home: select a dataset, review statistics, and choose **Continue**.
 - Datasets: create a name, select it, and import CSV. Required columns are `lemma` and `quiz_prompt_zh`; use [`data/examples/dataset-template.csv`](../data/examples/dataset-template.csv).
 - Mistakes: select a filter and choose **Practice this set**.
-- Settings: switch English / Simplified Chinese and System / Light / Dark appearance.
+- Settings: choose UI language, appearance, American/British voice, and speech rate.
 
 Study keys: `1`–`4` answer, `Space` next, `R` speak word, `S` speak example, `Esc` exit.
 

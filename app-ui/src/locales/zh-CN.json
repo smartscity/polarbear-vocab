@@ -73,6 +73,12 @@
   "settings.theme.system": "跟随系统",
   "settings.theme.light": "浅色",
   "settings.theme.dark": "深色",
+  "settings.speech": "朗读口音",
+  "settings.speechHint": "用于朗读正确单词和例句。",
+  "settings.speech.en-US": "美式英语",
+  "settings.speech.en-GB": "英式英语",
+  "settings.speechRate": "朗读语速",
+  "settings.speechRateHint": "调整离线系统语音的速度。",
   "error.collectionEmpty": "这个集合是空的。",
   "error.desktopOnly": "请通过 Tauri 桌面应用打开此界面。",
   "error.lexiconLoading": "正在加载 Polarbear Lexicon…"

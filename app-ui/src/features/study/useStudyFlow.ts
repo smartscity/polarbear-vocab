@@ -17,10 +17,12 @@ interface StudyFlowOptions {
   onError: (error: unknown) => void;
   onExit: () => Promise<void>;
   onStart: () => void;
+  speechLocale: string;
+  speechRate: number;
 }
 
 export function useStudyFlow(options: StudyFlowOptions) {
-  const { collectionEmptyMessage, onError, onExit, onStart } = options;
+  const { collectionEmptyMessage, onError, onExit, onStart, speechLocale, speechRate } = options;
   const [session, setSession] = useState<CollectionSession | null>(null);
   const [question, setQuestion] = useState<QuizQuestion | null>(null);
   const [result, setResult] = useState<AnswerResult | null>(null);
@@ -61,13 +63,13 @@ export function useStudyFlow(options: StudyFlowOptions) {
         Date.now() - questionStarted,
       );
       setResult(answerResult);
-      void speak(answerResult.lemma).catch(() => undefined);
+      void speak(answerResult.lemma, speechLocale, speechRate).catch(() => undefined);
       return true;
     } catch (error) {
       onError(error);
       return false;
     }
-  }, [onError, question, questionStarted, result, session]);
+  }, [onError, question, questionStarted, result, session, speechLocale, speechRate]);
 
   const advance = useCallback(async () => {
     if (!session) return;

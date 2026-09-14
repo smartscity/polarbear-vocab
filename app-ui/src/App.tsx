@@ -15,7 +15,7 @@ import { useI18n } from "./lib/i18n";
 type Screen = NavScreen | "study";
 
 export function App() {
-  const { t } = useI18n();
+  const { speechLocale, speechRatePercent, t } = useI18n();
   const data = useAppData();
   const [screen, setScreen] = useState<Screen>("home");
   const showMistakesScreen = useCallback(() => setScreen("mistakes"), []);
@@ -32,6 +32,8 @@ export function App() {
     onError: data.reportError,
     onExit: exitStudy,
     onStart: showStudyScreen,
+    speechLocale,
+    speechRate: speechRatePercent / 100,
   });
   const currentDataset = useMemo(
     () => data.datasets.find((dataset) => dataset.id === data.selectedDatasetId),
@@ -74,7 +76,7 @@ interface ScreenViewProps {
 }
 
 function ScreenView(props: ScreenViewProps) {
-  const { t } = useI18n();
+  const { speechLocale, speechRatePercent, t } = useI18n();
   if (props.screen === "home") {
     return <HomeScreen data={props.data} home={props.data.home} mistakes={props.mistakes} study={props.study} />;
   }
@@ -98,7 +100,7 @@ function ScreenView(props: ScreenViewProps) {
         onAnswer={props.study.answer}
         onExit={() => void props.study.exit()}
         onNext={() => void props.study.advance()}
-        onSpeak={(text) => void speak(text)}
+        onSpeak={(text) => void speak(text, speechLocale, speechRatePercent / 100)}
         question={props.study.question}
         result={props.study.result}
         title={props.currentDataset?.name ?? t("home.dataset")}

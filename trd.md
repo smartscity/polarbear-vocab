@@ -92,7 +92,7 @@ Responsive modes:
 
 Study hides global navigation so the question position remains stable. The UI supports pointer and touch input, visible keyboard focus, reduced motion, 200% text zoom, and no horizontal overflow.
 
-Themes are `system`, `light`, and `dark`. The initial system theme is applied before React paints; the saved choice is then loaded from `user.db`. UI language is `system`, `en`, or `zh-CN`; switching language does not translate dataset content.
+Themes are `system`, `light`, and `dark`. The initial system theme is applied before React paints; the saved choice is then loaded from `user.db`. UI language is `system`, `en`, or `zh-CN`; switching language does not translate dataset content. Speech settings persist the `en-US` / `en-GB` voice and a 50–200% rate.
 
 ## 7. Verification and release
 

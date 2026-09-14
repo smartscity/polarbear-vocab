@@ -109,8 +109,11 @@ export interface CsvImportResult {
 
 export type UiLanguage = "system" | "en" | "zh-CN";
 export type UiTheme = "system" | "light" | "dark";
+export type SpeechLocale = "en-US" | "en-GB";
 
 export interface SettingsDto {
+  speechLocale: SpeechLocale;
+  speechRatePercent: number;
   uiLanguage: UiLanguage;
   uiTheme: UiTheme;
 }

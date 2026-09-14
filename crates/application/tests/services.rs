@@ -97,6 +97,8 @@ fn settings_service_accepts_supported_values_only() {
     let repository = Arc::new(SettingsDouble::default());
     let service = SettingsService::new(repository.clone());
     let valid = SettingsDto {
+        speech_locale: "en-GB".to_owned(),
+        speech_rate_percent: 125,
         ui_language: "zh-CN".to_owned(),
         ui_theme: "dark".to_owned(),
     };
@@ -105,11 +107,29 @@ fn settings_service_accepts_supported_values_only() {
 
     assert_eq!(*repository.updates.lock().unwrap(), [valid]);
     let invalid_theme = SettingsDto {
+        speech_locale: "en-US".to_owned(),
+        speech_rate_percent: 100,
         ui_language: "en".to_owned(),
         ui_theme: "sepia".to_owned(),
     };
     assert!(matches!(
         service.update(&invalid_theme),
+        Err(ApplicationError::InvalidInput(_))
+    ));
+    let invalid_speech = SettingsDto {
+        speech_locale: "fr-FR".to_owned(),
+        ..SettingsDto::default()
+    };
+    assert!(matches!(
+        service.update(&invalid_speech),
+        Err(ApplicationError::InvalidInput(_))
+    ));
+    let invalid_rate = SettingsDto {
+        speech_rate_percent: 225,
+        ..SettingsDto::default()
+    };
+    assert!(matches!(
+        service.update(&invalid_rate),
         Err(ApplicationError::InvalidInput(_))
     ));
 }
@@ -153,6 +173,14 @@ fn speech_service_enforces_text_and_rate_boundaries() {
             Err(ApplicationError::InvalidInput(_))
         ));
     }
+    assert!(matches!(
+        service.speak(&SpeakRequest {
+            text: "word".to_owned(),
+            locale: Some("fr-FR".to_owned()),
+            rate: None
+        }),
+        Err(ApplicationError::InvalidInput(_))
+    ));
     assert!(matches!(
         service.speak(&SpeakRequest {
             text: " ".to_owned(),

@@ -73,6 +73,12 @@
   "settings.theme.system": "System",
   "settings.theme.light": "Light",
   "settings.theme.dark": "Dark",
+  "settings.speech": "Speech voice",
+  "settings.speechHint": "Used for the correct word and example sentence.",
+  "settings.speech.en-US": "American English",
+  "settings.speech.en-GB": "British English",
+  "settings.speechRate": "Speech rate",
+  "settings.speechRateHint": "Adjust the offline system voice speed.",
   "error.collectionEmpty": "This collection is empty.",
   "error.desktopOnly": "Open this interface through the Tauri desktop app.",
   "error.lexiconLoading": "Loading Polarbear Lexicon…"

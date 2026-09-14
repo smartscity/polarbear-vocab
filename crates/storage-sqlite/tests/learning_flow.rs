@@ -124,11 +124,13 @@ fn stale_question_cannot_create_a_duplicate_history_event() {
 }
 
 #[test]
-fn settings_round_trip_language_and_theme_together() {
+fn settings_round_trip_all_preferences_together() {
     let fixture = Fixture::new();
     let store = fixture.store();
     assert_eq!(store.get_settings().unwrap(), SettingsDto::default());
     let settings = SettingsDto {
+        speech_locale: "en-GB".to_owned(),
+        speech_rate_percent: 125,
         ui_language: "zh-CN".to_owned(),
         ui_theme: "dark".to_owned(),
     };

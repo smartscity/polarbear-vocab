@@ -41,6 +41,26 @@
   font-size: 0.875rem;
 }
 
+.pb-speech-rate {
+  min-width: min(100%, 250px);
+  display: flex;
+  align-items: center;
+  gap: var(--pb-space-3);
+}
+
+.pb-speech-rate input {
+  min-width: 0;
+  flex: 1;
+  accent-color: var(--pb-accent-strong);
+}
+
+.pb-speech-rate output {
+  min-width: 3.5rem;
+  color: var(--pb-text-muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
 .pb-activity-chart {
   height: 124px;
   margin: var(--pb-space-6) 0;
@@ -171,6 +191,10 @@
   }
 
   .pb-select-trigger {
+    width: 100%;
+  }
+
+  .pb-speech-rate {
     width: 100%;
   }
 

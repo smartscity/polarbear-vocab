@@ -273,6 +273,16 @@ impl SettingsService {
                 "unsupported UI theme".to_owned(),
             ));
         }
+        if !["en-US", "en-GB"].contains(&settings.speech_locale.as_str()) {
+            return Err(ApplicationError::InvalidInput(
+                "unsupported speech locale".to_owned(),
+            ));
+        }
+        if !(50..=200).contains(&settings.speech_rate_percent) {
+            return Err(ApplicationError::InvalidInput(
+                "speech rate must be between 50 and 200 percent".to_owned(),
+            ));
+        }
         self.repository.update_settings(settings)
     }
 }
@@ -301,6 +311,15 @@ impl SpeechUseCase {
         {
             return Err(ApplicationError::InvalidInput(
                 "speech rate must be between 0.2 and 2.0".to_owned(),
+            ));
+        }
+        if request
+            .locale
+            .as_deref()
+            .is_some_and(|locale| !["en-US", "en-GB"].contains(&locale))
+        {
+            return Err(ApplicationError::InvalidInput(
+                "unsupported speech locale".to_owned(),
             ));
         }
         self.speech.speak(request)

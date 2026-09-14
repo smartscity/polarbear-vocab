@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useStat
 
 import en from "../locales/en.json";
 import zhCn from "../locales/zh-CN.json";
-import { getSettings, updateSettings, type UiLanguage, type UiTheme } from "./commands";
+import { getSettings, updateSettings, type SpeechLocale, type UiLanguage, type UiTheme } from "./commands";
 
 type Parameters = Record<string, string | number>;
 type Translator = (key: string, parameters?: Parameters) => string;
@@ -12,7 +12,11 @@ interface I18nValue {
   resolvedLanguage: "en" | "zh-CN";
   resolvedTheme: "light" | "dark";
   setLanguage: (language: UiLanguage) => Promise<void>;
+  setSpeechLocale: (locale: SpeechLocale) => Promise<void>;
+  setSpeechRatePercent: (rate: number) => Promise<void>;
   setTheme: (theme: UiTheme) => Promise<void>;
+  speechLocale: SpeechLocale;
+  speechRatePercent: number;
   theme: UiTheme;
   t: Translator;
 }
@@ -27,6 +31,8 @@ const I18nContext = createContext<I18nValue | null>(null);
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<UiLanguage>("system");
   const [theme, setThemeState] = useState<UiTheme>("system");
+  const [speechLocale, setSpeechLocaleState] = useState<SpeechLocale>("en-US");
+  const [speechRatePercent, setSpeechRatePercentState] = useState(100);
   const [, setSystemPreferenceRevision] = useState(0);
   const resolvedLanguage = resolveLanguage(language);
   const resolvedTheme = resolveTheme(theme);
@@ -36,6 +42,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     void getSettings().then((settings) => {
       setLanguageState(settings.uiLanguage);
       setThemeState(settings.uiTheme);
+      setSpeechLocaleState(settings.speechLocale);
+      setSpeechRatePercentState(settings.speechRatePercent);
     }).catch(() => undefined);
   }, []);
 
@@ -65,18 +73,32 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     setLanguage: async (nextLanguage) => {
       setLanguageState(nextLanguage);
       if ("__TAURI_INTERNALS__" in window) {
-        await updateSettings({ uiLanguage: nextLanguage, uiTheme: theme });
+        await updateSettings({ speechLocale, speechRatePercent, uiLanguage: nextLanguage, uiTheme: theme });
+      }
+    },
+    setSpeechLocale: async (nextLocale) => {
+      setSpeechLocaleState(nextLocale);
+      if ("__TAURI_INTERNALS__" in window) {
+        await updateSettings({ speechLocale: nextLocale, speechRatePercent, uiLanguage: language, uiTheme: theme });
+      }
+    },
+    setSpeechRatePercent: async (nextRate) => {
+      setSpeechRatePercentState(nextRate);
+      if ("__TAURI_INTERNALS__" in window) {
+        await updateSettings({ speechLocale, speechRatePercent: nextRate, uiLanguage: language, uiTheme: theme });
       }
     },
     setTheme: async (nextTheme) => {
       setThemeState(nextTheme);
       if ("__TAURI_INTERNALS__" in window) {
-        await updateSettings({ uiLanguage: language, uiTheme: nextTheme });
+        await updateSettings({ speechLocale, speechRatePercent, uiLanguage: language, uiTheme: nextTheme });
       }
     },
+    speechLocale,
+    speechRatePercent,
     theme,
     t: (key, parameters) => translate(resources[resolvedLanguage], key, parameters),
-  }), [language, resolvedLanguage, resolvedTheme, theme]);
+  }), [language, resolvedLanguage, resolvedTheme, speechLocale, speechRatePercent, theme]);
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
