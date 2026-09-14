@@ -44,5 +44,5 @@ pnpm --filter @polarbear/vocab-ui storybook
 pnpm test:visual
 ```
 
-See the [English user guide](docs/user-guide.md) or [中文用户手册](docs/zh-CN/user-guide.md) for running and using the app. See [`docs/architecture.md`](docs/architecture.md) for architecture and naming decisions.
+See the [English user guide](docs/user-guide.md) or [中文用户手册](docs/zh-CN/user-guide.md) for running and using the app. See [`trd.md`](trd.md) for the consolidated technical design and [`docs/architecture.md`](docs/architecture.md) for architecture and naming decisions.
 See [`docs/dataset-csv.md`](docs/dataset-csv.md) for the CSV contract and import behavior.

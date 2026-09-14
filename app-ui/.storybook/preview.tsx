@@ -1,7 +1,9 @@
 import type { Preview } from "@storybook/react-vite";
 
-import { I18nProvider } from "../src/lib/i18n";
+import { I18nProvider, initializeSystemTheme } from "../src/lib/i18n";
 import "../src/styles.css";
+
+initializeSystemTheme();
 
 const preview: Preview = {
   decorators: [

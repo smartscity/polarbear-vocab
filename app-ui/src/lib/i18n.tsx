@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
 
 import en from "../locales/en.json";
 import zhCn from "../locales/zh-CN.json";
@@ -43,9 +43,8 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     document.documentElement.lang = resolvedLanguage;
   }, [resolvedLanguage]);
 
-  useEffect(() => {
-    document.documentElement.dataset.theme = resolvedTheme;
-    document.documentElement.style.colorScheme = resolvedTheme;
+  useLayoutEffect(() => {
+    applyDocumentTheme(resolvedTheme);
   }, [resolvedTheme]);
 
   useEffect(() => {
@@ -86,6 +85,15 @@ function resolveTheme(theme: UiTheme): "light" | "dark" {
   if (theme !== "system") return theme;
   if (typeof window === "undefined") return "light";
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
+export function initializeSystemTheme(): void {
+  applyDocumentTheme(resolveTheme("system"));
+}
+
+function applyDocumentTheme(theme: "light" | "dark"): void {
+  document.documentElement.dataset.theme = theme;
+  document.documentElement.style.colorScheme = theme;
 }
 
 export function useI18n(): I18nValue {

@@ -2,8 +2,10 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import { App } from "./App";
-import { I18nProvider } from "./lib/i18n";
+import { I18nProvider, initializeSystemTheme } from "./lib/i18n";
 import "./styles.css";
+
+initializeSystemTheme();
 
 const rootElement = document.getElementById("root");
 

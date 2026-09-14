@@ -41,6 +41,7 @@ for (const story of stories) {
     await page.setViewportSize({ width: 1280, height: 800 });
     await openStory(page, story);
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await waitForDarkThemePaint(page);
     const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
     expect(results.violations.filter((violation) => ["serious", "critical"].includes(violation.impact ?? ""))).toEqual([]);
     await expect(page).toHaveScreenshot(`${story}-dark-1280x800.png`, { animations: "disabled", fullPage: true });
@@ -53,6 +54,16 @@ for (const story of stories) {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow, "200 percent text must not cause horizontal page overflow").toBeLessThanOrEqual(1);
   });
+}
+
+async function waitForDarkThemePaint(page: import("@playwright/test").Page) {
+  await expect.poll(() => page.locator("body").evaluate((element) => {
+    const styles = getComputedStyle(element);
+    return { background: styles.backgroundColor, color: styles.color };
+  })).toEqual({ background: "rgb(17, 23, 19)", color: "rgb(237, 243, 238)" });
+  await page.evaluate(() => new Promise<void>((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+  }));
 }
 
 async function openStory(page: import("@playwright/test").Page, story: string) {
