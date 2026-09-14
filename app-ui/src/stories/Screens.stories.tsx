@@ -2,11 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { DatasetsView } from "../features/datasets/DatasetsView";
 import { HomeView } from "../features/home/HomeView";
+import { ListeningView } from "../features/listening/ListeningView";
 import { MistakesView } from "../features/mistakes/MistakesView";
 import { SettingsView } from "../features/settings/SettingsView";
 import { StudyView } from "../features/study/StudyView";
 import { AppShell, type NavScreen } from "../layout/AppShell";
-import type { AnswerResult as AnswerResultDto, DatasetSummary, HomeDto, QuizQuestion, WrongWord } from "../lib/commands";
+import type { AnswerResult as AnswerResultDto, Article, DatasetSummary, HomeDto, QuizQuestion, WrongWord } from "../lib/commands";
 
 const datasets: DatasetSummary[] = [
   { id: "core", name: "Everyday English", createdAt: 1, preloaded: true, wordCount: 640 },
@@ -60,6 +61,21 @@ const words: WrongWord[] = [
   { senseUid: "sense-concise", lemma: "concise", ipa: "/kənˈsaɪs/", zhGloss: "简洁的", wrongCount: 2, correctCount: 3, lastResult: "wrong" },
 ];
 
+const articles: Article[] = [
+  {
+    id: "article-1",
+    title: "A Walk Through the Rain",
+    body: "The rain began just after breakfast. Maya opened her umbrella and walked toward the station. The streets were quiet, and every window reflected the silver sky. She slowed down to listen to the rhythm of the drops.",
+    createdAt: 1,
+  },
+  {
+    id: "article-2",
+    title: "Small Habits",
+    body: "Small habits become strong routines when we repeat them with care.",
+    createdAt: 2,
+  },
+];
+
 function Screen(props: { children: React.ReactNode; screen: NavScreen | "study" }) {
   return <AppShell appName="Polarbear Vocab" footer="Polarbear Vocab · 0.10" onNavigate={() => undefined} screen={props.screen}>{props.children}</AppShell>;
 }
@@ -78,6 +94,8 @@ export const Home: Story = { render: () => <Screen screen="home"><HomeView datas
 export const DatasetList: Story = { render: () => <Screen screen="datasets"><DatasetsView datasets={datasets} onChanged={async () => undefined} onError={noOp} onSelect={noOp} onStart={noOp} selectedDatasetId="" /></Screen> };
 
 export const DatasetDetail: Story = { render: () => <Screen screen="datasets"><DatasetsView datasets={datasets} onChanged={async () => undefined} onError={noOp} onSelect={noOp} onStart={noOp} selectedDatasetId="core" /></Screen> };
+
+export const Listening: Story = { render: () => <Screen screen="listening"><ListeningView articles={articles} onDelete={noOp} onImport={noOp} onPause={noOp} onPlay={noOp} onRateChange={noOp} onResume={noOp} onSelect={noOp} onStop={noOp} onVoiceChange={noOp} playback="idle" rate={100} selected={articles[0]} voice="female" /></Screen> };
 
 export const Study: Story = { render: () => <Screen screen="study"><StudyView complete={false} onAnswer={async () => true} onExit={noOp} onNext={noOp} onSpeak={noOp} question={question} result={null} title="Everyday English" /></Screen> };
 

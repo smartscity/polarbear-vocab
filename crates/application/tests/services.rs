@@ -1,12 +1,67 @@
 use std::sync::{Arc, Mutex};
 
 use polarbear_vocab_application::{
-    ApplicationError, CsvImportPort, DatasetRepository, DatasetService, SettingsPort,
-    SettingsService, SpeechPort, SpeechUseCase,
+    ApplicationError, ArticleRepository, ArticleService, CsvImportPort, DatasetRepository,
+    DatasetService, SettingsPort, SettingsService, SpeechPort, SpeechUseCase,
 };
 use polarbear_vocab_domain::{
-    CsvImportPreview, CsvImportResult, DatasetImportPlan, DatasetSummary, SettingsDto, SpeakRequest,
+    ArticleDto, CsvImportPreview, CsvImportResult, DatasetImportPlan, DatasetSummary, SettingsDto,
+    SpeakRequest,
 };
+
+#[derive(Default)]
+struct ArticleDouble {
+    saved: Mutex<Vec<(String, String)>>,
+}
+
+impl ArticleRepository for ArticleDouble {
+    fn list_articles(&self) -> Result<Vec<ArticleDto>, ApplicationError> {
+        Ok(Vec::new())
+    }
+
+    fn save_article(&self, title: &str, body: &str) -> Result<ArticleDto, ApplicationError> {
+        self.saved
+            .lock()
+            .unwrap()
+            .push((title.to_owned(), body.to_owned()));
+        Ok(ArticleDto {
+            id: "article".to_owned(),
+            title: title.to_owned(),
+            body: body.to_owned(),
+            created_at: 1,
+        })
+    }
+
+    fn delete_article(&self, _: &str) -> Result<(), ApplicationError> {
+        Ok(())
+    }
+}
+
+#[test]
+fn article_service_trims_content_and_rejects_invalid_articles() {
+    let repository = Arc::new(ArticleDouble::default());
+    let service = ArticleService::new(repository.clone());
+
+    service
+        .import("  Listening practice  ", "  A short article.  ")
+        .unwrap();
+
+    assert_eq!(
+        *repository.saved.lock().unwrap(),
+        [(
+            "Listening practice".to_owned(),
+            "A short article.".to_owned()
+        )]
+    );
+    assert!(matches!(
+        service.import("Empty", "  "),
+        Err(ApplicationError::InvalidInput(_))
+    ));
+    assert!(matches!(
+        service.import("Long", &"x".repeat(100_001)),
+        Err(ApplicationError::InvalidInput(_))
+    ));
+}
 
 #[derive(Default)]
 struct DatasetDouble {
@@ -98,7 +153,8 @@ fn settings_service_accepts_supported_values_only() {
     let service = SettingsService::new(repository.clone());
     let valid = SettingsDto {
         speech_locale: "en-GB".to_owned(),
-        speech_rate_percent: 125,
+        speech_rate_percent: 150,
+        speech_voice: "male".to_owned(),
         ui_language: "zh-CN".to_owned(),
         ui_theme: "dark".to_owned(),
     };
@@ -109,6 +165,7 @@ fn settings_service_accepts_supported_values_only() {
     let invalid_theme = SettingsDto {
         speech_locale: "en-US".to_owned(),
         speech_rate_percent: 100,
+        speech_voice: "female".to_owned(),
         ui_language: "en".to_owned(),
         ui_theme: "sepia".to_owned(),
     };
@@ -132,6 +189,14 @@ fn settings_service_accepts_supported_values_only() {
         service.update(&invalid_rate),
         Err(ApplicationError::InvalidInput(_))
     ));
+    let invalid_voice = SettingsDto {
+        speech_voice: "robot".to_owned(),
+        ..SettingsDto::default()
+    };
+    assert!(matches!(
+        service.update(&invalid_voice),
+        Err(ApplicationError::InvalidInput(_))
+    ));
 }
 
 #[derive(Default)]
@@ -140,6 +205,12 @@ struct SpeechDouble {
 }
 
 impl SpeechPort for SpeechDouble {
+    fn pause(&self) -> Result<(), ApplicationError> {
+        Ok(())
+    }
+    fn resume(&self) -> Result<(), ApplicationError> {
+        Ok(())
+    }
     fn speak(&self, request: &SpeakRequest) -> Result<(), ApplicationError> {
         self.requests.lock().unwrap().push(request.clone());
         Ok(())
@@ -157,6 +228,7 @@ fn speech_service_enforces_text_and_rate_boundaries() {
         text: "word".to_owned(),
         locale: Some("en-US".to_owned()),
         rate: Some(1.0),
+        voice: Some("female".to_owned()),
     };
 
     service.speak(&valid).unwrap();
@@ -167,6 +239,7 @@ fn speech_service_enforces_text_and_rate_boundaries() {
             text: "word".to_owned(),
             locale: None,
             rate: Some(rate),
+            voice: None,
         };
         assert!(matches!(
             service.speak(&invalid),
@@ -177,7 +250,17 @@ fn speech_service_enforces_text_and_rate_boundaries() {
         service.speak(&SpeakRequest {
             text: "word".to_owned(),
             locale: Some("fr-FR".to_owned()),
-            rate: None
+            rate: None,
+            voice: None
+        }),
+        Err(ApplicationError::InvalidInput(_))
+    ));
+    assert!(matches!(
+        service.speak(&SpeakRequest {
+            text: "word".to_owned(),
+            locale: None,
+            rate: None,
+            voice: Some("robot".to_owned())
         }),
         Err(ApplicationError::InvalidInput(_))
     ));
@@ -185,7 +268,8 @@ fn speech_service_enforces_text_and_rate_boundaries() {
         service.speak(&SpeakRequest {
             text: " ".to_owned(),
             locale: None,
-            rate: None
+            rate: None,
+            voice: None
         }),
         Err(ApplicationError::InvalidInput(_))
     ));

@@ -29,6 +29,7 @@ pnpm tauri build
 
 - 首页：切换数据集，查看统计，点击“继续”学习。
 - 数据集：创建名称 → 选择数据集 → 导入 CSV。必填列为 `lemma`、`quiz_prompt_zh`；模板见 [`data/examples/dataset-template.csv`](../../data/examples/dataset-template.csv)。
+- 听力：导入 UTF-8 `.txt`/`.md` 文章，选择男声、女声、印度英语或日式英语，再以 0.5×/1×/1.5×/2× 播放、暂停或停止。
 - 错题：选择筛选条件，点击“练习这个集合”。
 - 设置：切换界面语言、外观、英美口音和朗读语速。
 
@@ -39,7 +40,7 @@ pnpm tauri build
 数据位于 `~/Library/Application Support/com.polarbear.vocab/`：
 
 - `content.db`：数据集和词汇内容。
-- `user.db`：答题历史、统计、会话和设置。
+- `user.db`：答题历史、统计、会话、导入文章和设置。
 
 应用离线运行，不提供远程导入、账号或云同步。备份时请同时复制两个数据库。
 

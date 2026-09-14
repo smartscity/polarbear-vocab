@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-const stories = ["home", "dataset-list", "dataset-detail", "study", "answer-result", "mistakes", "settings"] as const;
+const stories = ["home", "dataset-list", "dataset-detail", "listening", "study", "answer-result", "mistakes", "settings"] as const;
 const viewports = [
   { name: "390x844", width: 390, height: 844 },
   { name: "430x932", width: 430, height: 932 },

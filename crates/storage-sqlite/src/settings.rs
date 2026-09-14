@@ -10,11 +10,19 @@ impl SettingsPort for SqliteStore {
         let user = self.user()?;
         let language = read_setting(&user, "ui.language")?;
         let theme = read_setting(&user, "ui.theme")?;
-        let speech_locale = read_setting(&user, "speech.locale")?;
-        let speech_rate_percent = read_setting(&user, "speech.rate_percent")?;
+        let speech_locale: Option<String> = read_setting(&user, "speech.locale")?;
+        let speech_rate_percent: Option<u16> = read_setting(&user, "speech.rate_percent")?;
+        let speech_voice: Option<String> = read_setting(&user, "speech.voice")?;
         Ok(SettingsDto {
-            speech_locale: speech_locale.unwrap_or_else(|| "en-US".to_owned()),
-            speech_rate_percent: speech_rate_percent.unwrap_or(100),
+            speech_locale: speech_locale
+                .filter(|locale| ["en-US", "en-GB"].contains(&locale.as_str()))
+                .unwrap_or_else(|| "en-US".to_owned()),
+            speech_rate_percent: speech_rate_percent
+                .filter(|rate| [50, 100, 150, 200].contains(rate))
+                .unwrap_or(100),
+            speech_voice: speech_voice
+                .filter(|voice| ["male", "female", "indian", "japanese"].contains(&voice.as_str()))
+                .unwrap_or_else(|| "female".to_owned()),
             ui_language: language.unwrap_or_else(|| "system".to_owned()),
             ui_theme: theme.unwrap_or_else(|| "system".to_owned()),
         })
@@ -31,6 +39,10 @@ impl SettingsPort for SqliteStore {
             (
                 "speech.rate_percent",
                 serde_json::to_string(&settings.speech_rate_percent),
+            ),
+            (
+                "speech.voice",
+                serde_json::to_string(&settings.speech_voice),
             ),
         ]
         .map(|(key, value)| {

@@ -1,9 +1,9 @@
 use std::sync::Arc;
 
 use polarbear_vocab_domain::{
-    AnswerResultDto, AppInfo, CollectionSession, CollectionSpec, CsvImportPreview, CsvImportResult,
-    DatasetImportPlan, DatasetSummary, HomeDto, QuizQuestionDto, SettingsDto, SpeakRequest,
-    WrongWordDto,
+    AnswerResultDto, AppInfo, ArticleDto, CollectionSession, CollectionSpec, CsvImportPreview,
+    CsvImportResult, DatasetImportPlan, DatasetSummary, HomeDto, QuizQuestionDto, SettingsDto,
+    SpeakRequest, WrongWordDto,
 };
 use thiserror::Error;
 
@@ -76,9 +76,58 @@ pub trait SettingsPort: Send + Sync {
     fn update_settings(&self, settings: &SettingsDto) -> Result<(), ApplicationError>;
 }
 
+pub trait ArticleRepository: Send + Sync {
+    fn list_articles(&self) -> Result<Vec<ArticleDto>, ApplicationError>;
+    fn save_article(&self, title: &str, body: &str) -> Result<ArticleDto, ApplicationError>;
+    fn delete_article(&self, article_id: &str) -> Result<(), ApplicationError>;
+}
+
 pub trait SpeechPort: Send + Sync {
+    fn pause(&self) -> Result<(), ApplicationError>;
+    fn resume(&self) -> Result<(), ApplicationError>;
     fn speak(&self, request: &SpeakRequest) -> Result<(), ApplicationError>;
     fn stop(&self) -> Result<(), ApplicationError>;
+}
+
+#[derive(Clone)]
+pub struct ArticleService {
+    repository: Arc<dyn ArticleRepository>,
+}
+
+impl ArticleService {
+    #[must_use]
+    pub fn new(repository: Arc<dyn ArticleRepository>) -> Self {
+        Self { repository }
+    }
+
+    pub fn list(&self) -> Result<Vec<ArticleDto>, ApplicationError> {
+        self.repository.list_articles()
+    }
+
+    pub fn import(&self, title: &str, body: &str) -> Result<ArticleDto, ApplicationError> {
+        let title = title.trim();
+        let body = body.trim();
+        if title.is_empty() || title.chars().count() > 160 {
+            return Err(ApplicationError::InvalidInput(
+                "article title must contain between 1 and 160 characters".to_owned(),
+            ));
+        }
+        if body.is_empty() || body.chars().count() > 100_000 {
+            return Err(ApplicationError::InvalidInput(
+                "article body must contain between 1 and 100000 characters".to_owned(),
+            ));
+        }
+        self.repository.save_article(title, body)
+    }
+
+    pub fn delete(&self, article_id: &str) -> Result<(), ApplicationError> {
+        if article_id.trim().is_empty() {
+            return Err(ApplicationError::InvalidInput(
+                "article id must not be empty".to_owned(),
+            ));
+        }
+        self.repository.delete_article(article_id)
+    }
 }
 
 #[derive(Clone, Debug, Default)]
@@ -278,9 +327,14 @@ impl SettingsService {
                 "unsupported speech locale".to_owned(),
             ));
         }
-        if !(50..=200).contains(&settings.speech_rate_percent) {
+        if ![50, 100, 150, 200].contains(&settings.speech_rate_percent) {
             return Err(ApplicationError::InvalidInput(
-                "speech rate must be between 50 and 200 percent".to_owned(),
+                "speech rate must be 50, 100, 150, or 200 percent".to_owned(),
+            ));
+        }
+        if !["male", "female", "indian", "japanese"].contains(&settings.speech_voice.as_str()) {
+            return Err(ApplicationError::InvalidInput(
+                "unsupported speech voice".to_owned(),
             ));
         }
         self.repository.update_settings(settings)
@@ -300,9 +354,9 @@ impl SpeechUseCase {
 
     pub fn speak(&self, request: &SpeakRequest) -> Result<(), ApplicationError> {
         let text = request.text.trim();
-        if text.is_empty() || text.chars().count() > 500 {
+        if text.is_empty() || text.chars().count() > 100_000 {
             return Err(ApplicationError::InvalidInput(
-                "speech text must contain between 1 and 500 characters".to_owned(),
+                "speech text must contain between 1 and 100000 characters".to_owned(),
             ));
         }
         if request
@@ -322,7 +376,24 @@ impl SpeechUseCase {
                 "unsupported speech locale".to_owned(),
             ));
         }
+        if request
+            .voice
+            .as_deref()
+            .is_some_and(|voice| !["male", "female", "indian", "japanese"].contains(&voice))
+        {
+            return Err(ApplicationError::InvalidInput(
+                "unsupported speech voice".to_owned(),
+            ));
+        }
         self.speech.speak(request)
+    }
+
+    pub fn pause(&self) -> Result<(), ApplicationError> {
+        self.speech.pause()
+    }
+
+    pub fn resume(&self) -> Result<(), ApplicationError> {
+        self.speech.resume()
     }
 
     pub fn stop(&self) -> Result<(), ApplicationError> {

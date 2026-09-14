@@ -1,7 +1,9 @@
 use polarbear_vocab_domain::{
-    AnswerResultDto, AppInfo, CollectionSession, CollectionSpec, CsvImportPreview, CsvImportResult,
-    DatasetSummary, HomeDto, QuizQuestionDto, SettingsDto, SpeakRequest, WrongWordDto,
+    AnswerResultDto, AppInfo, ArticleDto, CollectionSession, CollectionSpec, CsvImportPreview,
+    CsvImportResult, DatasetSummary, HomeDto, QuizQuestionDto, SettingsDto, SpeakRequest,
+    WrongWordDto,
 };
+use std::path::Path;
 use tauri::State;
 
 use crate::state::AppRuntime;
@@ -164,11 +166,56 @@ pub fn update_settings(
 }
 
 #[tauri::command]
+pub fn list_articles(runtime: State<'_, AppRuntime>) -> Result<Vec<ArticleDto>, String> {
+    runtime.articles.list().map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn import_article(runtime: State<'_, AppRuntime>, path: String) -> Result<ArticleDto, String> {
+    let source = Path::new(&path);
+    let supported = source
+        .extension()
+        .and_then(|extension| extension.to_str())
+        .is_some_and(|extension| matches!(extension.to_ascii_lowercase().as_str(), "txt" | "md"));
+    if !supported {
+        return Err("invalid input: article must be a UTF-8 .txt or .md file".to_owned());
+    }
+    let title = source
+        .file_stem()
+        .and_then(|name| name.to_str())
+        .unwrap_or("Imported article");
+    let body =
+        std::fs::read_to_string(source).map_err(|error| format!("cannot read article: {error}"))?;
+    runtime
+        .articles
+        .import(title, &body)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn delete_article(runtime: State<'_, AppRuntime>, article_id: String) -> Result<(), String> {
+    runtime
+        .articles
+        .delete(&article_id)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
 pub fn speak(runtime: State<'_, AppRuntime>, request: SpeakRequest) -> Result<(), String> {
     runtime
         .speech
         .speak(&request)
         .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn pause_speech(runtime: State<'_, AppRuntime>) -> Result<(), String> {
+    runtime.speech.pause().map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn resume_speech(runtime: State<'_, AppRuntime>) -> Result<(), String> {
+    runtime.speech.resume().map_err(|error| error.to_string())
 }
 
 #[tauri::command]

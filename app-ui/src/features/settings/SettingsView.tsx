@@ -1,7 +1,7 @@
 import { PageHeader } from "../../design-system/components/PageHeader";
 import { SettingsSection } from "../../design-system/components/SettingsSection";
 import { SelectControl } from "../../design-system/primitives/SelectControl";
-import type { SpeechLocale, UiLanguage, UiTheme } from "../../lib/commands";
+import type { SpeechLocale, SpeechVoice, UiLanguage, UiTheme } from "../../lib/commands";
 import { useI18n } from "../../lib/i18n";
 
 export function SettingsView({ onError }: { onError: (error: unknown) => void }) {
@@ -10,9 +10,11 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
     setLanguage,
     setSpeechLocale,
     setSpeechRatePercent,
+    setSpeechVoice,
     setTheme,
     speechLocale,
     speechRatePercent,
+    speechVoice,
     t,
     theme,
   } = useI18n();
@@ -30,6 +32,12 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
     { label: t("settings.speech.en-US"), value: "en-US" },
     { label: t("settings.speech.en-GB"), value: "en-GB" },
   ];
+  const voiceOptions: Array<{ label: string; value: SpeechVoice }> = [
+    { label: t("settings.voice.male"), value: "male" },
+    { label: t("settings.voice.female"), value: "female" },
+    { label: t("settings.voice.indian"), value: "indian" },
+    { label: t("settings.voice.japanese"), value: "japanese" },
+  ];
   return (
     <section className="settings-page">
       <PageHeader eyebrow={t("app.name")} title={t("settings.title")} />
@@ -43,6 +51,9 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
         <SettingsSection description={t("settings.speechHint")} label={t("settings.speech")}>
           <SelectControl ariaLabel={t("settings.speech")} onValueChange={(value) => void setSpeechLocale(value).catch(onError)} options={speechOptions} value={speechLocale} />
         </SettingsSection>
+        <SettingsSection description={t("settings.voiceHint")} label={t("settings.voice")}>
+          <SelectControl ariaLabel={t("settings.voice")} onValueChange={(value) => void setSpeechVoice(value).catch(onError)} options={voiceOptions} value={speechVoice} />
+        </SettingsSection>
         <SettingsSection description={t("settings.speechRateHint")} label={t("settings.speechRate")}>
           <div className="pb-speech-rate">
             <input
@@ -50,7 +61,7 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
               max="200"
               min="50"
               onChange={(event) => void setSpeechRatePercent(Number(event.currentTarget.value)).catch(onError)}
-              step="25"
+              step="50"
               type="range"
               value={speechRatePercent}
             />

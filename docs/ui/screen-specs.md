@@ -19,3 +19,7 @@ Show history-derived filters, word-level correct/wrong counts, and a direct prac
 ## Settings
 
 Expose language and appearance in shared SettingsSection rows. Language and theme changes apply immediately, including system-preference changes.
+
+## Listening
+
+Keep the article library separate from the reader. Playback controls, voice style, and the four supported speeds remain visible above the text; compact layouts stack the library and reader without horizontal overflow.

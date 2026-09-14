@@ -29,6 +29,7 @@ Artifacts are written to `target/release/bundle/`.
 
 - Home: select a dataset, review statistics, and choose **Continue**.
 - Datasets: create a name, select it, and import CSV. Required columns are `lemma` and `quiz_prompt_zh`; use [`data/examples/dataset-template.csv`](../data/examples/dataset-template.csv).
+- Listening: import a UTF-8 `.txt`/`.md` article, choose male, female, Indian English, or Japanese English, then play, pause, or stop at 0.5×/1×/1.5×/2×.
 - Mistakes: select a filter and choose **Practice this set**.
 - Settings: choose UI language, appearance, American/British voice, and speech rate.
 
@@ -39,7 +40,7 @@ Study keys: `1`–`4` answer, `Space` next, `R` speak word, `S` speak example, `
 Data is stored under `~/Library/Application Support/com.polarbear.vocab/`:
 
 - `content.db`: datasets and vocabulary content.
-- `user.db`: answer history, statistics, sessions, and settings.
+- `user.db`: answer history, statistics, sessions, imported articles, and settings.
 
 The app works offline and has no remote import, account, or cloud sync. Back up both databases together.
 

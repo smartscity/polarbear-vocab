@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useStat
 
 import en from "../locales/en.json";
 import zhCn from "../locales/zh-CN.json";
-import { getSettings, updateSettings, type SpeechLocale, type UiLanguage, type UiTheme } from "./commands";
+import { getSettings, updateSettings, type SpeechLocale, type SpeechVoice, type UiLanguage, type UiTheme } from "./commands";
 
 type Parameters = Record<string, string | number>;
 type Translator = (key: string, parameters?: Parameters) => string;
@@ -14,9 +14,11 @@ interface I18nValue {
   setLanguage: (language: UiLanguage) => Promise<void>;
   setSpeechLocale: (locale: SpeechLocale) => Promise<void>;
   setSpeechRatePercent: (rate: number) => Promise<void>;
+  setSpeechVoice: (voice: SpeechVoice) => Promise<void>;
   setTheme: (theme: UiTheme) => Promise<void>;
   speechLocale: SpeechLocale;
   speechRatePercent: number;
+  speechVoice: SpeechVoice;
   theme: UiTheme;
   t: Translator;
 }
@@ -33,6 +35,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<UiTheme>("system");
   const [speechLocale, setSpeechLocaleState] = useState<SpeechLocale>("en-US");
   const [speechRatePercent, setSpeechRatePercentState] = useState(100);
+  const [speechVoice, setSpeechVoiceState] = useState<SpeechVoice>("female");
   const [, setSystemPreferenceRevision] = useState(0);
   const resolvedLanguage = resolveLanguage(language);
   const resolvedTheme = resolveTheme(theme);
@@ -44,6 +47,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       setThemeState(settings.uiTheme);
       setSpeechLocaleState(settings.speechLocale);
       setSpeechRatePercentState(settings.speechRatePercent);
+      setSpeechVoiceState(settings.speechVoice);
     }).catch(() => undefined);
   }, []);
 
@@ -73,32 +77,39 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     setLanguage: async (nextLanguage) => {
       setLanguageState(nextLanguage);
       if ("__TAURI_INTERNALS__" in window) {
-        await updateSettings({ speechLocale, speechRatePercent, uiLanguage: nextLanguage, uiTheme: theme });
+        await updateSettings({ speechLocale, speechRatePercent, speechVoice, uiLanguage: nextLanguage, uiTheme: theme });
       }
     },
     setSpeechLocale: async (nextLocale) => {
       setSpeechLocaleState(nextLocale);
       if ("__TAURI_INTERNALS__" in window) {
-        await updateSettings({ speechLocale: nextLocale, speechRatePercent, uiLanguage: language, uiTheme: theme });
+        await updateSettings({ speechLocale: nextLocale, speechRatePercent, speechVoice, uiLanguage: language, uiTheme: theme });
       }
     },
     setSpeechRatePercent: async (nextRate) => {
       setSpeechRatePercentState(nextRate);
       if ("__TAURI_INTERNALS__" in window) {
-        await updateSettings({ speechLocale, speechRatePercent: nextRate, uiLanguage: language, uiTheme: theme });
+        await updateSettings({ speechLocale, speechRatePercent: nextRate, speechVoice, uiLanguage: language, uiTheme: theme });
+      }
+    },
+    setSpeechVoice: async (nextVoice) => {
+      setSpeechVoiceState(nextVoice);
+      if ("__TAURI_INTERNALS__" in window) {
+        await updateSettings({ speechLocale, speechRatePercent, speechVoice: nextVoice, uiLanguage: language, uiTheme: theme });
       }
     },
     setTheme: async (nextTheme) => {
       setThemeState(nextTheme);
       if ("__TAURI_INTERNALS__" in window) {
-        await updateSettings({ speechLocale, speechRatePercent, uiLanguage: language, uiTheme: nextTheme });
+        await updateSettings({ speechLocale, speechRatePercent, speechVoice, uiLanguage: language, uiTheme: nextTheme });
       }
     },
     speechLocale,
     speechRatePercent,
+    speechVoice,
     theme,
     t: (key, parameters) => translate(resources[resolvedLanguage], key, parameters),
-  }), [language, resolvedLanguage, resolvedTheme, speechLocale, speechRatePercent, theme]);
+  }), [language, resolvedLanguage, resolvedTheme, speechLocale, speechRatePercent, speechVoice, theme]);
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }

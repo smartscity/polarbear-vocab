@@ -4,7 +4,7 @@
 
 Polarbear Vocab is a desktop-first, offline vocabulary app. The package and repository name is `polarbear-vocab`; the product name is **Polarbear Vocab** and the knowledge module is **Polarbear Lexicon**.
 
-This document consolidates the implemented design through v0.10:
+This document consolidates the implemented design through v0.11:
 
 | Version | Delivered scope |
 | --- | --- |
@@ -12,6 +12,7 @@ This document consolidates the implemented design through v0.10:
 | v0.8 | User-named datasets, local CSV import, preloaded datasets; no catalog, GitHub, or remote import |
 | v0.9 | English and Simplified Chinese UI with live switching in Settings |
 | v0.10 | Adaptive compact/medium/wide UI, light/dark/system themes, reusable design system, visual and accessibility gates |
+| v0.11 | Local TXT/Markdown article library and MP3-style offline listening controls |
 
 Non-goals: scheduler, spaced repetition, due dates, streaks, daily targets, accounts, cloud sync, remote dataset sources, and online TTS.
 
@@ -52,7 +53,7 @@ Stores preloaded and imported datasets, dataset membership, words, senses, IPA, 
 
 ### `user.db`
 
-Stores append-only answer history, study sessions, derived progress/statistics, UI language, and theme. Correct and mistake collections are derived from history; a later correct answer does not erase an earlier mistake.
+Stores append-only answer history, study sessions, derived progress/statistics, imported articles, UI language, theme, and speech preferences. Correct and mistake collections are derived from history; a later correct answer does not erase an earlier mistake.
 
 Stable identifiers use `dataset_id` and `sense_uid`. Schema migration converts the legacy `dataset_uid` column without losing data.
 
@@ -92,9 +93,15 @@ Responsive modes:
 
 Study hides global navigation so the question position remains stable. The UI supports pointer and touch input, visible keyboard focus, reduced motion, 200% text zoom, and no horizontal overflow.
 
-Themes are `system`, `light`, and `dark`. The initial system theme is applied before React paints; the saved choice is then loaded from `user.db`. UI language is `system`, `en`, or `zh-CN`; switching language does not translate dataset content. Speech settings persist the `en-US` / `en-GB` voice and a 50–200% rate.
+Themes are `system`, `light`, and `dark`. The initial system theme is applied before React paints; the saved choice is then loaded from `user.db`. UI language is `system`, `en`, or `zh-CN`; switching language does not translate dataset content. Speech settings persist the `en-US` / `en-GB` pronunciation, voice style, and one of the four supported rates.
 
-## 7. Verification and release
+## 7. Article listening
+
+The user imports a UTF-8 `.txt` or `.md` file. The Tauri adapter reads it locally, the application layer validates a 1–160 character title and 1–100,000 character body, and `user.db` stores it in the `article` table. No document content leaves the device.
+
+The Listening screen provides a local article library, readable text, and play, pause, resume, stop, and delete actions. Playback uses `AVSpeechSynthesizer` with exact rates 0.5×, 1×, 1.5×, and 2×. Voice choices are male, female, Indian English (`en-IN`), and Japanese English (`ja-JP`); unavailable voices fall back to a system voice.
+
+## 8. Verification and release
 
 Required local gate:
 
@@ -105,11 +112,11 @@ pnpm --filter @polarbear/vocab-ui run storybook:build
 pnpm run test:visual
 ```
 
-Coverage includes Rust domain/application/engine/storage tests, frontend locale/layout tests, seven screens at seven viewport sizes, dark appearance, axe WCAG checks, compact touch targets, focus visibility, 200% text zoom, and screenshot baselines under `docs/ui/screenshot-baselines`.
+Coverage includes Rust domain/application/engine/storage tests, frontend locale/layout tests, eight screens at seven viewport sizes, dark appearance, axe WCAG checks, compact touch targets, focus visibility, 200% text zoom, and screenshot baselines under `docs/ui/screenshot-baselines`.
 
 A `vMAJOR.MINOR.PATCH` tag is the release source of truth. CI validates the tag, injects the version, runs all gates, then builds platform artifacts. Release artifact paths are rooted at `target/release/bundle/`.
 
-## 8. Run and build
+## 9. Run and build
 
 ```bash
 pnpm install

@@ -6,7 +6,14 @@ pub fn initialize_user_schema(connection: &mut Connection) -> rusqlite::Result<(
             key TEXT PRIMARY KEY,
             value TEXT NOT NULL
         );
-        INSERT OR IGNORE INTO schema_meta(key, value) VALUES ('version', '2');
+        INSERT OR IGNORE INTO schema_meta(key, value) VALUES ('version', '3');
+
+        CREATE TABLE IF NOT EXISTS article (
+            id TEXT PRIMARY KEY,
+            title TEXT NOT NULL,
+            body TEXT NOT NULL,
+            created_at INTEGER NOT NULL
+        );
 
         CREATE TABLE IF NOT EXISTS word_stat (
             sense_uid TEXT PRIMARY KEY,
@@ -74,7 +81,7 @@ pub fn initialize_user_schema(connection: &mut Connection) -> rusqlite::Result<(
     )?;
     migrate_v1_dataset_columns(connection)?;
     connection.execute(
-        "INSERT INTO schema_meta(key, value) VALUES ('version', '2')
+        "INSERT INTO schema_meta(key, value) VALUES ('version', '3')
          ON CONFLICT(key) DO UPDATE SET value = excluded.value",
         [],
     )?;

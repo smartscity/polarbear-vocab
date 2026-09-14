@@ -22,6 +22,14 @@ impl NativeSpeech {
 
 #[cfg(not(target_os = "macos"))]
 impl SpeechPort for NativeSpeech {
+    fn pause(&self) -> Result<(), ApplicationError> {
+        Ok(())
+    }
+
+    fn resume(&self) -> Result<(), ApplicationError> {
+        Ok(())
+    }
+
     fn speak(&self, _request: &SpeakRequest) -> Result<(), ApplicationError> {
         Err(ApplicationError::Infrastructure(
             "native speech is not implemented on this platform".to_owned(),

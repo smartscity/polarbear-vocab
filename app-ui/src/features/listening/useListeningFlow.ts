@@ -1,0 +1,154 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { open } from "@tauri-apps/plugin-dialog";
+
+import {
+  deleteArticle,
+  importArticle,
+  listArticles,
+  pauseSpeech,
+  resumeSpeech,
+  speak,
+  stopSpeech,
+  type Article,
+} from "../../lib/commands";
+import { useI18n } from "../../lib/i18n";
+
+export type PlaybackState = "idle" | "paused" | "playing";
+
+export function useListeningFlow(onError: (error: unknown) => void) {
+  const {
+    setSpeechRatePercent,
+    setSpeechVoice,
+    speechLocale,
+    speechRatePercent,
+    speechVoice,
+  } = useI18n();
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [selectedId, setSelectedId] = useState("");
+  const [playback, setPlayback] = useState<PlaybackState>("idle");
+  const selected = useMemo(
+    () => articles.find((article) => article.id === selectedId) ?? articles[0],
+    [articles, selectedId],
+  );
+
+  const refresh = useCallback(async (preferredId?: string) => {
+    const available = await listArticles();
+    setArticles(available);
+    setSelectedId(available.some((article) => article.id === preferredId) ? preferredId ?? "" : available[0]?.id ?? "");
+  }, []);
+
+  useEffect(() => {
+    if ("__TAURI_INTERNALS__" in window) void refresh().catch(onError);
+  }, [onError, refresh]);
+
+  const chooseFile = async () => {
+    try {
+      const path = await open({
+        directory: false,
+        filters: [{ name: "Text article", extensions: ["txt", "md"] }],
+        multiple: false,
+      });
+      if (typeof path !== "string") return;
+      const imported = await importArticle(path);
+      await refresh(imported.id);
+    } catch (error) {
+      onError(error);
+    }
+  };
+
+  const play = async () => {
+    if (!selected) return;
+    try {
+      await speak(selected.body, speechLocale, speechRatePercent / 100, speechVoice);
+      setPlayback("playing");
+    } catch (error) {
+      onError(error);
+    }
+  };
+
+  const pause = async () => {
+    try {
+      await pauseSpeech();
+      setPlayback("paused");
+    } catch (error) {
+      onError(error);
+    }
+  };
+
+  const resume = async () => {
+    try {
+      await resumeSpeech();
+      setPlayback("playing");
+    } catch (error) {
+      onError(error);
+    }
+  };
+
+  const stop = async () => {
+    try {
+      await stopSpeech();
+      setPlayback("idle");
+    } catch (error) {
+      onError(error);
+    }
+  };
+
+  const remove = async () => {
+    if (!selected) return;
+    try {
+      await stopSpeech();
+      await deleteArticle(selected.id);
+      setPlayback("idle");
+      await refresh();
+    } catch (error) {
+      onError(error);
+    }
+  };
+
+  const changeRate = async (rate: number) => {
+    try {
+      if (playback !== "idle") await stopSpeech();
+      setPlayback("idle");
+      await setSpeechRatePercent(rate);
+    } catch (error) {
+      onError(error);
+    }
+  };
+
+  const changeVoice = async (voice: Parameters<typeof setSpeechVoice>[0]) => {
+    try {
+      if (playback !== "idle") await stopSpeech();
+      setPlayback("idle");
+      await setSpeechVoice(voice);
+    } catch (error) {
+      onError(error);
+    }
+  };
+
+  const select = async (articleId: string) => {
+    try {
+      if (playback !== "idle") await stopSpeech();
+      setPlayback("idle");
+      setSelectedId(articleId);
+    } catch (error) {
+      onError(error);
+    }
+  };
+
+  return {
+    articles,
+    changeRate,
+    changeVoice,
+    chooseFile,
+    pause,
+    playback,
+    play,
+    remove,
+    resume,
+    select,
+    selected,
+    speechRatePercent,
+    speechVoice,
+    stop,
+  };
+}

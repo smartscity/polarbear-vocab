@@ -2,6 +2,8 @@ import { useCallback, useMemo, useState } from "react";
 
 import { DatasetsView } from "./features/datasets/DatasetsView";
 import { HomeView } from "./features/home/HomeView";
+import { ListeningView } from "./features/listening/ListeningView";
+import { useListeningFlow } from "./features/listening/useListeningFlow";
 import { MistakesView } from "./features/mistakes/MistakesView";
 import { useMistakeFlow } from "./features/mistakes/useMistakeFlow";
 import { SettingsView } from "./features/settings/SettingsView";
@@ -15,12 +17,13 @@ import { useI18n } from "./lib/i18n";
 type Screen = NavScreen | "study";
 
 export function App() {
-  const { speechLocale, speechRatePercent, t } = useI18n();
+  const { speechLocale, speechRatePercent, speechVoice, t } = useI18n();
   const data = useAppData();
   const [screen, setScreen] = useState<Screen>("home");
   const showMistakesScreen = useCallback(() => setScreen("mistakes"), []);
   const showStudyScreen = useCallback(() => setScreen("study"), []);
   const mistakes = useMistakeFlow(data.selectedDatasetId, data.reportError, showMistakesScreen);
+  const listening = useListeningFlow(data.reportError);
   const exitStudy = useCallback(async () => {
     setScreen("home");
     if (data.selectedDatasetId) {
@@ -34,6 +37,7 @@ export function App() {
     onStart: showStudyScreen,
     speechLocale,
     speechRate: speechRatePercent / 100,
+    speechVoice,
   });
   const currentDataset = useMemo(
     () => data.datasets.find((dataset) => dataset.id === data.selectedDatasetId),
@@ -51,6 +55,7 @@ export function App() {
         currentDataset={currentDataset}
         data={data}
         mistakes={mistakes}
+        listening={listening}
         screen={screen}
         study={study}
       />
@@ -66,17 +71,19 @@ function ErrorBanner({ message, onClose }: { message: string; onClose: () => voi
 type AppData = ReturnType<typeof useAppData>;
 type StudyFlow = ReturnType<typeof useStudyFlow>;
 type MistakeFlow = ReturnType<typeof useMistakeFlow>;
+type ListeningFlow = ReturnType<typeof useListeningFlow>;
 
 interface ScreenViewProps {
   currentDataset?: DatasetSummary;
   data: AppData;
   mistakes: MistakeFlow;
+  listening: ListeningFlow;
   screen: Screen;
   study: StudyFlow;
 }
 
 function ScreenView(props: ScreenViewProps) {
-  const { speechLocale, speechRatePercent, t } = useI18n();
+  const { speechLocale, speechRatePercent, speechVoice, t } = useI18n();
   if (props.screen === "home") {
     return <HomeScreen data={props.data} home={props.data.home} mistakes={props.mistakes} study={props.study} />;
   }
@@ -93,6 +100,26 @@ function ScreenView(props: ScreenViewProps) {
     );
   }
   if (props.screen === "settings") return <SettingsView onError={props.data.reportError} />;
+  if (props.screen === "listening") {
+    return (
+      <ListeningView
+        articles={props.listening.articles}
+        onDelete={() => void props.listening.remove()}
+        onImport={() => void props.listening.chooseFile()}
+        onPause={() => void props.listening.pause()}
+        onPlay={() => void props.listening.play()}
+        onRateChange={(rate) => void props.listening.changeRate(rate)}
+        onResume={() => void props.listening.resume()}
+        onSelect={(articleId) => void props.listening.select(articleId)}
+        onStop={() => void props.listening.stop()}
+        onVoiceChange={(voice) => void props.listening.changeVoice(voice)}
+        playback={props.listening.playback}
+        rate={props.listening.speechRatePercent}
+        selected={props.listening.selected}
+        voice={props.listening.speechVoice}
+      />
+    );
+  }
   if (props.screen === "study") {
     return (
       <StudyView
@@ -100,7 +127,7 @@ function ScreenView(props: ScreenViewProps) {
         onAnswer={props.study.answer}
         onExit={() => void props.study.exit()}
         onNext={() => void props.study.advance()}
-        onSpeak={(text) => void speak(text, speechLocale, speechRatePercent / 100)}
+        onSpeak={(text) => void speak(text, speechLocale, speechRatePercent / 100, speechVoice)}
         question={props.study.question}
         result={props.study.result}
         title={props.currentDataset?.name ?? t("home.dataset")}

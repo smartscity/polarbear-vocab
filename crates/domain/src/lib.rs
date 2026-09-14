@@ -189,12 +189,22 @@ pub struct WrongWordDto {
     pub last_result: String,
 }
 
+#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ArticleDto {
+    pub id: String,
+    pub title: String,
+    pub body: String,
+    pub created_at: i64,
+}
+
 #[derive(Clone, Debug, PartialEq, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SpeakRequest {
     pub text: String,
     pub locale: Option<String>,
     pub rate: Option<f32>,
+    pub voice: Option<String>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize)]
@@ -254,6 +264,7 @@ pub struct ImportedSense {
 pub struct SettingsDto {
     pub speech_locale: String,
     pub speech_rate_percent: u16,
+    pub speech_voice: String,
     pub ui_language: String,
     pub ui_theme: String,
 }
@@ -263,6 +274,7 @@ impl Default for SettingsDto {
         Self {
             speech_locale: "en-US".to_owned(),
             speech_rate_percent: 100,
+            speech_voice: "female".to_owned(),
             ui_language: "system".to_owned(),
             ui_theme: "system".to_owned(),
         }
@@ -303,6 +315,7 @@ mod tests {
             SettingsDto {
                 speech_locale: "en-US".to_owned(),
                 speech_rate_percent: 100,
+                speech_voice: "female".to_owned(),
                 ui_language: "system".to_owned(),
                 ui_theme: "system".to_owned(),
             }

@@ -20,6 +20,9 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             commands::get_app_info,
+            commands::list_articles,
+            commands::import_article,
+            commands::delete_article,
             commands::list_datasets,
             commands::get_home,
             commands::start_collection,
@@ -35,6 +38,8 @@ pub fn run() {
             commands::get_settings,
             commands::update_settings,
             commands::speak,
+            commands::pause_speech,
+            commands::resume_speech,
             commands::stop_speech,
         ])
         .run(tauri::generate_context!())

@@ -88,6 +88,13 @@ export interface WrongWord {
   lastResult: string;
 }
 
+export interface Article {
+  id: string;
+  title: string;
+  body: string;
+  createdAt: number;
+}
+
 export interface CsvImportPreview {
   fileName: string;
   totalRows: number;
@@ -110,10 +117,12 @@ export interface CsvImportResult {
 export type UiLanguage = "system" | "en" | "zh-CN";
 export type UiTheme = "system" | "light" | "dark";
 export type SpeechLocale = "en-US" | "en-GB";
+export type SpeechVoice = "male" | "female" | "indian" | "japanese";
 
 export interface SettingsDto {
   speechLocale: SpeechLocale;
   speechRatePercent: number;
+  speechVoice: SpeechVoice;
   uiLanguage: UiLanguage;
   uiTheme: UiTheme;
 }
@@ -150,9 +159,14 @@ export const listWrongWords = (
     minWrongCount,
     lastWrongOnly,
   });
-export const speak = (text: string, locale = "en-US", rate = 1) =>
-  invoke<void>("speak", { request: { text, locale, rate } });
+export const speak = (text: string, locale = "en-US", rate = 1, voice: SpeechVoice = "female") =>
+  invoke<void>("speak", { request: { text, locale, rate, voice } });
+export const pauseSpeech = () => invoke<void>("pause_speech");
+export const resumeSpeech = () => invoke<void>("resume_speech");
 export const stopSpeech = () => invoke<void>("stop_speech");
+export const listArticles = () => invoke<Article[]>("list_articles");
+export const importArticle = (path: string) => invoke<Article>("import_article", { path });
+export const deleteArticle = (articleId: string) => invoke<void>("delete_article", { articleId });
 export const createDataset = (name: string) =>
   invoke<DatasetSummary>("create_dataset", { name });
 export const renameDataset = (datasetId: string, name: string) =>

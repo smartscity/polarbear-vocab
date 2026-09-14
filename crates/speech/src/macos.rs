@@ -1,7 +1,8 @@
 use std::sync::mpsc::{self, Sender};
 
 use objc2_avf_audio::{
-    AVSpeechBoundary, AVSpeechSynthesisVoice, AVSpeechSynthesizer, AVSpeechUtterance,
+    AVSpeechBoundary, AVSpeechSynthesisVoice, AVSpeechSynthesisVoiceGender, AVSpeechSynthesizer,
+    AVSpeechUtterance,
 };
 use objc2_foundation::NSString;
 use polarbear_vocab_application::{ApplicationError, SpeechPort};
@@ -14,6 +15,8 @@ pub struct NativeSpeech {
 
 #[derive(Clone, Debug)]
 enum SpeechCommand {
+    Pause,
+    Resume,
     Speak(SpeakRequest),
     Stop,
 }
@@ -27,6 +30,12 @@ impl NativeSpeech {
                 let synthesizer = unsafe { AVSpeechSynthesizer::new() };
                 while let Ok(command) = receiver.recv() {
                     match command {
+                        SpeechCommand::Pause => unsafe {
+                            synthesizer.pauseSpeakingAtBoundary(AVSpeechBoundary::Word);
+                        },
+                        SpeechCommand::Resume => unsafe {
+                            synthesizer.continueSpeaking();
+                        },
                         SpeechCommand::Speak(request) => {
                             speak(&synthesizer, &request);
                         }
@@ -42,6 +51,18 @@ impl NativeSpeech {
 }
 
 impl SpeechPort for NativeSpeech {
+    fn pause(&self) -> Result<(), ApplicationError> {
+        self.sender
+            .send(SpeechCommand::Pause)
+            .map_err(|error| ApplicationError::Infrastructure(error.to_string()))
+    }
+
+    fn resume(&self) -> Result<(), ApplicationError> {
+        self.sender
+            .send(SpeechCommand::Resume)
+            .map_err(|error| ApplicationError::Infrastructure(error.to_string()))
+    }
+
     fn speak(&self, request: &SpeakRequest) -> Result<(), ApplicationError> {
         self.sender
             .send(SpeechCommand::Speak(request.clone()))
@@ -57,11 +78,37 @@ impl SpeechPort for NativeSpeech {
 
 fn speak(synthesizer: &AVSpeechSynthesizer, request: &SpeakRequest) {
     let text = NSString::from_str(request.text.trim());
-    let locale = NSString::from_str(request.locale.as_deref().unwrap_or("en-US"));
+    let requested_locale = request.locale.as_deref().unwrap_or("en-US");
+    let (locale, gender) = match request.voice.as_deref() {
+        Some("indian") => ("en-IN", None),
+        Some("japanese") => ("ja-JP", None),
+        Some("male") => (requested_locale, Some(AVSpeechSynthesisVoiceGender::Male)),
+        Some("female") => (requested_locale, Some(AVSpeechSynthesisVoiceGender::Female)),
+        _ => (requested_locale, None),
+    };
+    let locale = NSString::from_str(locale);
     unsafe {
         synthesizer.stopSpeakingAtBoundary(AVSpeechBoundary::Immediate);
         let utterance = AVSpeechUtterance::speechUtteranceWithString(&text);
-        let voice = AVSpeechSynthesisVoice::voiceWithLanguage(Some(&locale));
+        let fallback = || AVSpeechSynthesisVoice::voiceWithLanguage(Some(&locale));
+        let voice = gender
+            .and_then(|expected| {
+                let voices = AVSpeechSynthesisVoice::speechVoices().to_vec();
+                voices
+                    .iter()
+                    .find(|voice| {
+                        voice.gender() == expected
+                            && voice.language().to_string() == requested_locale
+                    })
+                    .cloned()
+                    .or_else(|| {
+                        voices.into_iter().find(|voice| {
+                            voice.gender() == expected
+                                && voice.language().to_string().starts_with("en-")
+                        })
+                    })
+            })
+            .or_else(fallback);
         utterance.setVoice(voice.as_deref());
         utterance.setRate(request.rate.unwrap_or(1.0) * 0.5);
         synthesizer.speakUtterance(&utterance);

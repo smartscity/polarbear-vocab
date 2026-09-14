@@ -1,4 +1,5 @@
 mod answer_history;
+mod articles;
 mod datasets;
 mod distractor_index;
 mod home;

@@ -1,9 +1,9 @@
 use std::sync::Arc;
 
 use polarbear_vocab_application::{
-    AppService, CsvImportPort, DatasetRepository, DatasetService, HomeQueryPort, HomeService,
-    MistakeQueryPort, MistakeService, SettingsPort, SettingsService, SpeechPort, SpeechUseCase,
-    StudyPort, StudyService,
+    AppService, ArticleRepository, ArticleService, CsvImportPort, DatasetRepository,
+    DatasetService, HomeQueryPort, HomeService, MistakeQueryPort, MistakeService, SettingsPort,
+    SettingsService, SpeechPort, SpeechUseCase, StudyPort, StudyService,
 };
 use polarbear_vocab_dataset_import::CsvDatasetImporter;
 use polarbear_vocab_speech::NativeSpeech;
@@ -11,6 +11,7 @@ use polarbear_vocab_storage_sqlite::{DatabasePaths, SqliteStore};
 
 pub struct AppRuntime {
     pub app: AppService,
+    pub articles: ArticleService,
     pub home: HomeService,
     pub study: StudyService,
     pub mistakes: MistakeService,
@@ -27,10 +28,12 @@ impl AppRuntime {
         let mistake_repository: Arc<dyn MistakeQueryPort> = store.clone();
         let dataset_repository: Arc<dyn DatasetRepository> = store.clone();
         let settings_repository: Arc<dyn SettingsPort> = store.clone();
+        let article_repository: Arc<dyn ArticleRepository> = store.clone();
         let csv_import: Arc<dyn CsvImportPort> = Arc::new(CsvDatasetImporter);
         let speech: Arc<dyn SpeechPort> = Arc::new(NativeSpeech::new()?);
         Ok(Self {
             app: AppService::new(),
+            articles: ArticleService::new(article_repository),
             home: HomeService::new(home_repository),
             study: StudyService::new(study_repository),
             mistakes: MistakeService::new(mistake_repository),

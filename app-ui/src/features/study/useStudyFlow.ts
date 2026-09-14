@@ -19,10 +19,11 @@ interface StudyFlowOptions {
   onStart: () => void;
   speechLocale: string;
   speechRate: number;
+  speechVoice: "male" | "female" | "indian" | "japanese";
 }
 
 export function useStudyFlow(options: StudyFlowOptions) {
-  const { collectionEmptyMessage, onError, onExit, onStart, speechLocale, speechRate } = options;
+  const { collectionEmptyMessage, onError, onExit, onStart, speechLocale, speechRate, speechVoice } = options;
   const [session, setSession] = useState<CollectionSession | null>(null);
   const [question, setQuestion] = useState<QuizQuestion | null>(null);
   const [result, setResult] = useState<AnswerResult | null>(null);
@@ -63,13 +64,13 @@ export function useStudyFlow(options: StudyFlowOptions) {
         Date.now() - questionStarted,
       );
       setResult(answerResult);
-      void speak(answerResult.lemma, speechLocale, speechRate).catch(() => undefined);
+      void speak(answerResult.lemma, speechLocale, speechRate, speechVoice).catch(() => undefined);
       return true;
     } catch (error) {
       onError(error);
       return false;
     }
-  }, [onError, question, questionStarted, result, session, speechLocale, speechRate]);
+  }, [onError, question, questionStarted, result, session, speechLocale, speechRate, speechVoice]);
 
   const advance = useCallback(async () => {
     if (!session) return;
