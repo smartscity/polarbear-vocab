@@ -355,7 +355,7 @@ jobs:
 
       IOS_MOBILE_PROVISION: ${{ secrets.IOS_MOBILE_PROVISION }}
 
-      APPLE_DEVELOPMENT_TEAM: ${{ secrets.APPLE_TEAM_ID }}
+      APPLE_DEVELOPMENT_TEAM: ${{ secrets.APPLE_DEVELOPMENT_TEAM || secrets.APPLE_TEAM_ID }}
 
     steps:
       - name: Checkout
@@ -389,6 +389,35 @@ jobs:
 
       - name: Rust cache
         uses: swatinem/rust-cache@v2
+
+      - name: Resolve iOS development team
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          TEAM_ID="${APPLE_DEVELOPMENT_TEAM:-}"
+
+          if [ -z "${TEAM_ID}" ]; then
+            if [ -z "${IOS_MOBILE_PROVISION:-}" ]; then
+              echo "::error::Configure APPLE_DEVELOPMENT_TEAM (or APPLE_TEAM_ID), or provide IOS_MOBILE_PROVISION so the team ID can be derived."
+              exit 1
+            fi
+
+            PROFILE_PATH="$(mktemp -t polarbear-vocab-profile).mobileprovision"
+            PLIST_PATH="$(mktemp -t polarbear-vocab-profile).plist"
+            trap 'rm -f "${PROFILE_PATH}" "${PLIST_PATH}"' EXIT
+
+            printf '%s' "${IOS_MOBILE_PROVISION}" | base64 -D > "${PROFILE_PATH}"
+            security cms -D -i "${PROFILE_PATH}" > "${PLIST_PATH}"
+            TEAM_ID="$(/usr/libexec/PlistBuddy -c 'Print :TeamIdentifier:0' "${PLIST_PATH}")"
+          fi
+
+          if [[ ! "${TEAM_ID}" =~ ^[A-Z0-9]{10}$ ]]; then
+            echo "::error::Could not derive a valid Apple development team ID from IOS_MOBILE_PROVISION."
+            exit 1
+          fi
+
+          echo "APPLE_DEVELOPMENT_TEAM=${TEAM_ID}" >> "${GITHUB_ENV}"
 
       - name: Ensure CocoaPods is available
         shell: bash
