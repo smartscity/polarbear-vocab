@@ -271,7 +271,7 @@ jobs:
 
       - name: Build signed + notarized macOS Universal app
         run: |
-          pnpm run tauri build -- \
+          pnpm run tauri build \
             --target universal-apple-darwin \
             --bundles app,dmg
 
@@ -340,7 +340,7 @@ jobs:
   # ------------------------------------------------------------
   # 3. iPhone / iOS
   #
-  # Current mode: ad-hoc
+  # Current mode: debugging (development/ad-hoc provisioning)
   # ------------------------------------------------------------
   build-ios:
     name: iPhone IPA
@@ -407,14 +407,14 @@ jobs:
           set -euo pipefail
 
           if [ ! -d "src-tauri/gen/apple" ]; then
-            pnpm run tauri ios init -- --ci
+            pnpm run tauri ios init --ci
           fi
 
       - name: Build signed iPhone IPA
         run: |
-          pnpm run tauri ios build -- \
+          pnpm run tauri ios build \
             --ci \
-            --export-method ad-hoc
+            --export-method debugging
 
       - name: Collect iPhone artifact
         shell: bash
