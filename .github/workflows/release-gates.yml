@@ -340,7 +340,7 @@ jobs:
   # ------------------------------------------------------------
   # 3. iPhone / iOS
   #
-  # Current mode: debugging (development/ad-hoc provisioning)
+  # Current mode: release-testing (Xcode 15.4+ replacement for ad-hoc)
   # ------------------------------------------------------------
   build-ios:
     name: iPhone IPA
@@ -414,7 +414,7 @@ jobs:
         run: |
           pnpm run tauri ios build \
             --ci \
-            --export-method debugging
+            --export-method release-testing
 
       - name: Collect iPhone artifact
         shell: bash
