@@ -117,7 +117,8 @@ export interface CsvImportResult {
 export type UiLanguage = "system" | "en" | "zh-CN";
 export type UiTheme = "system" | "light" | "dark";
 export type SpeechLocale = "en-US" | "en-GB";
-export type SpeechVoice = "male" | "female" | "indian" | "japanese";
+export const SPEECH_VOICES = ["male", "female", "american", "british", "hong-kong", "indian", "japanese"] as const;
+export type SpeechVoice = typeof SPEECH_VOICES[number];
 
 export interface SettingsDto {
   speechLocale: SpeechLocale;

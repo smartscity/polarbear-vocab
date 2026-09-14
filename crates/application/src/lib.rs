@@ -2,8 +2,8 @@ use std::sync::Arc;
 
 use polarbear_vocab_domain::{
     AnswerResultDto, AppInfo, ArticleDto, CollectionSession, CollectionSpec, CsvImportPreview,
-    CsvImportResult, DatasetImportPlan, DatasetSummary, HomeDto, QuizQuestionDto, SettingsDto,
-    SpeakRequest, WrongWordDto,
+    CsvImportResult, DatasetImportPlan, DatasetSummary, HomeDto, QuizQuestionDto, SPEECH_VOICES,
+    SettingsDto, SpeakRequest, WrongWordDto,
 };
 use thiserror::Error;
 
@@ -332,7 +332,7 @@ impl SettingsService {
                 "speech rate must be 50, 100, 150, or 200 percent".to_owned(),
             ));
         }
-        if !["male", "female", "indian", "japanese"].contains(&settings.speech_voice.as_str()) {
+        if !SPEECH_VOICES.contains(&settings.speech_voice.as_str()) {
             return Err(ApplicationError::InvalidInput(
                 "unsupported speech voice".to_owned(),
             ));
@@ -379,7 +379,7 @@ impl SpeechUseCase {
         if request
             .voice
             .as_deref()
-            .is_some_and(|voice| !["male", "female", "indian", "japanese"].contains(&voice))
+            .is_some_and(|voice| !SPEECH_VOICES.contains(&voice))
         {
             return Err(ApplicationError::InvalidInput(
                 "unsupported speech voice".to_owned(),

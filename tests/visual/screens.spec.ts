@@ -56,6 +56,21 @@ for (const story of stories) {
   });
 }
 
+test("listening exposes every offline voice style", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await openStory(page, "listening");
+  await page.getByRole("combobox", { name: "Voice style" }).click();
+  await expect(page.getByRole("option")).toHaveText([
+    "Male",
+    "Female",
+    "American English",
+    "British English",
+    "Hong Kong English",
+    "Indian English",
+    "Japanese English",
+  ]);
+});
+
 async function waitForDarkThemePaint(page: import("@playwright/test").Page) {
   await expect.poll(() => page.locator("body").evaluate((element) => {
     const styles = getComputedStyle(element);

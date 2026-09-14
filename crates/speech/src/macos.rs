@@ -79,12 +79,11 @@ impl SpeechPort for NativeSpeech {
 fn speak(synthesizer: &AVSpeechSynthesizer, request: &SpeakRequest) {
     let text = NSString::from_str(request.text.trim());
     let requested_locale = request.locale.as_deref().unwrap_or("en-US");
-    let (locale, gender) = match request.voice.as_deref() {
-        Some("indian") => ("en-IN", None),
-        Some("japanese") => ("ja-JP", None),
-        Some("male") => (requested_locale, Some(AVSpeechSynthesisVoiceGender::Male)),
-        Some("female") => (requested_locale, Some(AVSpeechSynthesisVoiceGender::Female)),
-        _ => (requested_locale, None),
+    let locale = locale_for_voice(requested_locale, request.voice.as_deref());
+    let gender = match request.voice.as_deref() {
+        Some("male") => Some(AVSpeechSynthesisVoiceGender::Male),
+        Some("female") => Some(AVSpeechSynthesisVoiceGender::Female),
+        _ => None,
     };
     let locale = NSString::from_str(locale);
     unsafe {
@@ -112,5 +111,31 @@ fn speak(synthesizer: &AVSpeechSynthesizer, request: &SpeakRequest) {
         utterance.setVoice(voice.as_deref());
         utterance.setRate(request.rate.unwrap_or(1.0) * 0.5);
         synthesizer.speakUtterance(&utterance);
+    }
+}
+
+fn locale_for_voice<'a>(requested_locale: &'a str, voice: Option<&str>) -> &'a str {
+    match voice {
+        Some("american") => "en-US",
+        Some("british") => "en-GB",
+        Some("hong-kong") => "en-HK",
+        Some("indian") => "en-IN",
+        Some("japanese") => "ja-JP",
+        _ => requested_locale,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::locale_for_voice;
+
+    #[test]
+    fn accent_voices_select_their_system_locale() {
+        assert_eq!(locale_for_voice("en-GB", Some("american")), "en-US");
+        assert_eq!(locale_for_voice("en-US", Some("british")), "en-GB");
+        assert_eq!(locale_for_voice("en-US", Some("hong-kong")), "en-HK");
+        assert_eq!(locale_for_voice("en-US", Some("indian")), "en-IN");
+        assert_eq!(locale_for_voice("en-US", Some("japanese")), "ja-JP");
+        assert_eq!(locale_for_voice("en-GB", Some("female")), "en-GB");
     }
 }

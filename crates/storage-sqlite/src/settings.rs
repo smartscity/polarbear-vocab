@@ -1,6 +1,6 @@
 use chrono::Utc;
 use polarbear_vocab_application::{ApplicationError, SettingsPort};
-use polarbear_vocab_domain::SettingsDto;
+use polarbear_vocab_domain::{SPEECH_VOICES, SettingsDto};
 use rusqlite::{OptionalExtension, params};
 
 use crate::{SqliteStore, database_error, schema};
@@ -21,7 +21,7 @@ impl SettingsPort for SqliteStore {
                 .filter(|rate| [50, 100, 150, 200].contains(rate))
                 .unwrap_or(100),
             speech_voice: speech_voice
-                .filter(|voice| ["male", "female", "indian", "japanese"].contains(&voice.as_str()))
+                .filter(|voice| SPEECH_VOICES.contains(&voice.as_str()))
                 .unwrap_or_else(|| "female".to_owned()),
             ui_language: language.unwrap_or_else(|| "system".to_owned()),
             ui_theme: theme.unwrap_or_else(|| "system".to_owned()),

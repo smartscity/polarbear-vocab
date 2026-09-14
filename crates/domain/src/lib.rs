@@ -2,6 +2,15 @@ use serde::{Deserialize, Serialize};
 
 pub const PRODUCT_NAME: &str = "Polarbear Vocab";
 pub const KNOWLEDGE_MODULE_NAME: &str = "Polarbear Lexicon";
+pub const SPEECH_VOICES: [&str; 7] = [
+    "male",
+    "female",
+    "american",
+    "british",
+    "hong-kong",
+    "indian",
+    "japanese",
+];
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]

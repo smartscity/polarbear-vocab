@@ -154,7 +154,7 @@ fn settings_service_accepts_supported_values_only() {
     let valid = SettingsDto {
         speech_locale: "en-GB".to_owned(),
         speech_rate_percent: 150,
-        speech_voice: "male".to_owned(),
+        speech_voice: "hong-kong".to_owned(),
         ui_language: "zh-CN".to_owned(),
         ui_theme: "dark".to_owned(),
     };
@@ -228,7 +228,7 @@ fn speech_service_enforces_text_and_rate_boundaries() {
         text: "word".to_owned(),
         locale: Some("en-US".to_owned()),
         rate: Some(1.0),
-        voice: Some("female".to_owned()),
+        voice: Some("american".to_owned()),
     };
 
     service.speak(&valid).unwrap();

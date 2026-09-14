@@ -5,7 +5,7 @@ import { PageHeader } from "../../design-system/components/PageHeader";
 import { Button } from "../../design-system/primitives/Button";
 import { ConfirmDialog } from "../../design-system/primitives/Dialogs";
 import { SelectControl } from "../../design-system/primitives/SelectControl";
-import type { Article, SpeechVoice } from "../../lib/commands";
+import { SPEECH_VOICES, type Article, type SpeechVoice } from "../../lib/commands";
 import { useI18n } from "../../lib/i18n";
 import type { PlaybackState } from "./useListeningFlow";
 
@@ -29,12 +29,10 @@ interface ListeningViewProps {
 export function ListeningView(props: ListeningViewProps) {
   const { t } = useI18n();
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const voiceOptions: Array<{ label: string; value: SpeechVoice }> = [
-    { label: t("settings.voice.male"), value: "male" },
-    { label: t("settings.voice.female"), value: "female" },
-    { label: t("settings.voice.indian"), value: "indian" },
-    { label: t("settings.voice.japanese"), value: "japanese" },
-  ];
+  const voiceOptions = SPEECH_VOICES.map((value) => ({
+    label: t(`settings.voice.${value}`),
+    value,
+  }));
   const rateOptions = [50, 100, 150, 200];
 
   return (

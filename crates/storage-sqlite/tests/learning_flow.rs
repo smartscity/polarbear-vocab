@@ -131,7 +131,7 @@ fn settings_round_trip_all_preferences_together() {
     let settings = SettingsDto {
         speech_locale: "en-GB".to_owned(),
         speech_rate_percent: 150,
-        speech_voice: "male".to_owned(),
+        speech_voice: "british".to_owned(),
         ui_language: "zh-CN".to_owned(),
         ui_theme: "dark".to_owned(),
     };

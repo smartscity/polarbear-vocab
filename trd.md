@@ -99,7 +99,7 @@ Themes are `system`, `light`, and `dark`. The initial system theme is applied be
 
 The user imports a UTF-8 `.txt` or `.md` file. The Tauri adapter reads it locally, the application layer validates a 1–160 character title and 1–100,000 character body, and `user.db` stores it in the `article` table. No document content leaves the device.
 
-The Listening screen provides a local article library, readable text, and play, pause, resume, stop, and delete actions. Playback uses `AVSpeechSynthesizer` with exact rates 0.5×, 1×, 1.5×, and 2×. Voice choices are male, female, Indian English (`en-IN`), and Japanese English (`ja-JP`); unavailable voices fall back to a system voice.
+The Listening screen provides a local article library, readable text, and play, pause, resume, stop, and delete actions. Playback uses `AVSpeechSynthesizer` with exact rates 0.5×, 1×, 1.5×, and 2×. Voice choices are male, female, American English (`en-US`), British English (`en-GB`), Hong Kong English (`en-HK`), Indian English (`en-IN`), and Japanese English (`ja-JP`); unavailable voices fall back to a system voice.
 
 ## 8. Verification and release
 

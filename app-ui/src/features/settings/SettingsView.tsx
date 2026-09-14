@@ -1,7 +1,7 @@
 import { PageHeader } from "../../design-system/components/PageHeader";
 import { SettingsSection } from "../../design-system/components/SettingsSection";
 import { SelectControl } from "../../design-system/primitives/SelectControl";
-import type { SpeechLocale, SpeechVoice, UiLanguage, UiTheme } from "../../lib/commands";
+import { SPEECH_VOICES, type SpeechLocale, type UiLanguage, type UiTheme } from "../../lib/commands";
 import { useI18n } from "../../lib/i18n";
 
 export function SettingsView({ onError }: { onError: (error: unknown) => void }) {
@@ -32,12 +32,10 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
     { label: t("settings.speech.en-US"), value: "en-US" },
     { label: t("settings.speech.en-GB"), value: "en-GB" },
   ];
-  const voiceOptions: Array<{ label: string; value: SpeechVoice }> = [
-    { label: t("settings.voice.male"), value: "male" },
-    { label: t("settings.voice.female"), value: "female" },
-    { label: t("settings.voice.indian"), value: "indian" },
-    { label: t("settings.voice.japanese"), value: "japanese" },
-  ];
+  const voiceOptions = SPEECH_VOICES.map((value) => ({
+    label: t(`settings.voice.${value}`),
+    value,
+  }));
   return (
     <section className="settings-page">
       <PageHeader eyebrow={t("app.name")} title={t("settings.title")} />

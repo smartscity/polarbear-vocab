@@ -10,6 +10,7 @@ import {
   type CollectionSession,
   type CollectionSpec,
   type QuizQuestion,
+  type SpeechVoice,
 } from "../../lib/commands";
 
 interface StudyFlowOptions {
@@ -19,7 +20,7 @@ interface StudyFlowOptions {
   onStart: () => void;
   speechLocale: string;
   speechRate: number;
-  speechVoice: "male" | "female" | "indian" | "japanese";
+  speechVoice: SpeechVoice;
 }
 
 export function useStudyFlow(options: StudyFlowOptions) {
