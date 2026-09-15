@@ -57,6 +57,8 @@ Dependencies point inward. The UI does not access SQLite, the filesystem, or nat
 
 Stores preloaded and imported datasets, dataset membership, words, senses, IPA, translations, and examples. User imports are transactional: any invalid row aborts the full import.
 
+The builder can additionally read six supplied full CSV datasets from `POLARBEAR_PRELOADED_DATASETS_DIR` during a local build. It validates headers and identifiers, preserves every dataset membership, chooses one deterministic richer record for shared `sense_uid`s, and generates three distinct-lemma quiz distractors per sense. The CSVs are not checked into this repository while redistribution permission remains unverified; the source record marks locally built content as not cleared for redistribution.
+
 ### `user.db`
 
 Stores append-only answer history, study sessions, My Vocabulary, derived progress/statistics, imported articles, UI language, theme, and speech preferences. Correct and mistake collections are derived from history; a later correct answer does not erase an earlier mistake.
@@ -161,6 +163,8 @@ pnpm run test:visual
 Coverage includes Rust domain/application/engine/storage tests, frontend locale/layout tests, ten screens at seven viewport sizes, dark appearance, axe WCAG checks, compact touch targets, focus visibility, 200% text zoom, and screenshot baselines under `docs/ui/screenshot-baselines`.
 
 A `vMAJOR.MINOR.PATCH` tag is the release source of truth. CI validates the tag, injects the version, runs all gates, then builds platform artifacts. Release artifact paths are rooted at `target/release/bundle/`.
+
+The current tag workflow produces an unsigned macOS universal `.app` ZIP. Apple certificates/notarization are intentionally disabled; macOS may show a Gatekeeper warning for downloaded artifacts. DMG packaging and iPhone IPA release are paused; device IPA distribution requires Apple signing credentials.
 
 ## 12. Run and build
 

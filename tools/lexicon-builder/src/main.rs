@@ -1,5 +1,7 @@
 mod build;
 mod model;
+mod preloaded_db;
+mod preloaded_rows;
 
 use std::path::PathBuf;
 

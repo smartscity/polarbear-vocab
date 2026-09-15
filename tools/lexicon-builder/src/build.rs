@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::path::Path;
 
@@ -6,6 +6,7 @@ use anyhow::{Context, ensure};
 use rusqlite::{Connection, params};
 
 use crate::model::{Entry, Manifest};
+use crate::{preloaded_db, preloaded_rows};
 
 pub fn build(source_directory: &Path, output: &Path) -> anyhow::Result<()> {
     let manifest: Manifest =
@@ -22,6 +23,10 @@ pub fn build(source_directory: &Path, output: &Path) -> anyhow::Result<()> {
     let mut connection = Connection::open(&temporary)?;
     create_schema(&connection)?;
     populate(&mut connection, &manifest, &entries)?;
+    if let Some(directory) = std::env::var_os("POLARBEAR_PRELOADED_DATASETS_DIR") {
+        let batch = preloaded_rows::load(Path::new(&directory), &manifest)?;
+        preloaded_db::append(&mut connection, &batch)?;
+    }
     connection.close().map_err(|(_, error)| error)?;
     fs::rename(&temporary, output)?;
     Ok(())
@@ -102,7 +107,7 @@ fn validate(manifest: &Manifest, entries: &[Entry]) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn create_schema(connection: &Connection) -> rusqlite::Result<()> {
+pub(crate) fn create_schema(connection: &Connection) -> rusqlite::Result<()> {
     connection.execute_batch(
         "PRAGMA foreign_keys = ON;
          CREATE TABLE source(id INTEGER PRIMARY KEY, name TEXT NOT NULL, license TEXT NOT NULL, url TEXT, attribution TEXT NOT NULL);
@@ -140,6 +145,7 @@ fn populate(
             params![dataset.id, dataset.name],
         )?;
     }
+    let mut dataset_sequences = HashMap::<&str, u32>::new();
     for (index, entry) in entries.iter().enumerate() {
         transaction.execute(
             "INSERT INTO word(uid, lemma, frequency_rank) VALUES (?1, ?2, ?3)",
@@ -157,11 +163,13 @@ fn populate(
         let sense_id = transaction.last_insert_rowid();
         transaction.execute("INSERT INTO pronunciation(sense_id, accent, ipa) VALUES (?1, 'en-US', ?2), (?1, 'en-GB', ?3)", params![sense_id, entry.ipa_us, entry.ipa_uk])?;
         transaction.execute("INSERT INTO example(sense_id, sentence_en, sentence_zh, is_primary) VALUES (?1, ?2, ?3, 1)", params![sense_id, entry.example_en, entry.example_zh])?;
-        for (sequence, dataset_id) in entry.dataset_ids().enumerate() {
+        for dataset_id in entry.dataset_ids() {
+            let sequence = dataset_sequences.entry(dataset_id).or_default();
             transaction.execute(
                 "INSERT INTO dataset_item(dataset_id, sense_uid, sequence) VALUES (?1, ?2, ?3)",
-                params![dataset_id, entry.sense_uid, index as u32 + sequence as u32],
+                params![dataset_id, entry.sense_uid, *sequence],
             )?;
+            *sequence += 1;
         }
     }
     insert_distractors(&transaction, entries)?;

@@ -25,6 +25,14 @@ pnpm tauri build
 
 Artifacts are written to `target/release/bundle/`.
 
+To locally bundle the six supplied full datasets (primary, junior/high school, CET-4, CET-6, IELTS):
+
+```bash
+POLARBEAR_PRELOADED_DATASETS_DIR=/Users/liyunlong/Downloads/Polarbear_Vocab_Full_Dataset_Builder/polarbear-datasets pnpm tauri build --bundles app
+```
+
+Without this variable, the app includes only the repository's starter entries. Redistribution rights for the full CSVs are not yet verified, so do not publish this local build.
+
 ## Use
 
 - Lexicon: search a word, view pronunciation, meaning, examples and learning statistics, then practice it or add it to My Vocabulary.

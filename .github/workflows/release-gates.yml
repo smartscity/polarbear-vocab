@@ -221,7 +221,7 @@ jobs:
   # ------------------------------------------------------------
   # 2. macOS
   # Universal binary: Apple Silicon + Intel
-  # Output: DMG + APP zip
+  # Output: unsigned APP zip
   # ------------------------------------------------------------
   build-macos:
     name: macOS Universal
@@ -230,14 +230,6 @@ jobs:
 
     env:
       RELEASE_VERSION: ${{ needs.gate.outputs.version }}
-
-      APPLE_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
-      APPLE_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
-      APPLE_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
-
-      APPLE_ID: ${{ secrets.APPLE_ID }}
-      APPLE_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
     steps:
       - name: Checkout
@@ -269,11 +261,11 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
 
-      - name: Build signed + notarized macOS Universal app
+      - name: Build unsigned macOS Universal app
         run: |
           pnpm run tauri build \
             --target universal-apple-darwin \
-            --bundles app,dmg
+            --bundles app
 
       - name: Collect macOS artifacts
         shell: bash
@@ -281,15 +273,6 @@ jobs:
           set -euo pipefail
 
           mkdir -p dist
-
-          DMG_PATH="$(
-            find target/universal-apple-darwin/release/bundle/dmg \
-              -maxdepth 1 \
-              -type f \
-              -name '*.dmg' \
-              -print \
-              -quit
-          )"
 
           APP_PATH="$(
             find target/universal-apple-darwin/release/bundle/macos \
@@ -300,18 +283,10 @@ jobs:
               -quit
           )"
 
-          if [ -z "${DMG_PATH}" ]; then
-            echo "::error::DMG was not generated."
-            exit 1
-          fi
-
           if [ -z "${APP_PATH}" ]; then
             echo "::error::.app bundle was not generated."
             exit 1
           fi
-
-          cp "${DMG_PATH}" \
-            "dist/${APP_NAME}-${RELEASE_VERSION}-macOS-universal.dmg"
 
           ditto \
             -c \
@@ -322,7 +297,6 @@ jobs:
             "dist/${APP_NAME}-${RELEASE_VERSION}-macOS-universal.app.zip"
 
           shasum -a 256 \
-            "dist/${APP_NAME}-${RELEASE_VERSION}-macOS-universal.dmg" \
             "dist/${APP_NAME}-${RELEASE_VERSION}-macOS-universal.app.zip" \
             > dist/SHA256-macOS.txt
 
@@ -332,167 +306,20 @@ jobs:
           name: macOS
           if-no-files-found: error
           path: |
-            dist/*.dmg
             dist/*.zip
             dist/SHA256-macOS.txt
 
 
   # ------------------------------------------------------------
-  # 3. iPhone / iOS
-  #
-  # Current mode: release-testing (Xcode 15.4+ replacement for ad-hoc)
-  # ------------------------------------------------------------
-  build-ios:
-    name: iPhone IPA
-    needs: [gate, visual]
-    runs-on: macos-latest
-
-    env:
-      RELEASE_VERSION: ${{ needs.gate.outputs.version }}
-
-      IOS_CERTIFICATE: ${{ secrets.IOS_CERTIFICATE }}
-      IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
-
-      IOS_MOBILE_PROVISION: ${{ secrets.IOS_MOBILE_PROVISION }}
-
-      APPLE_DEVELOPMENT_TEAM: ${{ secrets.APPLE_DEVELOPMENT_TEAM || secrets.APPLE_TEAM_ID }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Activate pnpm
-        run: corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
-
-      - name: Sync release version
-        run: |
-          node scripts/sync-release-version.mjs "${RELEASE_VERSION}"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Setup Rust for iOS
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: >-
-            aarch64-apple-ios,
-            aarch64-apple-ios-sim,
-            x86_64-apple-ios
-
-      - name: Rust cache
-        uses: swatinem/rust-cache@v2
-
-      - name: Resolve iOS development team
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          TEAM_ID="${APPLE_DEVELOPMENT_TEAM:-}"
-
-          if [ -z "${TEAM_ID}" ]; then
-            if [ -z "${IOS_MOBILE_PROVISION:-}" ]; then
-              echo "::error::Configure APPLE_DEVELOPMENT_TEAM (or APPLE_TEAM_ID), or provide IOS_MOBILE_PROVISION so the team ID can be derived."
-              exit 1
-            fi
-
-            PROFILE_PATH="$(mktemp -t polarbear-vocab-profile).mobileprovision"
-            PLIST_PATH="$(mktemp -t polarbear-vocab-profile).plist"
-            trap 'rm -f "${PROFILE_PATH}" "${PLIST_PATH}"' EXIT
-
-            printf '%s' "${IOS_MOBILE_PROVISION}" | base64 -D > "${PROFILE_PATH}"
-            security cms -D -i "${PROFILE_PATH}" > "${PLIST_PATH}"
-            TEAM_ID="$(/usr/libexec/PlistBuddy -c 'Print :TeamIdentifier:0' "${PLIST_PATH}")"
-          fi
-
-          if [[ ! "${TEAM_ID}" =~ ^[A-Z0-9]{10}$ ]]; then
-            echo "::error::Could not derive a valid Apple development team ID from IOS_MOBILE_PROVISION."
-            exit 1
-          fi
-
-          echo "APPLE_DEVELOPMENT_TEAM=${TEAM_ID}" >> "${GITHUB_ENV}"
-
-      - name: Ensure CocoaPods is available
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          if ! command -v pod >/dev/null 2>&1; then
-            brew install cocoapods
-          fi
-
-          pod --version
-
-      - name: Initialize iOS project if missing
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          if [ ! -d "src-tauri/gen/apple" ]; then
-            pnpm run tauri ios init --ci
-          fi
-
-      - name: Build signed iPhone IPA
-        run: |
-          pnpm run tauri ios build \
-            --ci \
-            --export-method release-testing
-
-      - name: Collect iPhone artifact
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          mkdir -p dist
-
-          IPA_PATH="$(
-            find src-tauri/gen/apple/build \
-              -type f \
-              -name '*.ipa' \
-              -print \
-              -quit
-          )"
-
-          if [ -z "${IPA_PATH}" ]; then
-            echo "::error::IPA was not generated."
-            find src-tauri/gen/apple -maxdepth 5 -type f || true
-            exit 1
-          fi
-
-          cp "${IPA_PATH}" \
-            "dist/${APP_NAME}-${RELEASE_VERSION}-iPhone.ipa"
-
-          shasum -a 256 \
-            "dist/${APP_NAME}-${RELEASE_VERSION}-iPhone.ipa" \
-            > dist/SHA256-iPhone.txt
-
-      - name: Upload iPhone artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: iPhone
-          if-no-files-found: error
-          path: |
-            dist/*.ipa
-            dist/SHA256-iPhone.txt
-
-
-  # ------------------------------------------------------------
-  # 4. GitHub Release
-  # Only created after BOTH macOS and iPhone succeed.
+  # 3. GitHub Release
+  # macOS artifacts are unsigned. iPhone IPA distribution requires
+  # Apple signing credentials and is not part of this release workflow.
   # ------------------------------------------------------------
   release:
     name: GitHub Release
     needs:
       - gate
       - build-macos
-      - build-ios
 
     runs-on: ubuntu-latest
 
@@ -504,12 +331,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: macOS
-          path: dist
-
-      - name: Download iPhone artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: iPhone
           path: dist
 
       - name: Show release artifacts
