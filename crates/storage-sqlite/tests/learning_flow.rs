@@ -1,4 +1,6 @@
-use polarbear_vocab_application::{HomeQueryPort, MistakeQueryPort, SettingsPort, StudyPort};
+use polarbear_vocab_application::{
+    HomeQueryPort, LexiconRepository, MistakeQueryPort, SettingsPort, StudyPort,
+};
 use polarbear_vocab_domain::{CollectionSpec, SettingsDto};
 use polarbear_vocab_storage_sqlite::{DatabasePaths, SqliteStore};
 use rusqlite::{Connection, params};
@@ -9,9 +11,12 @@ fn answer_updates_history_aggregates_and_dynamic_collections() {
     let fixture = Fixture::new();
     let store = fixture.store();
     let session = store
-        .start_collection(&CollectionSpec::Unseen {
-            dataset_id: "test".to_owned(),
-        })
+        .start_collection(
+            &CollectionSpec::Unseen {
+                dataset_id: "test".to_owned(),
+            },
+            None,
+        )
         .expect("unseen collection should start");
     let question = store
         .next_question(&session.collection_id)
@@ -38,10 +43,13 @@ fn answer_updates_history_aggregates_and_dynamic_collections() {
     assert_eq!(home.totals.mistakes, 1);
     assert_eq!(home.daily_activity.last().unwrap().attempt_count, 1);
     let wrong = store
-        .start_collection(&CollectionSpec::Wrong {
-            dataset_id: Some("test".to_owned()),
-            min_wrong_count: 1,
-        })
+        .start_collection(
+            &CollectionSpec::Wrong {
+                dataset_id: Some("test".to_owned()),
+                min_wrong_count: 1,
+            },
+            None,
+        )
         .expect("mistake collection should start");
     assert_eq!(wrong.total_count, 1);
     assert_eq!(
@@ -58,9 +66,12 @@ fn invalid_option_does_not_write_answer_history() {
     let fixture = Fixture::new();
     let store = fixture.store();
     let session = store
-        .start_collection(&CollectionSpec::Dataset {
-            dataset_id: "test".to_owned(),
-        })
+        .start_collection(
+            &CollectionSpec::Dataset {
+                dataset_id: "test".to_owned(),
+            },
+            None,
+        )
         .expect("dataset collection should start");
     let question = store
         .next_question(&session.collection_id)
@@ -87,9 +98,12 @@ fn stale_question_cannot_create_a_duplicate_history_event() {
     let fixture = Fixture::new();
     let store = fixture.store();
     let session = store
-        .start_collection(&CollectionSpec::Dataset {
-            dataset_id: "test".to_owned(),
-        })
+        .start_collection(
+            &CollectionSpec::Dataset {
+                dataset_id: "test".to_owned(),
+            },
+            None,
+        )
         .unwrap();
     let question = store
         .next_question(&session.collection_id)
@@ -151,6 +165,149 @@ fn sqlite_store_exposes_the_lexicon_read_model() {
     assert_eq!(sense.lemma, "word1");
     assert_eq!(sense.part_of_speech, "noun");
     assert_eq!(sense.quiz_prompt_zh, "提示1");
+}
+
+#[test]
+fn lexicon_search_returns_content_membership_and_learning_stats() {
+    let fixture = Fixture::new();
+    let store = fixture.store();
+    let session = store
+        .start_collection(
+            &CollectionSpec::Custom {
+                sense_uids: vec!["word1.n.01".to_owned()],
+            },
+            None,
+        )
+        .unwrap();
+    let question = store
+        .next_question(&session.collection_id)
+        .unwrap()
+        .unwrap();
+    let correct = question
+        .options
+        .iter()
+        .find(|option| option.sense_uid == question.sense_uid)
+        .unwrap();
+    store
+        .submit_answer(
+            &session.collection_id,
+            &question.question_id,
+            &correct.option_id,
+            None,
+        )
+        .unwrap();
+    store.add_to_my_vocabulary("word1.n.01").unwrap();
+
+    let results = store.search_lexicon("word1", 10).unwrap();
+
+    assert_eq!(results.len(), 1);
+    assert_eq!(results[0].lemma, "word1");
+    assert_eq!(results[0].dataset_names, vec!["Test"]);
+    assert_eq!(results[0].attempt_count, 1);
+    assert_eq!(results[0].correct_count, 1);
+    assert_eq!(results[0].wrong_count, 0);
+    assert!(results[0].in_my_vocabulary);
+}
+
+#[test]
+fn my_vocabulary_is_a_practice_collection_and_search_escapes_wildcards() {
+    let fixture = Fixture::new();
+    let store = fixture.store();
+    store.add_to_my_vocabulary("word2.n.01").unwrap();
+
+    let collection = store
+        .start_collection(&CollectionSpec::MyVocabulary, None)
+        .unwrap();
+
+    assert_eq!(collection.total_count, 1);
+    assert_eq!(
+        store
+            .next_question(&collection.collection_id)
+            .unwrap()
+            .unwrap()
+            .sense_uid,
+        "word2.n.01"
+    );
+    assert!(store.search_lexicon("%", 10).unwrap().is_empty());
+    assert!(store.search_lexicon("_", 10).unwrap().is_empty());
+}
+
+#[test]
+fn limited_session_can_resume_from_its_persisted_checkpoint() {
+    let fixture = Fixture::new();
+    let store = fixture.store();
+    let session = store
+        .start_collection(
+            &CollectionSpec::Dataset {
+                dataset_id: "test".to_owned(),
+            },
+            Some(2),
+        )
+        .unwrap();
+    assert_eq!(session.total_count, 2);
+    let question = store
+        .next_question(&session.collection_id)
+        .unwrap()
+        .unwrap();
+    let correct = question
+        .options
+        .iter()
+        .find(|option| option.sense_uid == question.sense_uid)
+        .unwrap();
+    let result = store
+        .submit_answer(
+            &session.collection_id,
+            &question.question_id,
+            &correct.option_id,
+            None,
+        )
+        .unwrap();
+
+    let resumable = store.resumable_session().unwrap().unwrap();
+    assert!(result.was_new);
+    assert_eq!(resumable.session_id, session.session_id);
+    assert_eq!(resumable.answered_count, 1);
+    assert_eq!(resumable.correct_count, 1);
+    assert_eq!(resumable.wrong_count, 0);
+    assert_eq!(resumable.new_word_count, 1);
+    assert!(resumable.wrong_sense_uids.is_empty());
+}
+
+#[test]
+fn resumed_session_keeps_its_wrong_words_for_summary_practice() {
+    let fixture = Fixture::new();
+    let store = fixture.store();
+    let session = store
+        .start_collection(
+            &CollectionSpec::Dataset {
+                dataset_id: "test".to_owned(),
+            },
+            Some(2),
+        )
+        .unwrap();
+    let question = store
+        .next_question(&session.collection_id)
+        .unwrap()
+        .unwrap();
+    let wrong = question
+        .options
+        .iter()
+        .find(|option| option.sense_uid != question.sense_uid)
+        .unwrap();
+    store
+        .submit_answer(
+            &session.collection_id,
+            &question.question_id,
+            &wrong.option_id,
+            None,
+        )
+        .unwrap();
+
+    let resumed = store.resumable_session().unwrap().unwrap();
+    assert_eq!(resumed.answered_count, 1);
+    assert_eq!(resumed.wrong_count, 1);
+    assert_eq!(resumed.new_word_count, 1);
+    assert_eq!(resumed.wrong_sense_uids, vec![question.sense_uid]);
 }
 
 struct Fixture {

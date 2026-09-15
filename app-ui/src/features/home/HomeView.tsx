@@ -12,6 +12,8 @@ interface HomeViewProps {
   onContinue: () => void;
   onMistakes: (minimum: number, lastWrongOnly: boolean) => void;
   onPracticeCollection: (type: "answered" | "correct") => void;
+  onResume: () => void;
+  resumableCount?: number;
 }
 
 export function HomeView(props: HomeViewProps) {
@@ -37,6 +39,7 @@ export function HomeView(props: HomeViewProps) {
         <Button disabled={props.home.progress.unseen === 0} onClick={props.onContinue} variant="primary">
           {props.home.progress.unseen > 0 ? t("home.continue") : t("home.allExplored")}
         </Button>
+        {props.resumableCount ? <Button onClick={props.onResume}>{t("home.resumeSession", { count: props.resumableCount })}</Button> : null}
       </section>
       <section className="home-section">
         <div className="section-heading"><div><p className="pb-eyebrow">{t("home.last30Days")}</p><h2>{t("home.activity")}</h2></div><span>{t("home.historyOnly")}</span></div>

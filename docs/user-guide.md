@@ -3,9 +3,9 @@
 ## Run
 
 macOS requires Node.js 20.19+, pnpm 11, Rust 1.85+, and Xcode Command Line Tools.
+Run these commands from the project root:
 
 ```bash
-cd /Users/liyunlong/git/smartscity/VocabProbe
 pnpm install
 pnpm tauri dev
 ```
@@ -27,22 +27,18 @@ Artifacts are written to `target/release/bundle/`.
 
 ## Use
 
-- Home: select a dataset, review statistics, and choose **Continue**.
-- Datasets: create a name, select it, and import CSV. Required columns are `lemma` and `quiz_prompt_zh`; use [`data/examples/dataset-template.csv`](../data/examples/dataset-template.csv).
-- Listening: import a UTF-8 `.txt`/`.md` article, choose a gender or American, British, Hong Kong, Indian, or Japanese English, then play, pause, or stop at 0.5×/1×/1.5×/2×.
+- Lexicon: search a word, view pronunciation, meaning, examples and learning statistics, then practice it or add it to My Vocabulary.
+- Home/Datasets: choose Unseen, Mistakes, or All; choose 10/20/50 words; start. The summary can immediately practice mistakes.
+- Datasets: import or update CSV with Add only, Update existing, or Replace dataset. Export, rename, and delete are under Manage. Required columns: `lemma`, `quiz_prompt_zh`; template: [`data/examples/dataset-template.csv`](../data/examples/dataset-template.csv).
+- Listening: import UTF-8 `.txt`/`.md`, choose a voice and 0.5×/1×/1.5×/2×. Select a word in the article to look it up and add it to My Vocabulary.
 - Mistakes: select a filter and choose **Practice this set**.
-- Settings: choose UI language, appearance, local voice style, and speech rate.
+- Settings: choose language, appearance, voice, rate, and export/import backup.
 
 Study keys: `1`–`4` answer, `Space` next, `R` speak word, `S` speak example, `Esc` exit.
 
-## Data
+## Backup
 
-Data is stored under `~/Library/Application Support/com.polarbear.vocab/`:
-
-- `content.db`: datasets and vocabulary content.
-- `user.db`: answer history, statistics, sessions, imported articles, and settings.
-
-The app works offline and has no remote import, account, or cloud sync. Back up both databases together.
+Settings → Data → **Export Backup**. Restore with **Import Backup**. Restore automatically backs up current data first. The app remains offline and has no account or cloud sync.
 
 ## Startup issues
 

@@ -4,6 +4,8 @@ dist/
 target/
 app-ui/dist/
 app-ui/storybook-static/
+src-tauri/gen/apple/
+debug-storybook.log
 playwright-report/
 test-results/
 *.tsbuildinfo

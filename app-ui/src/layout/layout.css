@@ -86,7 +86,7 @@
   left: 0;
   padding: var(--pb-space-2) max(var(--pb-space-2), env(safe-area-inset-right)) max(var(--pb-space-2), env(safe-area-inset-bottom)) max(var(--pb-space-2), env(safe-area-inset-left));
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   border-top: 1px solid var(--pb-border);
   background: color-mix(in srgb, var(--pb-surface-raised) 94%, transparent);
   backdrop-filter: blur(16px);

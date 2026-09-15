@@ -2,17 +2,19 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { DatasetsView } from "../features/datasets/DatasetsView";
 import { HomeView } from "../features/home/HomeView";
+import { LexiconView } from "../features/lexicon/LexiconView";
 import { ListeningView } from "../features/listening/ListeningView";
 import { MistakesView } from "../features/mistakes/MistakesView";
 import { SettingsView } from "../features/settings/SettingsView";
+import { SessionSetupView } from "../features/study/SessionSetupView";
 import { StudyView } from "../features/study/StudyView";
 import { AppShell, type NavScreen } from "../layout/AppShell";
-import type { AnswerResult as AnswerResultDto, Article, DatasetSummary, HomeDto, QuizQuestion, WrongWord } from "../lib/commands";
+import type { AnswerResult as AnswerResultDto, Article, DatasetSummary, HomeDto, LexiconEntry, QuizQuestion, WrongWord } from "../lib/commands";
 
 const datasets: DatasetSummary[] = [
-  { id: "core", name: "Everyday English", createdAt: 1, preloaded: true, wordCount: 640 },
-  { id: "travel", name: "Travel notes", createdAt: 2, preloaded: false, wordCount: 84 },
-  { id: "work", name: "Product vocabulary", createdAt: 3, preloaded: false, wordCount: 126 },
+  { id: "core", name: "Everyday English", createdAt: 1, updatedAt: 1, preloaded: true, wordCount: 640 },
+  { id: "travel", name: "Travel notes", createdAt: 2, updatedAt: 2, preloaded: false, wordCount: 84 },
+  { id: "work", name: "Product vocabulary", createdAt: 3, updatedAt: 3, preloaded: false, wordCount: 126 },
 ];
 
 const activity = Array.from({ length: 30 }, (_, index) => ({
@@ -46,6 +48,7 @@ const question: QuizQuestion = {
 
 const answer: AnswerResultDto = {
   correct: false,
+  wasNew: true,
   correctSenseUid: "sense-resilient",
   selectedSenseUid: "sense-reluctant",
   lemma: "resilient",
@@ -60,6 +63,20 @@ const words: WrongWord[] = [
   { senseUid: "sense-subtle", lemma: "subtle", ipa: "/ˈsʌtl/", zhGloss: "微妙的", wrongCount: 3, correctCount: 1, lastResult: "correct" },
   { senseUid: "sense-concise", lemma: "concise", ipa: "/kənˈsaɪs/", zhGloss: "简洁的", wrongCount: 2, correctCount: 3, lastResult: "wrong" },
 ];
+
+const lexiconResults: LexiconEntry[] = [{
+  senseUid: "earn.v.01",
+  lemma: "earn",
+  ipa: "/ɜːrn/",
+  partOfSpeech: "verb",
+  zhGloss: "获得（通过努力赢得）；赚得",
+  exampleEn: "She earned their trust.",
+  datasetNames: ["CET-4", "CET-6", "IELTS"],
+  attemptCount: 8,
+  correctCount: 6,
+  wrongCount: 2,
+  inMyVocabulary: false,
+}];
 
 const articles: Article[] = [
   {
@@ -76,7 +93,7 @@ const articles: Article[] = [
   },
 ];
 
-function Screen(props: { children: React.ReactNode; screen: NavScreen | "study" }) {
+function Screen(props: { children: React.ReactNode; screen: NavScreen | "session" | "study" }) {
   return <AppShell appName="Polarbear Vocab" footer="Polarbear Vocab · 0.10" onNavigate={() => undefined} screen={props.screen}>{props.children}</AppShell>;
 }
 
@@ -89,17 +106,21 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Home: Story = { render: () => <Screen screen="home"><HomeView datasets={datasets} home={home} onContinue={noOp} onDatasetChange={noOp} onMistakes={noOp} onPracticeCollection={noOp} /></Screen> };
+export const Home: Story = { render: () => <Screen screen="home"><HomeView datasets={datasets} home={home} onContinue={noOp} onDatasetChange={noOp} onMistakes={noOp} onPracticeCollection={noOp} onResume={noOp} resumableCount={12} /></Screen> };
 
 export const DatasetList: Story = { render: () => <Screen screen="datasets"><DatasetsView datasets={datasets} onChanged={async () => undefined} onError={noOp} onSelect={noOp} onStart={noOp} selectedDatasetId="" /></Screen> };
 
 export const DatasetDetail: Story = { render: () => <Screen screen="datasets"><DatasetsView datasets={datasets} onChanged={async () => undefined} onError={noOp} onSelect={noOp} onStart={noOp} selectedDatasetId="core" /></Screen> };
 
-export const Listening: Story = { render: () => <Screen screen="listening"><ListeningView articles={articles} onDelete={noOp} onImport={noOp} onPause={noOp} onPlay={noOp} onRateChange={noOp} onResume={noOp} onSelect={noOp} onStop={noOp} onVoiceChange={noOp} playback="idle" rate={100} selected={articles[0]} voice="female" /></Screen> };
+export const Lexicon: Story = { render: () => <Screen screen="lexicon"><LexiconView busy={false} onPractice={noOp} onQueryChange={noOp} onSearch={noOp} onToggleVocabulary={noOp} query="earn" results={lexiconResults} searched /></Screen> };
 
-export const Study: Story = { render: () => <Screen screen="study"><StudyView complete={false} onAnswer={async () => true} onExit={noOp} onNext={noOp} onSpeak={noOp} question={question} result={null} title="Everyday English" /></Screen> };
+export const Listening: Story = { render: () => <Screen screen="listening"><ListeningView articles={articles} onDelete={noOp} onError={noOp} onImport={noOp} onPause={noOp} onPlay={noOp} onRateChange={noOp} onResume={noOp} onSelect={noOp} onStop={noOp} onVoiceChange={noOp} playback="idle" rate={100} selected={articles[0]} voice="female" /></Screen> };
 
-export const AnswerResult: Story = { render: () => <Screen screen="study"><StudyView complete={false} onAnswer={async () => true} onExit={noOp} onNext={noOp} onSpeak={noOp} question={question} result={answer} title="Everyday English" /></Screen> };
+export const Study: Story = { render: () => <Screen screen="study"><StudyView complete={false} onAnswer={async () => true} onExit={noOp} onNext={noOp} onPracticeMistakes={noOp} onSpeak={noOp} question={question} result={null} summary={{ answered: 0, correct: 0, wrong: 0, newWords: 0 }} title="Everyday English" /></Screen> };
+
+export const AnswerResult: Story = { render: () => <Screen screen="study"><StudyView complete={false} onAnswer={async () => true} onExit={noOp} onNext={noOp} onPracticeMistakes={noOp} onSpeak={noOp} question={question} result={answer} summary={{ answered: 1, correct: 0, wrong: 1, newWords: 1 }} title="Everyday English" /></Screen> };
+
+export const SessionSetup: Story = { render: () => <Screen screen="session"><SessionSetupView home={home} onCancel={noOp} onStart={noOp} /></Screen> };
 
 export const Mistakes: Story = { render: () => <Screen screen="mistakes"><MistakesView datasetName="Everyday English" lastWrongOnly={false} minimum={1} onFilter={noOp} onPractice={noOp} words={words} /></Screen> };
 

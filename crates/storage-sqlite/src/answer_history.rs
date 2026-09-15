@@ -1,6 +1,6 @@
 use chrono::{Local, Utc};
 use polarbear_vocab_application::ApplicationError;
-use rusqlite::{Transaction, params};
+use rusqlite::{OptionalExtension, Transaction, params};
 use uuid::Uuid;
 
 use crate::{SqliteStore, database_error, schema};
@@ -20,19 +20,27 @@ pub(super) struct AnswerWrite<'a> {
 pub(super) fn record_answer(
     store: &SqliteStore,
     write: AnswerWrite<'_>,
-) -> Result<(), ApplicationError> {
+) -> Result<bool, ApplicationError> {
     let answered_at = Utc::now().timestamp_millis();
     let local_date = Local::now().date_naive().to_string();
     let event_id = Uuid::new_v4().to_string();
     let mut user = store.user()?;
     schema::in_immediate_transaction(&mut user, |transaction| {
         ensure_unanswered(transaction, write.collection_id, write.ordinal)?;
+        let was_new = transaction
+            .query_row(
+                "SELECT 1 FROM word_stat WHERE sense_uid = ?1",
+                [write.sense_uid],
+                |_| Ok(()),
+            )
+            .optional()?
+            .is_none();
         let is_unique = is_first_attempt_today(transaction, write.sense_uid, &local_date)?;
         insert_review_event(transaction, &write, &event_id, answered_at)?;
         update_word_stat(transaction, &write, answered_at)?;
         update_daily_stat(transaction, &write, &local_date, answered_at, is_unique)?;
-        update_session(transaction, &write)?;
-        Ok(())
+        update_session(transaction, &write, was_new)?;
+        Ok(was_new)
     })
     .map_err(|error| match error {
         rusqlite::Error::QueryReturnedNoRows => {
@@ -158,7 +166,11 @@ fn update_daily_stat(
     Ok(())
 }
 
-fn update_session(transaction: &Transaction<'_>, write: &AnswerWrite<'_>) -> rusqlite::Result<()> {
+fn update_session(
+    transaction: &Transaction<'_>,
+    write: &AnswerWrite<'_>,
+    was_new: bool,
+) -> rusqlite::Result<()> {
     transaction.execute(
         "UPDATE session_item SET answered = 1
          WHERE session_id = ?1 AND ordinal = ?2",
@@ -168,12 +180,14 @@ fn update_session(transaction: &Transaction<'_>, write: &AnswerWrite<'_>) -> rus
         "UPDATE study_session SET
             attempt_count = attempt_count + 1,
             correct_count = correct_count + ?2,
-            wrong_count = wrong_count + ?3
+            wrong_count = wrong_count + ?3,
+            new_word_count = new_word_count + ?4
          WHERE id = ?1",
         params![
             write.collection_id,
             u8::from(write.correct),
-            u8::from(!write.correct)
+            u8::from(!write.correct),
+            u8::from(was_new)
         ],
     )?;
     Ok(())

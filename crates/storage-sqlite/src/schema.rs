@@ -6,13 +6,18 @@ pub fn initialize_user_schema(connection: &mut Connection) -> rusqlite::Result<(
             key TEXT PRIMARY KEY,
             value TEXT NOT NULL
         );
-        INSERT OR IGNORE INTO schema_meta(key, value) VALUES ('version', '3');
+        INSERT OR IGNORE INTO schema_meta(key, value) VALUES ('version', '5');
 
         CREATE TABLE IF NOT EXISTS article (
             id TEXT PRIMARY KEY,
             title TEXT NOT NULL,
             body TEXT NOT NULL,
             created_at INTEGER NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS my_vocabulary (
+            sense_uid TEXT PRIMARY KEY,
+            added_at INTEGER NOT NULL
         );
 
         CREATE TABLE IF NOT EXISTS word_stat (
@@ -36,7 +41,8 @@ pub fn initialize_user_schema(connection: &mut Connection) -> rusqlite::Result<(
             ended_at INTEGER,
             attempt_count INTEGER NOT NULL DEFAULT 0,
             correct_count INTEGER NOT NULL DEFAULT 0,
-            wrong_count INTEGER NOT NULL DEFAULT 0
+            wrong_count INTEGER NOT NULL DEFAULT 0,
+            new_word_count INTEGER NOT NULL DEFAULT 0
         );
 
         CREATE TABLE IF NOT EXISTS session_item (
@@ -80,8 +86,23 @@ pub fn initialize_user_schema(connection: &mut Connection) -> rusqlite::Result<(
         );",
     )?;
     migrate_v1_dataset_columns(connection)?;
+    if !has_column(connection, LegacyTable::StudySession, "new_word_count")? {
+        connection.execute(
+            "ALTER TABLE study_session ADD COLUMN new_word_count INTEGER NOT NULL DEFAULT 0",
+            [],
+        )?;
+        connection.execute(
+            "UPDATE study_session SET new_word_count = (
+                SELECT COUNT(*) FROM review_event event
+                JOIN word_stat stat ON stat.sense_uid = event.sense_uid
+                WHERE event.session_id = study_session.id
+                  AND stat.first_answered_at = event.answered_at
+             )",
+            [],
+        )?;
+    }
     connection.execute(
-        "INSERT INTO schema_meta(key, value) VALUES ('version', '3')
+        "INSERT INTO schema_meta(key, value) VALUES ('version', '5')
          ON CONFLICT(key) DO UPDATE SET value = excluded.value",
         [],
     )?;
@@ -209,6 +230,32 @@ mod tests {
             "study_session",
             "dataset_uid"
         ));
+    }
+
+    #[test]
+    fn version_four_session_new_word_count_is_recovered_from_history() {
+        let mut connection = Connection::open_in_memory().unwrap();
+        connection
+            .execute_batch(
+                "CREATE TABLE study_session(id TEXT PRIMARY KEY);
+             INSERT INTO study_session(id) VALUES ('old-session');
+             CREATE TABLE review_event(session_id TEXT, sense_uid TEXT, answered_at INTEGER,
+                 correct INTEGER);
+             INSERT INTO review_event VALUES ('old-session', 'earn.v.01', 42, 1);
+             CREATE TABLE word_stat(sense_uid TEXT PRIMARY KEY, first_answered_at INTEGER);
+             INSERT INTO word_stat VALUES ('earn.v.01', 42);",
+            )
+            .unwrap();
+
+        initialize_user_schema(&mut connection).unwrap();
+        let count: u32 = connection
+            .query_row(
+                "SELECT new_word_count FROM study_session WHERE id = 'old-session'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+        assert_eq!(count, 1);
     }
 
     fn fixture() -> Connection {

@@ -13,8 +13,15 @@ impl StudyPort for SqliteStore {
     fn start_collection(
         &self,
         spec: &CollectionSpec,
+        limit: Option<u32>,
     ) -> Result<CollectionSession, ApplicationError> {
-        let sense_uids = self.resolve_collection(spec)?;
+        let mut sense_uids = self.resolve_collection(spec)?;
+        if let Some(limit) = limit {
+            sense_uids.truncate(limit as usize);
+        }
+        if sense_uids.is_empty() {
+            return Err(ApplicationError::NotFound("collection is empty".to_owned()));
+        }
         let session_id = Uuid::new_v4().to_string();
         let started_at = Utc::now().timestamp_millis();
         let spec_json = serde_json::to_string(spec)
@@ -49,6 +56,11 @@ impl StudyPort for SqliteStore {
             dataset_id: spec.dataset_id().map(str::to_owned),
             collection_type: spec.collection_type().to_owned(),
             total_count: sense_uids.len() as u32,
+            answered_count: 0,
+            correct_count: 0,
+            wrong_count: 0,
+            new_word_count: 0,
+            wrong_sense_uids: Vec::new(),
         })
     }
 
@@ -94,6 +106,58 @@ impl StudyPort for SqliteStore {
         .map_err(database_error)
     }
 
+    fn resumable_session(&self) -> Result<Option<CollectionSession>, ApplicationError> {
+        let user = self.user()?;
+        let session = user
+            .query_row(
+                "SELECT session.id, session.dataset_id, session.collection_type,
+                    COUNT(item.ordinal), session.attempt_count,
+                    session.correct_count, session.wrong_count, session.new_word_count
+             FROM study_session session
+             JOIN session_item item ON item.session_id = session.id
+             WHERE session.ended_at IS NULL
+               AND EXISTS (
+                   SELECT 1 FROM session_item pending
+                   WHERE pending.session_id = session.id AND pending.answered = 0
+               )
+             GROUP BY session.id
+             ORDER BY session.started_at DESC LIMIT 1",
+                [],
+                |row| {
+                    let id: String = row.get(0)?;
+                    Ok(CollectionSession {
+                        collection_id: id.clone(),
+                        session_id: id,
+                        dataset_id: row.get(1)?,
+                        collection_type: row.get(2)?,
+                        total_count: row.get(3)?,
+                        answered_count: row.get(4)?,
+                        correct_count: row.get(5)?,
+                        wrong_count: row.get(6)?,
+                        new_word_count: row.get(7)?,
+                        wrong_sense_uids: Vec::new(),
+                    })
+                },
+            )
+            .optional()
+            .map_err(database_error)?;
+        let Some(mut session) = session else {
+            return Ok(None);
+        };
+        let mut statement = user
+            .prepare(
+                "SELECT DISTINCT sense_uid FROM review_event
+             WHERE session_id = ?1 AND correct = 0 ORDER BY answered_at",
+            )
+            .map_err(database_error)?;
+        session.wrong_sense_uids = statement
+            .query_map([&session.session_id], |row| row.get::<_, String>(0))
+            .map_err(database_error)?
+            .collect::<rusqlite::Result<_>>()
+            .map_err(database_error)?;
+        Ok(Some(session))
+    }
+
     fn submit_answer(
         &self,
         collection_id: &str,
@@ -124,7 +188,7 @@ impl StudyPort for SqliteStore {
             ));
         }
         let correct = selected_option_id == sense_uid;
-        answer_history::record_answer(
+        let was_new = answer_history::record_answer(
             self,
             answer_history::AnswerWrite {
                 collection_id,
@@ -141,6 +205,7 @@ impl StudyPort for SqliteStore {
         )?;
         Ok(AnswerResultDto {
             correct,
+            was_new,
             correct_sense_uid: sense_uid,
             selected_sense_uid: selected_option_id.to_owned(),
             lemma: detail.lemma,
@@ -177,6 +242,7 @@ impl SqliteStore {
                 }
                 None => match spec {
                     CollectionSpec::Custom { sense_uids } => sense_uids.clone(),
+                    CollectionSpec::MyVocabulary => self.my_vocabulary_uids()?,
                     _ => read_model::all_sense_uids(&content).map_err(database_error)?,
                 },
             }

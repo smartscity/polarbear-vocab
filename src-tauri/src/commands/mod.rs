@@ -1,7 +1,7 @@
 use polarbear_vocab_domain::{
-    AnswerResultDto, AppInfo, ArticleDto, CollectionSession, CollectionSpec, CsvImportPreview,
-    CsvImportResult, DatasetSummary, HomeDto, QuizQuestionDto, SettingsDto, SpeakRequest,
-    WrongWordDto,
+    AnswerResultDto, AppInfo, ArticleDto, BackupStatusDto, CollectionSession, CollectionSpec,
+    CsvImportPreview, CsvImportResult, DatasetImportStrategy, DatasetSummary, HomeDto,
+    LexiconEntryDto, QuizQuestionDto, RestoreResultDto, SettingsDto, SpeakRequest, WrongWordDto,
 };
 use std::path::Path;
 use tauri::State;
@@ -33,10 +33,11 @@ pub fn get_home(runtime: State<'_, AppRuntime>, dataset_id: String) -> Result<Ho
 pub fn start_collection(
     runtime: State<'_, AppRuntime>,
     spec: CollectionSpec,
+    limit: Option<u32>,
 ) -> Result<CollectionSession, String> {
     runtime
         .study
-        .start_collection(&spec)
+        .start_collection(&spec, limit)
         .map_err(|error| error.to_string())
 }
 
@@ -48,6 +49,16 @@ pub fn next_question(
     runtime
         .study
         .next_question(&collection_id)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn get_resumable_session(
+    runtime: State<'_, AppRuntime>,
+) -> Result<Option<CollectionSession>, String> {
+    runtime
+        .study
+        .resumable_session()
         .map_err(|error| error.to_string())
 }
 
@@ -92,6 +103,66 @@ pub fn list_wrong_words(
             min_wrong_count.unwrap_or(1),
             last_wrong_only.unwrap_or(false),
         )
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn search_lexicon(
+    runtime: State<'_, AppRuntime>,
+    query: String,
+) -> Result<Vec<LexiconEntryDto>, String> {
+    runtime
+        .lexicon
+        .search(&query)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn add_to_my_vocabulary(
+    runtime: State<'_, AppRuntime>,
+    sense_uid: String,
+) -> Result<(), String> {
+    runtime
+        .lexicon
+        .add_to_my_vocabulary(&sense_uid)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn remove_from_my_vocabulary(
+    runtime: State<'_, AppRuntime>,
+    sense_uid: String,
+) -> Result<(), String> {
+    runtime
+        .lexicon
+        .remove_from_my_vocabulary(&sense_uid)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn get_backup_status(runtime: State<'_, AppRuntime>) -> Result<BackupStatusDto, String> {
+    runtime.backup.status().map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn export_backup(
+    runtime: State<'_, AppRuntime>,
+    path: String,
+) -> Result<BackupStatusDto, String> {
+    runtime
+        .backup
+        .export(&path)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn import_backup(
+    runtime: State<'_, AppRuntime>,
+    path: String,
+) -> Result<RestoreResultDto, String> {
+    runtime
+        .backup
+        .import(&path)
         .map_err(|error| error.to_string())
 }
 
@@ -142,10 +213,23 @@ pub fn import_dataset_csv(
     runtime: State<'_, AppRuntime>,
     dataset_id: String,
     path: String,
+    strategy: DatasetImportStrategy,
 ) -> Result<CsvImportResult, String> {
     runtime
         .datasets
-        .import_csv(&dataset_id, &path)
+        .import_csv(&dataset_id, &path, strategy)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn export_dataset_csv(
+    runtime: State<'_, AppRuntime>,
+    dataset_id: String,
+    path: String,
+) -> Result<u32, String> {
+    runtime
+        .datasets
+        .export_csv(&dataset_id, &path)
         .map_err(|error| error.to_string())
 }
 

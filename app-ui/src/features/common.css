@@ -1,4 +1,5 @@
 .datasets-page,
+.lexicon-page,
 .settings-page,
 .mistakes-page {
   width: min(100%, var(--pb-content-normal));
@@ -14,4 +15,10 @@
   color: var(--pb-text-muted);
   background: var(--pb-surface);
   text-align: center;
+}
+
+.settings-data-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pb-space-2);
 }

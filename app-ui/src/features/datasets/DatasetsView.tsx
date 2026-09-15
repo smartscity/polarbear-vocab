@@ -24,6 +24,7 @@ export function DatasetsView(props: DatasetsViewProps) {
     ...props,
     csvLabel: t("dataset.csvFormat"),
     successMessage: (count) => t("dataset.csvSuccess", { count }),
+    exportMessage: (count) => t("dataset.csvExported", { count }),
   });
   const submitCreate = (event: FormEvent) => {
     event.preventDefault();
@@ -34,9 +35,9 @@ export function DatasetsView(props: DatasetsViewProps) {
       <PageHeader actions={<CreateDatasetForm busy={controller.busy} name={controller.name} onChange={controller.setName} onSubmit={submitCreate} />} eyebrow={t("app.name")} title={t("dataset.title")} />
       <div className="dataset-layout">
         <DatasetList datasets={props.datasets} onSelect={props.onSelect} selectedId={props.selectedDatasetId} />
-        {controller.selected ? <DatasetDetail busy={controller.busy} dataset={controller.selected} notice={controller.notice} onDelete={() => controller.setDeleteOpen(true)} onImport={controller.chooseCsv} onRename={controller.beginRename} onStart={props.onStart} /> : <EmptyState>{t("dataset.select")}</EmptyState>}
+        {controller.selected ? <DatasetDetail busy={controller.busy} dataset={controller.selected} notice={controller.notice} onDelete={() => controller.setDeleteOpen(true)} onExport={controller.exportCsv} onImport={controller.chooseCsv} onRename={controller.beginRename} onStart={props.onStart} /> : <EmptyState>{t("dataset.select")}</EmptyState>}
       </div>
-      {controller.pendingImport ? <ImportPreview busy={controller.busy} onCancel={() => controller.setPendingImport(null)} onConfirm={controller.confirmImport} pending={controller.pendingImport} /> : null}
+      {controller.pendingImport ? <ImportPreview busy={controller.busy} onCancel={() => controller.setPendingImport(null)} onConfirm={controller.confirmImport} onStrategyChange={controller.setImportStrategy} pending={controller.pendingImport} strategy={controller.importStrategy} /> : null}
       <RenameDialog controller={controller} />
       {controller.selected ? <ConfirmDialog cancelLabel={t("common.cancel")} confirmLabel={t("common.delete")} description={t("dataset.deleteConfirm", { name: controller.selected.name })} onConfirm={controller.confirmDelete} onOpenChange={controller.setDeleteOpen} open={controller.deleteOpen} title={t("dataset.delete")} /> : null}
     </section>
@@ -66,21 +67,29 @@ function DatasetList(props: { datasets: DatasetSummary[]; onSelect: (id: string)
   );
 }
 
-function DatasetDetail(props: { busy: boolean; dataset: DatasetSummary; notice: string | null; onDelete: () => void; onImport: () => void; onRename: () => void; onStart: (id: string) => void }) {
+function DatasetDetail(props: { busy: boolean; dataset: DatasetSummary; notice: string | null; onDelete: () => void; onExport: () => void; onImport: () => void; onRename: () => void; onStart: (id: string) => void }) {
   const { t } = useI18n();
   return (
     <article className="dataset-detail">
       <span className="dataset-kind">{t(props.dataset.preloaded ? "dataset.preloaded" : "dataset.custom")}</span>
       <h2 className="pb-display">{props.dataset.name}</h2><p>{t("dataset.words", { count: props.dataset.wordCount })}</p>
+      <dl className="dataset-meta"><div><dt>{t("dataset.source")}</dt><dd>{t(props.dataset.preloaded ? "dataset.preloaded" : "dataset.custom")}</dd></div><div><dt>{t("dataset.updated")}</dt><dd>{formatDatasetDate(props.dataset.updatedAt, t("dataset.bundled"))}</dd></div></dl>
       <p className="csv-hint">{t("dataset.csvColumns")}</p>{props.notice ? <p className="success-notice">{props.notice}</p> : null}
+      <h3>{t("dataset.manage")}</h3>
       <div className="dataset-actions">
         <Button disabled={props.busy || props.dataset.wordCount === 0} onClick={() => props.onStart(props.dataset.id)} variant="primary">{t("dataset.start")}</Button>
-        <Button disabled={props.busy} onClick={props.onImport}>{t("dataset.importCsv")}</Button>
+        <Button disabled={props.busy} onClick={props.onImport}>{t("dataset.importUpdate")}</Button>
+        <Button disabled={props.busy || props.dataset.wordCount === 0} onClick={props.onExport}>{t("dataset.exportCsv")}</Button>
         <Button disabled={props.busy} onClick={props.onRename}>{t("dataset.rename")}</Button>
         <Button disabled={props.busy} onClick={props.onDelete} variant="danger">{t("dataset.delete")}</Button>
       </div>
     </article>
   );
+}
+
+function formatDatasetDate(value: number, fallback: string): string {
+  if (value <= 0) return fallback;
+  return new Date(value).toLocaleDateString();
 }
 
 type DatasetController = ReturnType<typeof useDatasetController>;

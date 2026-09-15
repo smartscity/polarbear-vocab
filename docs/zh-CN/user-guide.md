@@ -3,9 +3,9 @@
 ## 运行
 
 macOS 需要 Node.js 20.19+、pnpm 11、Rust 1.85+ 和 Xcode Command Line Tools。
+在项目根目录执行：
 
 ```bash
-cd /Users/liyunlong/git/smartscity/VocabProbe
 pnpm install
 pnpm tauri dev
 ```
@@ -27,22 +27,18 @@ pnpm tauri build
 
 ## 使用
 
-- 首页：切换数据集，查看统计，点击“继续”学习。
-- 数据集：创建名称 → 选择数据集 → 导入 CSV。必填列为 `lemma`、`quiz_prompt_zh`；模板见 [`data/examples/dataset-template.csv`](../../data/examples/dataset-template.csv)。
-- 听力：导入 UTF-8 `.txt`/`.md` 文章，选择男声、女声、美式、英式、港式、印度或日式英语，再以 0.5×/1×/1.5×/2× 播放、暂停或停止。
+- 查词：搜索单词，查看音标、释义、例句和学习统计；可直接练习或加入“我的词汇”。
+- 首页/数据集：选择未学、错题或全部，再选 10/20/50 个词开始；结束后可练习本次错词。
+- 数据集：导入/更新 CSV 时选择“仅新增 / 更新已有 / 替换数据集”；管理区可导出、重命名、删除。必填列：`lemma`、`quiz_prompt_zh`；模板：[`data/examples/dataset-template.csv`](../../data/examples/dataset-template.csv)。
+- 听力：导入 UTF-8 `.txt`/`.md`，选择声音与 0.5×/1×/1.5×/2×；选中文章单词即可查词并加入“我的词汇”。
 - 错题：选择筛选条件，点击“练习这个集合”。
-- 设置：切换界面语言、外观、本机声音风格和朗读语速。
+- 设置：切换语言、外观、声音、语速，并导出/导入备份。
 
 答题快捷键：`1`–`4` 选择，`Space` 下一题，`R` 读单词，`S` 读例句，`Esc` 退出。
 
-## 数据
+## 备份
 
-数据位于 `~/Library/Application Support/com.polarbear.vocab/`：
-
-- `content.db`：数据集和词汇内容。
-- `user.db`：答题历史、统计、会话、导入文章和设置。
-
-应用离线运行，不提供远程导入、账号或云同步。备份时请同时复制两个数据库。
+设置 → 数据 →“导出备份”；恢复时点“导入备份”。恢复前会自动备份当前数据。应用离线运行，不提供账号或云同步。
 
 ## 启动失败
 

@@ -3,17 +3,17 @@ import type { ReactNode } from "react";
 import { useI18n } from "../lib/i18n";
 import { useLayoutCapabilities } from "./useLayoutCapabilities";
 
-export type NavScreen = "home" | "datasets" | "listening" | "mistakes" | "settings";
+export type NavScreen = "home" | "lexicon" | "datasets" | "listening" | "mistakes" | "settings";
 
 interface AppShellProps {
   appName: string;
   children: ReactNode;
   footer: string;
   onNavigate: (screen: NavScreen) => void;
-  screen: NavScreen | "study";
+  screen: NavScreen | "session" | "study";
 }
 
-const navigation: NavScreen[] = ["home", "datasets", "listening", "mistakes", "settings"];
+const navigation: NavScreen[] = ["home", "lexicon", "datasets", "listening", "mistakes", "settings"];
 
 export function AppShell(props: AppShellProps) {
   const { input, layout } = useLayoutCapabilities();

@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-const stories = ["home", "dataset-list", "dataset-detail", "listening", "study", "answer-result", "mistakes", "settings"] as const;
+const stories = ["home", "lexicon", "dataset-list", "dataset-detail", "listening", "session-setup", "study", "answer-result", "mistakes", "settings"] as const;
 const viewports = [
   { name: "390x844", width: 390, height: 844 },
   { name: "430x932", width: 430, height: 932 },
@@ -51,6 +51,10 @@ for (const story of stories) {
     await page.setViewportSize({ width: 390, height: 844 });
     await openStory(page, story);
     await page.locator("html").evaluate((element) => { element.style.fontSize = "200%"; });
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+      await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+    });
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow, "200 percent text must not cause horizontal page overflow").toBeLessThanOrEqual(1);
   });

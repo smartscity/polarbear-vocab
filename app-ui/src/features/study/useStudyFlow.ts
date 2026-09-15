@@ -1,7 +1,8 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import {
   finishSession,
+  getResumableSession,
   nextQuestion,
   speak,
   startCollection,
@@ -23,6 +24,13 @@ interface StudyFlowOptions {
   speechVoice: SpeechVoice;
 }
 
+export interface SessionSummary {
+  answered: number;
+  correct: number;
+  wrong: number;
+  newWords: number;
+}
+
 export function useStudyFlow(options: StudyFlowOptions) {
   const { collectionEmptyMessage, onError, onExit, onStart, speechLocale, speechRate, speechVoice } = options;
   const [session, setSession] = useState<CollectionSession | null>(null);
@@ -30,10 +38,18 @@ export function useStudyFlow(options: StudyFlowOptions) {
   const [result, setResult] = useState<AnswerResult | null>(null);
   const [complete, setComplete] = useState(false);
   const [questionStarted, setQuestionStarted] = useState(0);
+  const [summary, setSummary] = useState<SessionSummary>({ answered: 0, correct: 0, wrong: 0, newWords: 0 });
+  const [wrongSenseUids, setWrongSenseUids] = useState<string[]>([]);
+  const [resumableSession, setResumableSession] = useState<CollectionSession | null>(null);
 
-  const begin = useCallback(async (spec: CollectionSpec) => {
+  useEffect(() => {
+    if (!("__TAURI_INTERNALS__" in window)) return;
+    void getResumableSession().then(setResumableSession).catch(onError);
+  }, [onError]);
+
+  const begin = useCallback(async (spec: CollectionSpec, limit?: number) => {
     try {
-      const nextSession = await startCollection(spec);
+      const nextSession = await startCollection(spec, limit);
       if (nextSession.totalCount === 0) {
         onError(collectionEmptyMessage);
         return;
@@ -49,11 +65,38 @@ export function useStudyFlow(options: StudyFlowOptions) {
       setQuestionStarted(Date.now());
       setResult(null);
       setComplete(false);
+      setSummary({ answered: 0, correct: 0, wrong: 0, newWords: 0 });
+      setWrongSenseUids([]);
+      setResumableSession(null);
       onStart();
     } catch (error) {
       onError(error);
     }
   }, [collectionEmptyMessage, onError, onStart]);
+
+  const resume = useCallback(async () => {
+    if (!resumableSession) return;
+    try {
+      const pending = await nextQuestion(resumableSession.collectionId);
+      if (!pending) return;
+      setSession(resumableSession);
+      setQuestion(pending);
+      setQuestionStarted(Date.now());
+      setResult(null);
+      setComplete(false);
+      setSummary({
+        answered: resumableSession.answeredCount,
+        correct: resumableSession.correctCount,
+        wrong: resumableSession.wrongCount,
+        newWords: resumableSession.newWordCount,
+      });
+      setWrongSenseUids(resumableSession.wrongSenseUids);
+      setResumableSession(null);
+      onStart();
+    } catch (error) {
+      onError(error);
+    }
+  }, [onError, onStart, resumableSession]);
 
   const answer = useCallback(async (optionId: string) => {
     if (!session || !question || result) return false;
@@ -65,6 +108,17 @@ export function useStudyFlow(options: StudyFlowOptions) {
         Date.now() - questionStarted,
       );
       setResult(answerResult);
+      setSummary((current) => ({
+        answered: current.answered + 1,
+        correct: current.correct + Number(answerResult.correct),
+        wrong: current.wrong + Number(!answerResult.correct),
+        newWords: current.newWords + Number(answerResult.wasNew),
+      }));
+      if (!answerResult.correct) {
+        setWrongSenseUids((current) => current.includes(answerResult.correctSenseUid)
+          ? current
+          : [...current, answerResult.correctSenseUid]);
+      }
       void speak(answerResult.lemma, speechLocale, speechRate, speechVoice).catch(() => undefined);
       return true;
     } catch (error) {
@@ -91,8 +145,15 @@ export function useStudyFlow(options: StudyFlowOptions) {
     setSession(null);
     setQuestion(null);
     setResult(null);
+    setResumableSession(null);
     await onExit();
   }, [onExit, session]);
 
-  return { advance, answer, begin, complete, exit, question, result };
+  const practiceMistakes = useCallback(async () => {
+    if (wrongSenseUids.length === 0) return;
+    if (session) await finishSession(session.sessionId).catch(() => undefined);
+    await begin({ type: "custom", senseUids: wrongSenseUids });
+  }, [begin, session, wrongSenseUids]);
+
+  return { advance, answer, begin, complete, exit, practiceMistakes, question, result, resumableSession, resume, summary };
 }

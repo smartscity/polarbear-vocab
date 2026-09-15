@@ -107,8 +107,8 @@ fn create_schema(connection: &Connection) -> rusqlite::Result<()> {
         "PRAGMA foreign_keys = ON;
          CREATE TABLE source(id INTEGER PRIMARY KEY, name TEXT NOT NULL, license TEXT NOT NULL, url TEXT, attribution TEXT NOT NULL);
          CREATE TABLE schema_meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
-         INSERT INTO schema_meta(key, value) VALUES ('version', '2');
-         CREATE TABLE dataset(id TEXT PRIMARY KEY, name TEXT NOT NULL, created_at INTEGER NOT NULL, preloaded INTEGER NOT NULL DEFAULT 0 CHECK(preloaded IN (0, 1)));
+         INSERT INTO schema_meta(key, value) VALUES ('version', '3');
+         CREATE TABLE dataset(id TEXT PRIMARY KEY, name TEXT NOT NULL, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL DEFAULT 0, preloaded INTEGER NOT NULL DEFAULT 0 CHECK(preloaded IN (0, 1)));
          CREATE TABLE word(id INTEGER PRIMARY KEY, uid TEXT NOT NULL UNIQUE, lemma TEXT NOT NULL, frequency_rank INTEGER);
          CREATE TABLE sense(id INTEGER PRIMARY KEY, uid TEXT NOT NULL UNIQUE, word_id INTEGER NOT NULL REFERENCES word(id), source_id INTEGER NOT NULL REFERENCES source(id), pos TEXT NOT NULL, quiz_prompt_zh TEXT NOT NULL, zh_gloss TEXT NOT NULL, en_definition TEXT NOT NULL, cefr TEXT NOT NULL);
          CREATE TABLE pronunciation(id INTEGER PRIMARY KEY, sense_id INTEGER NOT NULL REFERENCES sense(id), accent TEXT NOT NULL, ipa TEXT NOT NULL, UNIQUE(sense_id, accent));
@@ -136,7 +136,7 @@ fn populate(
     )?;
     for dataset in &manifest.datasets {
         transaction.execute(
-            "INSERT INTO dataset(id, name, created_at, preloaded) VALUES (?1, ?2, 0, 1)",
+            "INSERT INTO dataset(id, name, created_at, updated_at, preloaded) VALUES (?1, ?2, 0, 0, 1)",
             params![dataset.id, dataset.name],
         )?;
     }

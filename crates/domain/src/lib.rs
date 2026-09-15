@@ -60,6 +60,7 @@ pub enum CollectionSpec {
     Custom {
         sense_uids: Vec<String>,
     },
+    MyVocabulary,
 }
 
 impl CollectionSpec {
@@ -71,7 +72,7 @@ impl CollectionSpec {
             | Self::Correct { dataset_id }
             | Self::Wrong { dataset_id, .. }
             | Self::LastWrong { dataset_id } => dataset_id.as_deref(),
-            Self::Custom { .. } => None,
+            Self::Custom { .. } | Self::MyVocabulary => None,
         }
     }
 
@@ -85,6 +86,7 @@ impl CollectionSpec {
             Self::Wrong { .. } => "wrong",
             Self::LastWrong { .. } => "last_wrong",
             Self::Custom { .. } => "custom",
+            Self::MyVocabulary => "my_vocabulary",
         }
     }
 }
@@ -95,6 +97,7 @@ pub struct DatasetSummary {
     pub id: String,
     pub name: String,
     pub created_at: i64,
+    pub updated_at: i64,
     pub preloaded: bool,
     pub word_count: u32,
 }
@@ -152,6 +155,11 @@ pub struct CollectionSession {
     pub dataset_id: Option<String>,
     pub collection_type: String,
     pub total_count: u32,
+    pub answered_count: u32,
+    pub correct_count: u32,
+    pub wrong_count: u32,
+    pub new_word_count: u32,
+    pub wrong_sense_uids: Vec<String>,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize)]
@@ -177,6 +185,7 @@ pub struct QuizQuestionDto {
 #[serde(rename_all = "camelCase")]
 pub struct AnswerResultDto {
     pub correct: bool,
+    pub was_new: bool,
     pub correct_sense_uid: String,
     pub selected_sense_uid: String,
     pub lemma: String,
@@ -196,6 +205,42 @@ pub struct WrongWordDto {
     pub wrong_count: u32,
     pub correct_count: u32,
     pub last_result: String,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LexiconEntryDto {
+    pub sense_uid: String,
+    pub lemma: String,
+    pub ipa: String,
+    pub part_of_speech: String,
+    pub zh_gloss: String,
+    pub example_en: String,
+    pub dataset_names: Vec<String>,
+    pub attempt_count: u32,
+    pub correct_count: u32,
+    pub wrong_count: u32,
+    pub in_my_vocabulary: bool,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
+pub struct BackupManifest {
+    pub format: String,
+    pub schema_version: u32,
+    pub app_version: String,
+    pub created_at: String,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BackupStatusDto {
+    pub last_backup_at: Option<String>,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RestoreResultDto {
+    pub automatic_backup_path: String,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize)]
@@ -248,6 +293,14 @@ pub struct CsvImportResult {
     pub imported_items: u32,
     pub inserted_senses: u32,
     pub updated_senses: u32,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub enum DatasetImportStrategy {
+    AddOnly,
+    UpdateExisting,
+    ReplaceDataset,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]

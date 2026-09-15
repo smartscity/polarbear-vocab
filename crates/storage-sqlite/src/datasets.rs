@@ -1,6 +1,8 @@
 use chrono::Utc;
 use polarbear_vocab_application::{ApplicationError, DatasetRepository};
-use polarbear_vocab_domain::{CsvImportResult, DatasetImportPlan, DatasetSummary, ImportedSense};
+use polarbear_vocab_domain::{
+    CsvImportResult, DatasetImportPlan, DatasetImportStrategy, DatasetSummary, ImportedSense,
+};
 use rusqlite::{OptionalExtension, Transaction, params};
 use uuid::Uuid;
 
@@ -13,8 +15,8 @@ impl DatasetRepository for SqliteStore {
         let mut content = self.content()?;
         schema::in_immediate_transaction(&mut content, |transaction| {
             transaction.execute(
-                "INSERT INTO dataset(id, name, created_at, preloaded)
-                 VALUES (?1, ?2, ?3, 0)",
+                "INSERT INTO dataset(id, name, created_at, updated_at, preloaded)
+                 VALUES (?1, ?2, ?3, ?3, 0)",
                 params![id, name, created_at],
             )?;
             Ok(())
@@ -24,6 +26,7 @@ impl DatasetRepository for SqliteStore {
             id,
             name: name.to_owned(),
             created_at,
+            updated_at: created_at,
             preloaded: false,
             word_count: 0,
         })
@@ -33,8 +36,8 @@ impl DatasetRepository for SqliteStore {
         let mut content = self.content()?;
         let changed = schema::in_immediate_transaction(&mut content, |transaction| {
             transaction.execute(
-                "UPDATE dataset SET name = ?2 WHERE id = ?1",
-                params![dataset_id, name],
+                "UPDATE dataset SET name = ?2, updated_at = ?3 WHERE id = ?1",
+                params![dataset_id, name, Utc::now().timestamp_millis()],
             )
         })
         .map_err(database_error)?;
@@ -54,17 +57,28 @@ impl DatasetRepository for SqliteStore {
         &self,
         dataset_id: &str,
         plan: &DatasetImportPlan,
+        strategy: DatasetImportStrategy,
     ) -> Result<CsvImportResult, ApplicationError> {
         let mut content = self.content()?;
         schema::in_immediate_transaction(&mut content, |transaction| {
             ensure_dataset(transaction, dataset_id)?;
+            if strategy == DatasetImportStrategy::ReplaceDataset {
+                transaction.execute(
+                    "DELETE FROM dataset_item WHERE dataset_id = ?1",
+                    [dataset_id],
+                )?;
+            }
             let source_id = ensure_import_source(transaction)?;
             let mut inserted_senses = 0;
             let mut updated_senses = 0;
             for (sequence, entry) in plan.entries.iter().enumerate() {
-                if upsert_sense(transaction, entry, source_id)? {
+                let exists = sense_exists(transaction, &entry.sense_uid)?;
+                if !exists || strategy != DatasetImportStrategy::AddOnly {
+                    upsert_sense(transaction, entry, source_id)?;
+                }
+                if !exists {
                     inserted_senses += 1;
-                } else {
+                } else if strategy != DatasetImportStrategy::AddOnly {
                     updated_senses += 1;
                 }
                 transaction.execute(
@@ -81,6 +95,10 @@ impl DatasetRepository for SqliteStore {
                 .map(|entry| entry.sense_uid.clone())
                 .collect();
             distractor_index::refresh_for(transaction, &imported_uids)?;
+            transaction.execute(
+                "UPDATE dataset SET updated_at = ?2 WHERE id = ?1",
+                params![dataset_id, Utc::now().timestamp_millis()],
+            )?;
             Ok(CsvImportResult {
                 imported_items: plan.entries.len() as u32,
                 inserted_senses,
@@ -89,6 +107,87 @@ impl DatasetRepository for SqliteStore {
         })
         .map_err(database_error)
     }
+
+    fn export_dataset(&self, dataset_id: &str, path: &str) -> Result<u32, ApplicationError> {
+        let content = self.content()?;
+        ensure_dataset_exists(&content, dataset_id)?;
+        let mut statement = content
+            .prepare(
+                "SELECT s.uid, w.lemma, s.pos, s.quiz_prompt_zh, s.zh_gloss,
+                    COALESCE((SELECT ipa FROM pronunciation WHERE sense_id = s.id AND accent = 'en-US'), ''),
+                    COALESCE((SELECT ipa FROM pronunciation WHERE sense_id = s.id AND accent = 'en-GB'), ''),
+                    COALESCE(e.sentence_en, ''), COALESCE(e.sentence_zh, '')
+                 FROM dataset_item item
+                 JOIN sense s ON s.uid = item.sense_uid
+                 JOIN word w ON w.id = s.word_id
+                 LEFT JOIN example e ON e.sense_id = s.id AND e.is_primary = 1
+                 WHERE item.dataset_id = ?1 ORDER BY item.sequence, s.uid",
+            )
+            .map_err(database_error)?;
+        let rows = statement
+            .query_map([dataset_id], |row| {
+                Ok((
+                    row.get::<_, String>(0)?,
+                    row.get::<_, String>(1)?,
+                    row.get::<_, String>(2)?,
+                    row.get::<_, String>(3)?,
+                    row.get::<_, String>(4)?,
+                    row.get::<_, String>(5)?,
+                    row.get::<_, String>(6)?,
+                    row.get::<_, String>(7)?,
+                    row.get::<_, String>(8)?,
+                ))
+            })
+            .map_err(database_error)?;
+        let mut writer = csv::Writer::from_path(path).map_err(csv_error)?;
+        writer
+            .write_record([
+                "sense_uid",
+                "lemma",
+                "pos",
+                "quiz_prompt_zh",
+                "gloss_zh",
+                "ipa_us",
+                "ipa_uk",
+                "example_en",
+                "example_zh",
+            ])
+            .map_err(csv_error)?;
+        let mut count = 0;
+        for row in rows {
+            let row = row.map_err(database_error)?;
+            writer.serialize(row).map_err(csv_error)?;
+            count += 1;
+        }
+        writer
+            .flush()
+            .map_err(|error| ApplicationError::Infrastructure(error.to_string()))?;
+        Ok(count)
+    }
+}
+
+fn ensure_dataset_exists(
+    connection: &rusqlite::Connection,
+    dataset_id: &str,
+) -> Result<(), ApplicationError> {
+    connection
+        .query_row("SELECT 1 FROM dataset WHERE id = ?1", [dataset_id], |_| {
+            Ok(())
+        })
+        .optional()
+        .map_err(database_error)?
+        .ok_or_else(|| ApplicationError::NotFound(dataset_id.to_owned()))
+}
+
+fn sense_exists(transaction: &Transaction<'_>, sense_uid: &str) -> rusqlite::Result<bool> {
+    Ok(transaction
+        .query_row(
+            "SELECT 1 FROM sense WHERE uid = ?1",
+            [sense_uid],
+            |_| Ok(()),
+        )
+        .optional()?
+        .is_some())
 }
 
 fn ensure_dataset(transaction: &Transaction<'_>, dataset_id: &str) -> rusqlite::Result<()> {
@@ -223,4 +322,8 @@ fn require_change(changed: usize, dataset_id: &str) -> Result<(), ApplicationErr
         return Err(ApplicationError::NotFound(dataset_id.to_owned()));
     }
     Ok(())
+}
+
+fn csv_error(error: csv::Error) -> ApplicationError {
+    ApplicationError::Infrastructure(format!("cannot export dataset CSV: {error}"))
 }

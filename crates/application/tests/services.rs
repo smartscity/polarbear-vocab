@@ -5,8 +5,8 @@ use polarbear_vocab_application::{
     DatasetService, SettingsPort, SettingsService, SpeechPort, SpeechUseCase,
 };
 use polarbear_vocab_domain::{
-    ArticleDto, CsvImportPreview, CsvImportResult, DatasetImportPlan, DatasetSummary, SettingsDto,
-    SpeakRequest,
+    ArticleDto, CsvImportPreview, CsvImportResult, DatasetImportPlan, DatasetImportStrategy,
+    DatasetSummary, SettingsDto, SpeakRequest,
 };
 
 #[derive(Default)]
@@ -75,6 +75,7 @@ impl DatasetRepository for DatasetDouble {
             id: "id".to_owned(),
             name: name.to_owned(),
             created_at: 0,
+            updated_at: 0,
             preloaded: false,
             word_count: 0,
         })
@@ -93,12 +94,17 @@ impl DatasetRepository for DatasetDouble {
         &self,
         _: &str,
         _: &DatasetImportPlan,
+        _: DatasetImportStrategy,
     ) -> Result<CsvImportResult, ApplicationError> {
         Ok(CsvImportResult {
             imported_items: 0,
             inserted_senses: 0,
             updated_senses: 0,
         })
+    }
+
+    fn export_dataset(&self, _: &str, _: &str) -> Result<u32, ApplicationError> {
+        Ok(0)
     }
 }
 

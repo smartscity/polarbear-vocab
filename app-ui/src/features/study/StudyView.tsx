@@ -4,6 +4,7 @@ import { AnswerOption, AnswerResult, QuestionCard } from "../../design-system/co
 import { Button } from "../../design-system/primitives/Button";
 import type { AnswerResult as AnswerResultDto, QuizQuestion } from "../../lib/commands";
 import { useI18n } from "../../lib/i18n";
+import type { SessionSummary } from "./useStudyFlow";
 
 interface StudyViewProps {
   title: string;
@@ -14,6 +15,8 @@ interface StudyViewProps {
   onNext: () => void;
   onExit: () => void;
   onSpeak: (text: string) => void;
+  onPracticeMistakes: () => void;
+  summary: SessionSummary;
 }
 
 export function StudyView(props: StudyViewProps) {
@@ -30,7 +33,16 @@ export function StudyView(props: StudyViewProps) {
     return (
       <div className="study-page"><section className="question-card answer-result">
         <p className="result-mark" data-correct="true">✓</p><h1 className="pb-display">{t("study.complete")}</h1>
-        <p className="pb-muted">{t("study.saved")}</p><Button onClick={props.onExit} variant="primary">{t("study.backHome")}</Button>
+        <dl className="session-summary">
+          <div><dt>{t("study.summaryAnswered")}</dt><dd>{props.summary.answered}</dd></div>
+          <div><dt>{t("study.summaryCorrect")}</dt><dd>{props.summary.correct}</dd></div>
+          <div><dt>{t("study.summaryWrong")}</dt><dd>{props.summary.wrong}</dd></div>
+          <div><dt>{t("study.summaryNew")}</dt><dd>{props.summary.newWords}</dd></div>
+        </dl>
+        <div className="session-summary-actions">
+          <Button disabled={props.summary.wrong === 0} onClick={props.onPracticeMistakes}>{t("study.practiceMistakes")}</Button>
+          <Button onClick={props.onExit} variant="primary">{t("study.done")}</Button>
+        </div>
       </section></div>
     );
   }

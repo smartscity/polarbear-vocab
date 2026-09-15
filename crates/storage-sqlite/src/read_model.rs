@@ -6,7 +6,7 @@ use rusqlite::{Connection, OptionalExtension};
 
 pub fn list_datasets(connection: &Connection) -> rusqlite::Result<Vec<DatasetSummary>> {
     let mut statement = connection.prepare(
-        "SELECT d.id, d.name, d.created_at, d.preloaded, COUNT(di.sense_uid)
+        "SELECT d.id, d.name, d.created_at, d.updated_at, d.preloaded, COUNT(di.sense_uid)
          FROM dataset d
          LEFT JOIN dataset_item di ON di.dataset_id = d.id
          GROUP BY d.id
@@ -17,8 +17,9 @@ pub fn list_datasets(connection: &Connection) -> rusqlite::Result<Vec<DatasetSum
             id: row.get(0)?,
             name: row.get(1)?,
             created_at: row.get(2)?,
-            preloaded: row.get(3)?,
-            word_count: row.get::<_, u32>(4)?,
+            updated_at: row.get(3)?,
+            preloaded: row.get(4)?,
+            word_count: row.get::<_, u32>(5)?,
         })
     })?;
     rows.collect()
@@ -30,7 +31,7 @@ pub fn dataset_summary(
 ) -> rusqlite::Result<Option<DatasetSummary>> {
     connection
         .query_row(
-            "SELECT d.id, d.name, d.created_at, d.preloaded, COUNT(di.sense_uid)
+            "SELECT d.id, d.name, d.created_at, d.updated_at, d.preloaded, COUNT(di.sense_uid)
              FROM dataset d
              LEFT JOIN dataset_item di ON di.dataset_id = d.id
              WHERE d.id = ?1
@@ -41,8 +42,9 @@ pub fn dataset_summary(
                     id: row.get(0)?,
                     name: row.get(1)?,
                     created_at: row.get(2)?,
-                    preloaded: row.get(3)?,
-                    word_count: row.get(4)?,
+                    updated_at: row.get(3)?,
+                    preloaded: row.get(4)?,
+                    word_count: row.get(5)?,
                 })
             },
         )

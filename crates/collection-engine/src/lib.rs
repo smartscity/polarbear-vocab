@@ -37,7 +37,9 @@ pub fn resolve_collection(
 fn matches_collection(spec: &CollectionSpec, stat: Option<&WordProgress>) -> bool {
     let stat = stat.cloned().unwrap_or_default();
     match spec {
-        CollectionSpec::Dataset { .. } | CollectionSpec::Custom { .. } => true,
+        CollectionSpec::Dataset { .. }
+        | CollectionSpec::Custom { .. }
+        | CollectionSpec::MyVocabulary => true,
         CollectionSpec::Unseen { .. } => stat.attempt_count == 0,
         CollectionSpec::Answered { .. } => stat.attempt_count > 0,
         CollectionSpec::Correct { .. } => stat.correct_count > 0,

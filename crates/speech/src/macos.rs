@@ -1,5 +1,7 @@
 use std::sync::mpsc::{self, Sender};
 
+#[cfg(target_os = "ios")]
+use objc2_avf_audio::{AVAudioSession, AVAudioSessionCategoryPlayback};
 use objc2_avf_audio::{
     AVSpeechBoundary, AVSpeechSynthesisVoice, AVSpeechSynthesisVoiceGender, AVSpeechSynthesizer,
     AVSpeechUtterance,
@@ -27,6 +29,8 @@ impl NativeSpeech {
         std::thread::Builder::new()
             .name("polarbear-vocab-speech".to_owned())
             .spawn(move || {
+                #[cfg(target_os = "ios")]
+                configure_audio_session();
                 let synthesizer = unsafe { AVSpeechSynthesizer::new() };
                 while let Ok(command) = receiver.recv() {
                     match command {
@@ -47,6 +51,17 @@ impl NativeSpeech {
             })
             .map_err(|error| ApplicationError::Infrastructure(error.to_string()))?;
         Ok(Self { sender })
+    }
+}
+
+#[cfg(target_os = "ios")]
+fn configure_audio_session() {
+    unsafe {
+        let session = AVAudioSession::sharedInstance();
+        if let Some(category) = AVAudioSessionCategoryPlayback {
+            let _ = session.setCategory_error(category);
+        }
+        let _ = session.setActive_error(true);
     }
 }
 

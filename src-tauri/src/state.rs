@@ -1,9 +1,10 @@
 use std::sync::Arc;
 
 use polarbear_vocab_application::{
-    AppService, ArticleRepository, ArticleService, CsvImportPort, DatasetRepository,
-    DatasetService, HomeQueryPort, HomeService, MistakeQueryPort, MistakeService, SettingsPort,
-    SettingsService, SpeechPort, SpeechUseCase, StudyPort, StudyService,
+    AppService, ArticleRepository, ArticleService, BackupRepository, BackupService, CsvImportPort,
+    DatasetRepository, DatasetService, HomeQueryPort, HomeService, LexiconRepository,
+    LexiconService, MistakeQueryPort, MistakeService, SettingsPort, SettingsService, SpeechPort,
+    SpeechUseCase, StudyPort, StudyService,
 };
 use polarbear_vocab_dataset_import::CsvDatasetImporter;
 use polarbear_vocab_speech::NativeSpeech;
@@ -12,7 +13,9 @@ use polarbear_vocab_storage_sqlite::{DatabasePaths, SqliteStore};
 pub struct AppRuntime {
     pub app: AppService,
     pub articles: ArticleService,
+    pub backup: BackupService,
     pub home: HomeService,
+    pub lexicon: LexiconService,
     pub study: StudyService,
     pub mistakes: MistakeService,
     pub datasets: DatasetService,
@@ -29,12 +32,16 @@ impl AppRuntime {
         let dataset_repository: Arc<dyn DatasetRepository> = store.clone();
         let settings_repository: Arc<dyn SettingsPort> = store.clone();
         let article_repository: Arc<dyn ArticleRepository> = store.clone();
+        let lexicon_repository: Arc<dyn LexiconRepository> = store.clone();
+        let backup_repository: Arc<dyn BackupRepository> = store.clone();
         let csv_import: Arc<dyn CsvImportPort> = Arc::new(CsvDatasetImporter);
         let speech: Arc<dyn SpeechPort> = Arc::new(NativeSpeech::new()?);
         Ok(Self {
             app: AppService::new(),
             articles: ArticleService::new(article_repository),
+            backup: BackupService::new(backup_repository),
             home: HomeService::new(home_repository),
+            lexicon: LexiconService::new(lexicon_repository),
             study: StudyService::new(study_repository),
             mistakes: MistakeService::new(mistake_repository),
             datasets: DatasetService::new(dataset_repository, csv_import),

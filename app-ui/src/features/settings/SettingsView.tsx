@@ -1,10 +1,26 @@
+import { open, save } from "@tauri-apps/plugin-dialog";
+import { useEffect, useState } from "react";
+
 import { PageHeader } from "../../design-system/components/PageHeader";
 import { SettingsSection } from "../../design-system/components/SettingsSection";
+import { Button } from "../../design-system/primitives/Button";
 import { SelectControl } from "../../design-system/primitives/SelectControl";
-import { SPEECH_VOICES, type SpeechLocale, type UiLanguage, type UiTheme } from "../../lib/commands";
+import {
+  exportBackup,
+  getBackupStatus,
+  importBackup,
+  SPEECH_VOICES,
+  type BackupStatus,
+  type SpeechLocale,
+  type UiLanguage,
+  type UiTheme,
+} from "../../lib/commands";
 import { useI18n } from "../../lib/i18n";
 
 export function SettingsView({ onError }: { onError: (error: unknown) => void }) {
+  const [backupStatus, setBackupStatus] = useState<BackupStatus>({});
+  const [backupBusy, setBackupBusy] = useState(false);
+  const [backupMessage, setBackupMessage] = useState("");
   const {
     language,
     setLanguage,
@@ -36,6 +52,47 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
     label: t(`settings.voice.${value}`),
     value,
   }));
+  useEffect(() => {
+    if (!("__TAURI_INTERNALS__" in window)) return;
+    void getBackupStatus().then(setBackupStatus).catch(onError);
+  }, [onError]);
+  const exportData = async () => {
+    const path = await save({
+      defaultPath: `polarbear-vocab-${new Date().toISOString().slice(0, 10)}.polarbear-vocab-backup`,
+      filters: [{ name: t("settings.backupFile"), extensions: ["polarbear-vocab-backup"] }],
+    });
+    if (!path) return;
+    setBackupBusy(true);
+    setBackupMessage("");
+    try {
+      setBackupStatus(await exportBackup(path));
+      setBackupMessage(t("settings.backupExported"));
+    } catch (error) {
+      onError(error);
+    } finally {
+      setBackupBusy(false);
+    }
+  };
+  const importData = async () => {
+    const path = await open({
+      multiple: false,
+      directory: false,
+      filters: [{ name: t("settings.backupFile"), extensions: ["polarbear-vocab-backup"] }],
+    });
+    if (!path || !window.confirm(t("settings.restoreConfirm"))) return;
+    setBackupBusy(true);
+    setBackupMessage("");
+    try {
+      const result = await importBackup(path);
+      setBackupStatus(await getBackupStatus());
+      window.alert(t("settings.restoreComplete", { path: result.automaticBackupPath }));
+      window.location.reload();
+    } catch (error) {
+      onError(error);
+    } finally {
+      setBackupBusy(false);
+    }
+  };
   return (
     <section className="settings-page">
       <PageHeader eyebrow={t("app.name")} title={t("settings.title")} />
@@ -66,7 +123,23 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
             <output>{speechRatePercent}%</output>
           </div>
         </SettingsSection>
+        <SettingsSection description={t("settings.dataHint")} label={t("settings.data")}>
+          <div className="settings-data-actions">
+            <Button disabled={backupBusy} onClick={() => void exportData()}>{t("settings.exportBackup")}</Button>
+            <Button disabled={backupBusy} onClick={() => void importData()}>{t("settings.importBackup")}</Button>
+          </div>
+          <p className="pb-muted">
+            {t("settings.lastBackup")}: {formatBackupDate(backupStatus.lastBackupAt, t("settings.never"))}
+          </p>
+          {backupMessage ? <p role="status">{backupMessage}</p> : null}
+        </SettingsSection>
       </div>
     </section>
   );
+}
+
+function formatBackupDate(value: string | undefined, fallback: string): string {
+  if (!value) return fallback;
+  const date = new Date(value);
+  return Number.isNaN(date.valueOf()) ? fallback : date.toLocaleDateString();
 }

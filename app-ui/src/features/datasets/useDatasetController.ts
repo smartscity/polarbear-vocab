@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { open } from "@tauri-apps/plugin-dialog";
+import { open, save } from "@tauri-apps/plugin-dialog";
 
 import {
   createDataset,
   deleteDataset,
+  exportDatasetCsv,
   importDatasetCsv,
   previewDatasetCsv,
   renameDataset,
   type CsvImportPreview,
+  type DatasetImportStrategy,
   type DatasetSummary,
 } from "../../lib/commands";
 
@@ -18,6 +20,7 @@ export interface DatasetControllerOptions {
   selectedDatasetId: string;
   csvLabel: string;
   successMessage: (count: number) => string;
+  exportMessage: (count: number) => string;
 }
 
 export interface PendingImport {
@@ -29,6 +32,7 @@ export function useDatasetController(options: DatasetControllerOptions) {
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [pendingImport, setPendingImport] = useState<PendingImport | null>(null);
+  const [importStrategy, setImportStrategy] = useState<DatasetImportStrategy>("updateExisting");
   const [notice, setNotice] = useState<string | null>(null);
   const [renameOpen, setRenameOpen] = useState(false);
   const [renameName, setRenameName] = useState("");
@@ -46,10 +50,20 @@ export function useDatasetController(options: DatasetControllerOptions) {
   });
   const confirmImport = () => void run(async () => {
     if (!selected || !pendingImport) return;
-    const result = await importDatasetCsv(selected.id, pendingImport.path);
+    const result = await importDatasetCsv(selected.id, pendingImport.path, importStrategy);
     setPendingImport(null);
     setNotice(options.successMessage(result.importedItems));
     await options.onChanged(selected.id);
+  });
+  const exportCsv = () => void run(async () => {
+    if (!selected) return;
+    const path = await save({
+      defaultPath: `${safeFileName(selected.name)}.csv`,
+      filters: [{ name: options.csvLabel, extensions: ["csv"] }],
+    });
+    if (!path) return;
+    const count = await exportDatasetCsv(selected.id, path);
+    setNotice(options.exportMessage(count));
   });
   const beginRename = () => {
     if (!selected) return;
@@ -68,7 +82,11 @@ export function useDatasetController(options: DatasetControllerOptions) {
     setDeleteOpen(false);
     await options.onChanged();
   });
-  return { beginRename, busy, chooseCsv, confirmDelete, confirmImport, confirmRename, create, deleteOpen, name, notice, pendingImport, renameName, renameOpen, selected, setDeleteOpen, setName, setPendingImport, setRenameName, setRenameOpen };
+  return { beginRename, busy, chooseCsv, confirmDelete, confirmImport, confirmRename, create, deleteOpen, exportCsv, importStrategy, name, notice, pendingImport, renameName, renameOpen, selected, setDeleteOpen, setImportStrategy, setName, setPendingImport, setRenameName, setRenameOpen };
+}
+
+function safeFileName(name: string): string {
+  return name.trim().replace(/[^\p{L}\p{N}._-]+/gu, "-").replace(/^-+|-+$/g, "") || "dataset";
 }
 
 async function runAction(

@@ -1,5 +1,5 @@
 use polarbear_vocab_application::{DatasetRepository, HomeQueryPort};
-use polarbear_vocab_domain::{DatasetImportPlan, ImportedSense};
+use polarbear_vocab_domain::{DatasetImportPlan, DatasetImportStrategy, ImportedSense};
 use polarbear_vocab_storage_sqlite::{DatabasePaths, SqliteStore};
 use rusqlite::{Connection, params};
 use tempfile::TempDir;
@@ -13,8 +13,12 @@ fn dataset_crud_and_import_are_persisted() {
         entries: vec![imported_sense("travel.v.01", "travel", "旅行")],
     };
 
-    let first = store.import_dataset(&created.id, &plan).unwrap();
-    let second = store.import_dataset(&created.id, &plan).unwrap();
+    let first = store
+        .import_dataset(&created.id, &plan, DatasetImportStrategy::AddOnly)
+        .unwrap();
+    let second = store
+        .import_dataset(&created.id, &plan, DatasetImportStrategy::UpdateExisting)
+        .unwrap();
     store.rename_dataset(&created.id, "Travel English").unwrap();
 
     assert_eq!(first.inserted_senses, 1);
@@ -27,6 +31,16 @@ fn dataset_crud_and_import_are_persisted() {
         .unwrap();
     assert_eq!(dataset.name, "Travel English");
     assert_eq!(dataset.word_count, 1);
+    let export_path = fixture.directory.path().join("travel.csv");
+    assert_eq!(
+        store
+            .export_dataset(&created.id, export_path.to_str().unwrap())
+            .unwrap(),
+        1
+    );
+    let exported = std::fs::read_to_string(export_path).unwrap();
+    assert!(exported.contains("sense_uid,lemma,pos,quiz_prompt_zh"));
+    assert!(exported.contains("travel.v.01,travel,verb"));
     store.delete_dataset(&created.id).unwrap();
     assert!(
         store
@@ -38,6 +52,60 @@ fn dataset_crud_and_import_are_persisted() {
 }
 
 #[test]
+fn import_strategies_add_update_and_replace_as_requested() {
+    let fixture = Fixture::new();
+    let store = fixture.store();
+    let dataset = store.create_dataset("Lifecycle").unwrap();
+    let original = DatasetImportPlan {
+        entries: vec![imported_sense("shared.v.01", "share", "原始")],
+    };
+    store
+        .import_dataset(&dataset.id, &original, DatasetImportStrategy::AddOnly)
+        .unwrap();
+    let changed = DatasetImportPlan {
+        entries: vec![imported_sense("shared.v.01", "share", "更新")],
+    };
+
+    store
+        .import_dataset(&dataset.id, &changed, DatasetImportStrategy::AddOnly)
+        .unwrap();
+    assert_eq!(gloss(&fixture.content_path(), "shared.v.01"), "原始");
+    store
+        .import_dataset(&dataset.id, &changed, DatasetImportStrategy::UpdateExisting)
+        .unwrap();
+    assert_eq!(gloss(&fixture.content_path(), "shared.v.01"), "更新");
+    let replacement = DatasetImportPlan {
+        entries: vec![imported_sense("new.v.01", "renew", "替换")],
+    };
+    store
+        .import_dataset(
+            &dataset.id,
+            &replacement,
+            DatasetImportStrategy::ReplaceDataset,
+        )
+        .unwrap();
+
+    let summary = store
+        .list_datasets()
+        .unwrap()
+        .into_iter()
+        .find(|candidate| candidate.id == dataset.id)
+        .unwrap();
+    assert_eq!(summary.word_count, 1);
+}
+
+fn gloss(path: &std::path::Path, sense_uid: &str) -> String {
+    Connection::open(path)
+        .unwrap()
+        .query_row(
+            "SELECT zh_gloss FROM sense WHERE uid = ?1",
+            [sense_uid],
+            |row| row.get(0),
+        )
+        .unwrap()
+}
+
+#[test]
 fn missing_dataset_rolls_back_the_complete_import() {
     let fixture = Fixture::new();
     let store = fixture.store();
@@ -45,7 +113,11 @@ fn missing_dataset_rolls_back_the_complete_import() {
         entries: vec![imported_sense("rollback.v.01", "rollback", "回滚")],
     };
 
-    assert!(store.import_dataset("missing", &plan).is_err());
+    assert!(
+        store
+            .import_dataset("missing", &plan, DatasetImportStrategy::UpdateExisting)
+            .is_err()
+    );
 
     let connection = Connection::open(fixture.content_path()).unwrap();
     let inserted: u32 = connection

@@ -67,6 +67,22 @@
   font-weight: 750;
 }
 
+.dataset-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pb-space-5);
+  margin: var(--pb-space-4) 0;
+}
+
+.dataset-meta dt {
+  color: var(--pb-text-muted);
+  font-size: 0.76rem;
+}
+
+.dataset-meta dd {
+  margin: var(--pb-space-1) 0 0;
+}
+
 .csv-hint {
   margin-top: auto;
   color: var(--pb-text-muted);
@@ -116,6 +132,12 @@
 .import-issues p {
   margin: var(--pb-space-2) 0 0;
   font-size: 0.84rem;
+}
+
+.import-strategy {
+  margin-top: var(--pb-space-5);
+  display: grid;
+  gap: var(--pb-space-2);
 }
 
 @media (max-width: 639px) {

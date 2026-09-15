@@ -1,9 +1,15 @@
 use std::sync::Arc;
 
+mod content_services;
+mod settings_speech;
+pub use content_services::{ArticleService, BackupService, LexiconService};
+pub use settings_speech::{SettingsService, SpeechUseCase};
+
 use polarbear_vocab_domain::{
-    AnswerResultDto, AppInfo, ArticleDto, CollectionSession, CollectionSpec, CsvImportPreview,
-    CsvImportResult, DatasetImportPlan, DatasetSummary, HomeDto, QuizQuestionDto, SPEECH_VOICES,
-    SettingsDto, SpeakRequest, WrongWordDto,
+    AnswerResultDto, AppInfo, ArticleDto, BackupStatusDto, CollectionSession, CollectionSpec,
+    CsvImportPreview, CsvImportResult, DatasetImportPlan, DatasetImportStrategy, DatasetSummary,
+    HomeDto, LexiconEntryDto, QuizQuestionDto, RestoreResultDto, SettingsDto, SpeakRequest,
+    WrongWordDto,
 };
 use thiserror::Error;
 
@@ -28,12 +34,15 @@ pub trait StudyPort: Send + Sync {
     fn start_collection(
         &self,
         spec: &CollectionSpec,
+        limit: Option<u32>,
     ) -> Result<CollectionSession, ApplicationError>;
 
     fn next_question(
         &self,
         collection_id: &str,
     ) -> Result<Option<QuizQuestionDto>, ApplicationError>;
+
+    fn resumable_session(&self) -> Result<Option<CollectionSession>, ApplicationError>;
 
     fn submit_answer(
         &self,
@@ -63,7 +72,9 @@ pub trait DatasetRepository: Send + Sync {
         &self,
         dataset_id: &str,
         plan: &DatasetImportPlan,
+        strategy: DatasetImportStrategy,
     ) -> Result<CsvImportResult, ApplicationError>;
+    fn export_dataset(&self, dataset_id: &str, path: &str) -> Result<u32, ApplicationError>;
 }
 
 pub trait CsvImportPort: Send + Sync {
@@ -82,52 +93,35 @@ pub trait ArticleRepository: Send + Sync {
     fn delete_article(&self, article_id: &str) -> Result<(), ApplicationError>;
 }
 
+pub trait LexiconRepository: Send + Sync {
+    fn search_lexicon(
+        &self,
+        query: &str,
+        limit: u32,
+    ) -> Result<Vec<LexiconEntryDto>, ApplicationError>;
+    fn add_to_my_vocabulary(&self, sense_uid: &str) -> Result<(), ApplicationError>;
+    fn remove_from_my_vocabulary(&self, sense_uid: &str) -> Result<(), ApplicationError>;
+}
+
+pub trait BackupRepository: Send + Sync {
+    fn backup_status(&self) -> Result<BackupStatusDto, ApplicationError>;
+    fn export_backup(
+        &self,
+        path: &str,
+        app_version: &str,
+    ) -> Result<BackupStatusDto, ApplicationError>;
+    fn import_backup(
+        &self,
+        path: &str,
+        app_version: &str,
+    ) -> Result<RestoreResultDto, ApplicationError>;
+}
+
 pub trait SpeechPort: Send + Sync {
     fn pause(&self) -> Result<(), ApplicationError>;
     fn resume(&self) -> Result<(), ApplicationError>;
     fn speak(&self, request: &SpeakRequest) -> Result<(), ApplicationError>;
     fn stop(&self) -> Result<(), ApplicationError>;
-}
-
-#[derive(Clone)]
-pub struct ArticleService {
-    repository: Arc<dyn ArticleRepository>,
-}
-
-impl ArticleService {
-    #[must_use]
-    pub fn new(repository: Arc<dyn ArticleRepository>) -> Self {
-        Self { repository }
-    }
-
-    pub fn list(&self) -> Result<Vec<ArticleDto>, ApplicationError> {
-        self.repository.list_articles()
-    }
-
-    pub fn import(&self, title: &str, body: &str) -> Result<ArticleDto, ApplicationError> {
-        let title = title.trim();
-        let body = body.trim();
-        if title.is_empty() || title.chars().count() > 160 {
-            return Err(ApplicationError::InvalidInput(
-                "article title must contain between 1 and 160 characters".to_owned(),
-            ));
-        }
-        if body.is_empty() || body.chars().count() > 100_000 {
-            return Err(ApplicationError::InvalidInput(
-                "article body must contain between 1 and 100000 characters".to_owned(),
-            ));
-        }
-        self.repository.save_article(title, body)
-    }
-
-    pub fn delete(&self, article_id: &str) -> Result<(), ApplicationError> {
-        if article_id.trim().is_empty() {
-            return Err(ApplicationError::InvalidInput(
-                "article id must not be empty".to_owned(),
-            ));
-        }
-        self.repository.delete_article(article_id)
-    }
 }
 
 #[derive(Clone, Debug, Default)]
@@ -184,6 +178,7 @@ impl StudyService {
     pub fn start_collection(
         &self,
         spec: &CollectionSpec,
+        limit: Option<u32>,
     ) -> Result<CollectionSession, ApplicationError> {
         if matches!(
             spec,
@@ -196,7 +191,12 @@ impl StudyService {
                 "min_wrong_count must be at least one".to_owned(),
             ));
         }
-        self.repository.start_collection(spec)
+        if limit.is_some_and(|value| value == 0 || value > 500) {
+            return Err(ApplicationError::InvalidInput(
+                "session size must be between 1 and 500".to_owned(),
+            ));
+        }
+        self.repository.start_collection(spec, limit)
     }
 
     pub fn next_question(
@@ -204,6 +204,10 @@ impl StudyService {
         collection_id: &str,
     ) -> Result<Option<QuizQuestionDto>, ApplicationError> {
         self.repository.next_question(collection_id)
+    }
+
+    pub fn resumable_session(&self) -> Result<Option<CollectionSession>, ApplicationError> {
+        self.repository.resumable_session()
     }
 
     pub fn submit_answer(
@@ -280,9 +284,19 @@ impl DatasetService {
         &self,
         dataset_id: &str,
         path: &str,
+        strategy: DatasetImportStrategy,
     ) -> Result<CsvImportResult, ApplicationError> {
         let plan = self.csv_import.parse(path)?;
-        self.repository.import_dataset(dataset_id, &plan)
+        self.repository.import_dataset(dataset_id, &plan, strategy)
+    }
+
+    pub fn export_csv(&self, dataset_id: &str, path: &str) -> Result<u32, ApplicationError> {
+        if !path.to_ascii_lowercase().ends_with(".csv") {
+            return Err(ApplicationError::InvalidInput(
+                "dataset export path must end with .csv".to_owned(),
+            ));
+        }
+        self.repository.export_dataset(dataset_id, path)
     }
 }
 
@@ -294,111 +308,6 @@ fn validate_dataset_name(name: &str) -> Result<&str, ApplicationError> {
         ));
     }
     Ok(name)
-}
-
-#[derive(Clone)]
-pub struct SettingsService {
-    repository: Arc<dyn SettingsPort>,
-}
-
-impl SettingsService {
-    #[must_use]
-    pub fn new(repository: Arc<dyn SettingsPort>) -> Self {
-        Self { repository }
-    }
-
-    pub fn get(&self) -> Result<SettingsDto, ApplicationError> {
-        self.repository.get_settings()
-    }
-
-    pub fn update(&self, settings: &SettingsDto) -> Result<(), ApplicationError> {
-        if !["system", "en", "zh-CN"].contains(&settings.ui_language.as_str()) {
-            return Err(ApplicationError::InvalidInput(
-                "unsupported UI language".to_owned(),
-            ));
-        }
-        if !["system", "light", "dark"].contains(&settings.ui_theme.as_str()) {
-            return Err(ApplicationError::InvalidInput(
-                "unsupported UI theme".to_owned(),
-            ));
-        }
-        if !["en-US", "en-GB"].contains(&settings.speech_locale.as_str()) {
-            return Err(ApplicationError::InvalidInput(
-                "unsupported speech locale".to_owned(),
-            ));
-        }
-        if ![50, 100, 150, 200].contains(&settings.speech_rate_percent) {
-            return Err(ApplicationError::InvalidInput(
-                "speech rate must be 50, 100, 150, or 200 percent".to_owned(),
-            ));
-        }
-        if !SPEECH_VOICES.contains(&settings.speech_voice.as_str()) {
-            return Err(ApplicationError::InvalidInput(
-                "unsupported speech voice".to_owned(),
-            ));
-        }
-        self.repository.update_settings(settings)
-    }
-}
-
-#[derive(Clone)]
-pub struct SpeechUseCase {
-    speech: Arc<dyn SpeechPort>,
-}
-
-impl SpeechUseCase {
-    #[must_use]
-    pub fn new(speech: Arc<dyn SpeechPort>) -> Self {
-        Self { speech }
-    }
-
-    pub fn speak(&self, request: &SpeakRequest) -> Result<(), ApplicationError> {
-        let text = request.text.trim();
-        if text.is_empty() || text.chars().count() > 100_000 {
-            return Err(ApplicationError::InvalidInput(
-                "speech text must contain between 1 and 100000 characters".to_owned(),
-            ));
-        }
-        if request
-            .rate
-            .is_some_and(|rate| !(0.2..=2.0).contains(&rate))
-        {
-            return Err(ApplicationError::InvalidInput(
-                "speech rate must be between 0.2 and 2.0".to_owned(),
-            ));
-        }
-        if request
-            .locale
-            .as_deref()
-            .is_some_and(|locale| !["en-US", "en-GB"].contains(&locale))
-        {
-            return Err(ApplicationError::InvalidInput(
-                "unsupported speech locale".to_owned(),
-            ));
-        }
-        if request
-            .voice
-            .as_deref()
-            .is_some_and(|voice| !SPEECH_VOICES.contains(&voice))
-        {
-            return Err(ApplicationError::InvalidInput(
-                "unsupported speech voice".to_owned(),
-            ));
-        }
-        self.speech.speak(request)
-    }
-
-    pub fn pause(&self) -> Result<(), ApplicationError> {
-        self.speech.pause()
-    }
-
-    pub fn resume(&self) -> Result<(), ApplicationError> {
-        self.speech.resume()
-    }
-
-    pub fn stop(&self) -> Result<(), ApplicationError> {
-        self.speech.stop()
-    }
 }
 
 #[cfg(test)]
