@@ -28,7 +28,7 @@ pnpm tauri build
 本地预制提供的 6 份完整数据集（小学、初中、高中、CET-4、CET-6、IELTS）：
 
 ```bash
-POLARBEAR_PRELOADED_DATASETS_DIR=/Users/liyunlong/Downloads/Polarbear_Vocab_Full_Dataset_Builder/polarbear-datasets pnpm tauri build --bundles app
+POLARBEAR_PRELOADED_DATASETS_DIR=/Users/liyunlong/Downloads/Polarbear_Vocab_Full_Dataset_Builder/polarbear-datasets pnpm tauri build --bundles app,dmg --no-sign
 ```
 
 不设置这个环境变量时，只预制项目自带的示例词条。完整 CSV 的再分发授权尚未核实，因此不要把上述本地产物公开分发。

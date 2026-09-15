@@ -221,7 +221,7 @@ jobs:
   # ------------------------------------------------------------
   # 2. macOS
   # Universal binary: Apple Silicon + Intel
-  # Output: unsigned APP zip
+  # Output: unsigned DMG + APP zip
   # ------------------------------------------------------------
   build-macos:
     name: macOS Universal
@@ -265,7 +265,8 @@ jobs:
         run: |
           pnpm run tauri build \
             --target universal-apple-darwin \
-            --bundles app
+            --bundles app,dmg \
+            --no-sign
 
       - name: Collect macOS artifacts
         shell: bash
@@ -273,6 +274,15 @@ jobs:
           set -euo pipefail
 
           mkdir -p dist
+
+          DMG_PATH="$(
+            find target/universal-apple-darwin/release/bundle/dmg \
+              -maxdepth 1 \
+              -type f \
+              -name '*.dmg' \
+              -print \
+              -quit
+          )"
 
           APP_PATH="$(
             find target/universal-apple-darwin/release/bundle/macos \
@@ -283,10 +293,18 @@ jobs:
               -quit
           )"
 
+          if [ -z "${DMG_PATH}" ]; then
+            echo "::error::DMG was not generated."
+            exit 1
+          fi
+
           if [ -z "${APP_PATH}" ]; then
             echo "::error::.app bundle was not generated."
             exit 1
           fi
+
+          cp "${DMG_PATH}" \
+            "dist/${APP_NAME}-${RELEASE_VERSION}-macOS-universal.dmg"
 
           ditto \
             -c \
@@ -297,6 +315,7 @@ jobs:
             "dist/${APP_NAME}-${RELEASE_VERSION}-macOS-universal.app.zip"
 
           shasum -a 256 \
+            "dist/${APP_NAME}-${RELEASE_VERSION}-macOS-universal.dmg" \
             "dist/${APP_NAME}-${RELEASE_VERSION}-macOS-universal.app.zip" \
             > dist/SHA256-macOS.txt
 
@@ -306,6 +325,7 @@ jobs:
           name: macOS
           if-no-files-found: error
           path: |
+            dist/*.dmg
             dist/*.zip
             dist/SHA256-macOS.txt
 

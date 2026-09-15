@@ -164,7 +164,7 @@ Coverage includes Rust domain/application/engine/storage tests, frontend locale/
 
 A `vMAJOR.MINOR.PATCH` tag is the release source of truth. CI validates the tag, injects the version, runs all gates, then builds platform artifacts. Release artifact paths are rooted at `target/release/bundle/`.
 
-The current tag workflow produces an unsigned macOS universal `.app` ZIP. Apple certificates/notarization are intentionally disabled; macOS may show a Gatekeeper warning for downloaded artifacts. DMG packaging and iPhone IPA release are paused; device IPA distribution requires Apple signing credentials.
+The current tag workflow produces an unsigned macOS universal DMG and `.app` ZIP. Apple certificates/notarization are intentionally disabled with `--no-sign`; macOS may show a Gatekeeper warning for downloaded artifacts. iPhone IPA release is paused because device distribution requires Apple signing credentials.
 
 ## 12. Run and build
 

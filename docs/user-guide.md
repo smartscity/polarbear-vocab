@@ -28,7 +28,7 @@ Artifacts are written to `target/release/bundle/`.
 To locally bundle the six supplied full datasets (primary, junior/high school, CET-4, CET-6, IELTS):
 
 ```bash
-POLARBEAR_PRELOADED_DATASETS_DIR=/Users/liyunlong/Downloads/Polarbear_Vocab_Full_Dataset_Builder/polarbear-datasets pnpm tauri build --bundles app
+POLARBEAR_PRELOADED_DATASETS_DIR=/Users/liyunlong/Downloads/Polarbear_Vocab_Full_Dataset_Builder/polarbear-datasets pnpm tauri build --bundles app,dmg --no-sign
 ```
 
 Without this variable, the app includes only the repository's starter entries. Redistribution rights for the full CSVs are not yet verified, so do not publish this local build.
