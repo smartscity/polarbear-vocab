@@ -32,7 +32,7 @@
   "lexicon.title": "Word search",
   "lexicon.search": "Search",
   "lexicon.placeholder": "Search a word, for example earn",
-  "lexicon.hint": "Search Polarbear Lexicon for a word.",
+  "lexicon.hint": "Search words across all local datasets.",
   "lexicon.noResults": "No matching word was found.",
   "lexicon.practice": "Practice",
   "lexicon.answered": "Answered",

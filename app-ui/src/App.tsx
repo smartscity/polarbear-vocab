@@ -60,7 +60,7 @@ export function App() {
   };
 
   return (
-    <AppShell appName={data.appInfo.name} footer={`${data.appInfo.name} · ${data.appInfo.version}`} onNavigate={navigate} screen={screen}>
+    <AppShell appName={data.appInfo.name} footer="Copyright © 2020-2026 smartscity All rights reserved." onNavigate={navigate} screen={screen}>
       {data.error ? <ErrorBanner message={data.error} onClose={() => data.setError(null)} /> : null}
       <ScreenView
         currentDataset={currentDataset}

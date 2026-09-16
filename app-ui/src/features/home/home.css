@@ -13,6 +13,29 @@
   background: var(--pb-accent-strong);
 }
 
+.home-hero-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--pb-space-4);
+}
+
+.home-hero-heading .dataset-picker {
+  min-width: 0;
+}
+
+.home-hero-heading .dataset-picker select {
+  max-width: 100%;
+  text-overflow: ellipsis;
+}
+
+.home-hero-logo {
+  width: clamp(56px, 9vw, 76px);
+  height: auto;
+  flex: none;
+  border-radius: 20%;
+}
+
 .dataset-picker {
   display: inline-flex;
   flex-direction: column;

@@ -32,6 +32,7 @@ POLARBEAR_PRELOADED_DATASETS_DIR=/Users/liyunlong/Downloads/Polarbear_Vocab_Full
 ```
 
 Without this variable, the app includes only the repository's starter entries. Redistribution rights for the full CSVs are not yet verified, so do not publish this local build.
+When opened, a new local build adds missing preloaded entries to an existing app data directory without deleting learning history or user-created datasets. No manual database deletion is needed.
 
 ## Use
 

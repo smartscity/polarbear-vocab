@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import {
   addToMyVocabulary,
@@ -12,18 +12,31 @@ export function useLexiconSearch(onError: (error: unknown) => void) {
   const [results, setResults] = useState<LexiconEntry[]>([]);
   const [busy, setBusy] = useState(false);
   const [searched, setSearched] = useState(false);
+  const requestId = useRef(0);
+
+  const updateQuery = (nextQuery: string) => {
+    requestId.current += 1;
+    setQuery(nextQuery);
+    setResults([]);
+    setSearched(false);
+    setBusy(false);
+  };
 
   const search = async (nextQuery = query) => {
     const normalized = nextQuery.trim();
     if (!normalized) return;
+    const currentRequest = ++requestId.current;
     setBusy(true);
     try {
-      setResults(await searchLexicon(normalized));
-      setSearched(true);
+      const matches = await searchLexicon(normalized);
+      if (currentRequest === requestId.current) {
+        setResults(matches);
+        setSearched(true);
+      }
     } catch (error) {
-      onError(error);
+      if (currentRequest === requestId.current) onError(error);
     } finally {
-      setBusy(false);
+      if (currentRequest === requestId.current) setBusy(false);
     }
   };
 
@@ -44,5 +57,5 @@ export function useLexiconSearch(onError: (error: unknown) => void) {
     }
   };
 
-  return { busy, query, results, search, searched, setQuery, toggleVocabulary };
+  return { busy, query, results, search, searched, setQuery: updateQuery, toggleVocabulary };
 }

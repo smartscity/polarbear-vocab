@@ -94,7 +94,7 @@ const articles: Article[] = [
 ];
 
 function Screen(props: { children: React.ReactNode; screen: NavScreen | "session" | "study" }) {
-  return <AppShell appName="Polarbear Vocab" footer="Polarbear Vocab · 0.10" onNavigate={() => undefined} screen={props.screen}>{props.children}</AppShell>;
+  return <AppShell appName="Polarbear Vocab" footer="Copyright © 2020-2026 smartscity All rights reserved." onNavigate={() => undefined} screen={props.screen}>{props.children}</AppShell>;
 }
 
 const noOp = () => undefined;

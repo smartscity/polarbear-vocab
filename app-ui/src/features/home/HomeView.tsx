@@ -5,6 +5,8 @@ import { Button } from "../../design-system/primitives/Button";
 import type { DatasetSummary, HomeDto } from "../../lib/commands";
 import { useI18n } from "../../lib/i18n";
 
+const logo = new URL("../../../../src-tauri/icons/128x128@2x.png", import.meta.url).href;
+
 interface HomeViewProps {
   datasets: DatasetSummary[];
   home: HomeDto;
@@ -33,7 +35,10 @@ export function HomeView(props: HomeViewProps) {
   return (
     <div className="home-page">
       <section className="home-hero">
-        <DatasetSwitcher datasets={props.datasets} label={t("home.dataset")} onChange={props.onDatasetChange} value={props.home.dataset.id} />
+        <div className="home-hero-heading">
+          <DatasetSwitcher datasets={props.datasets} label={t("home.dataset")} onChange={props.onDatasetChange} value={props.home.dataset.id} />
+          <img alt="Polarbear Vocab" className="home-hero-logo" height="76" src={logo} width="76" />
+        </div>
         <div className="progress-copy">{t("home.explored", { answered: props.home.progress.answered.toLocaleString(), total: props.home.progress.total.toLocaleString() })}</div>
         <div aria-hidden="true" className="progress-track"><span style={{ width: `${progressPercent(props.home)}%` }} /></div>
         <Button disabled={props.home.progress.unseen === 0} onClick={props.onContinue} variant="primary">

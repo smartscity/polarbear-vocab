@@ -32,7 +32,7 @@
   "lexicon.title": "查词",
   "lexicon.search": "搜索",
   "lexicon.placeholder": "输入单词，例如 earn",
-  "lexicon.hint": "在 Polarbear Lexicon 中搜索单词。",
+  "lexicon.hint": "搜索所有本地数据集中的单词。",
   "lexicon.noResults": "没有找到匹配的单词。",
   "lexicon.practice": "练习",
   "lexicon.answered": "已答",

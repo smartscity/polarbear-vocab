@@ -32,6 +32,7 @@ POLARBEAR_PRELOADED_DATASETS_DIR=/Users/liyunlong/Downloads/Polarbear_Vocab_Full
 ```
 
 不设置这个环境变量时，只预制项目自带的示例词条。完整 CSV 的再分发授权尚未核实，因此不要把上述本地产物公开分发。
+安装并打开新的本地构建后，App 会自动把新增预制词条补入旧数据目录，保留已有学习记录和自建数据集；无需手工删除数据库。
 
 ## 使用
 

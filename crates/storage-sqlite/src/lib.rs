@@ -9,6 +9,7 @@ mod lexicon_search;
 mod mistakes;
 mod read_model;
 mod schema;
+mod seed_upgrade;
 mod settings;
 mod study;
 
@@ -69,6 +70,7 @@ pub fn ensure_writable_content(
             })
             .map_err(database_error)?;
         if version == "2" || version == "3" {
+            seed_upgrade::sync_preloaded_seed(seed, destination)?;
             return Ok(destination.to_path_buf());
         }
         return Err(ApplicationError::Infrastructure(format!(

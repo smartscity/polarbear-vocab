@@ -59,6 +59,8 @@ Stores preloaded and imported datasets, dataset membership, words, senses, IPA, 
 
 The builder can additionally read six supplied full CSV datasets from `POLARBEAR_PRELOADED_DATASETS_DIR` during a local build. It validates headers and identifiers, preserves every dataset membership, chooses one deterministic richer record for shared `sense_uid`s, and generates three distinct-lemma quiz distractors per sense. The CSVs are not checked into this repository while redistribution permission remains unverified; the source record marks locally built content as not cleared for redistribution.
 
+On startup, the app hashes the bundled seed and applies each new seed once to the writable `content.db`. The upgrade backs up the existing database, transactionally inserts missing senses and preloaded memberships, and preserves user-created datasets and existing stable UIDs. Failed upgrades restore the backup. Lexicon search queries all senses in the merged content database, independent of the active dataset.
+
 ### `user.db`
 
 Stores append-only answer history, study sessions, My Vocabulary, derived progress/statistics, imported articles, UI language, theme, and speech preferences. Correct and mistake collections are derived from history; a later correct answer does not erase an earlier mistake.
