@@ -112,7 +112,7 @@ export const DatasetList: Story = { render: () => <Screen screen="datasets"><Dat
 
 export const DatasetDetail: Story = { render: () => <Screen screen="datasets"><DatasetsView datasets={datasets} onChanged={async () => undefined} onError={noOp} onSelect={noOp} onStart={noOp} selectedDatasetId="core" /></Screen> };
 
-export const Lexicon: Story = { render: () => <Screen screen="lexicon"><LexiconView busy={false} onPractice={noOp} onQueryChange={noOp} onSearch={noOp} onToggleVocabulary={noOp} query="earn" results={lexiconResults} searched /></Screen> };
+export const Lexicon: Story = { render: () => <Screen screen="lexicon"><LexiconView busy={false} onPractice={noOp} onQueryChange={noOp} onSearch={noOp} onSpeak={noOp} onToggleVocabulary={noOp} query="earn" results={lexiconResults} searched /></Screen> };
 
 export const Listening: Story = { render: () => <Screen screen="listening"><ListeningView articles={articles} onDelete={noOp} onError={noOp} onImport={noOp} onPause={noOp} onPlay={noOp} onRateChange={noOp} onResume={noOp} onSelect={noOp} onStop={noOp} onVoiceChange={noOp} playback="idle" rate={100} selected={articles[0]} voice="female" /></Screen> };
 

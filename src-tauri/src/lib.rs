@@ -39,6 +39,7 @@ pub fn run() {
             commands::list_wrong_words,
             commands::create_dataset,
             commands::rename_dataset,
+            commands::reorder_datasets,
             commands::delete_dataset,
             commands::preview_dataset_csv,
             commands::import_dataset_csv,

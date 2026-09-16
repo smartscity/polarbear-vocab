@@ -11,6 +11,7 @@ interface LexiconViewProps {
   onPractice: (senseUid: string) => void;
   onQueryChange: (query: string) => void;
   onSearch: () => void;
+  onSpeak: (text: string) => void;
   onToggleVocabulary: (entry: LexiconEntry) => void;
   query: string;
   results: LexiconEntry[];
@@ -49,6 +50,7 @@ export function LexiconView(props: LexiconViewProps) {
               entry={entry}
               key={entry.senseUid}
               onPractice={props.onPractice}
+              onSpeak={props.onSpeak}
               onToggleVocabulary={props.onToggleVocabulary}
             />
           ))}
@@ -64,6 +66,7 @@ function LexiconCard(props: {
   busy: boolean;
   entry: LexiconEntry;
   onPractice: (senseUid: string) => void;
+  onSpeak: (text: string) => void;
   onToggleVocabulary: (entry: LexiconEntry) => void;
 }) {
   const { t } = useI18n();
@@ -71,7 +74,18 @@ function LexiconCard(props: {
   return (
     <article className="lexicon-card">
       <header>
-        <div><h2 className="pb-display">{entry.lemma}</h2><p>{entry.ipa}</p></div>
+        <div className="lexicon-heading">
+          <div><h2 className="pb-display">{entry.lemma}</h2><p>{entry.ipa}</p></div>
+          <button
+            aria-label={`${t("lexicon.playPronunciation")}: ${entry.lemma}`}
+            className="lexicon-speak"
+            onClick={() => props.onSpeak(entry.lemma)}
+            title={t("lexicon.playPronunciation")}
+            type="button"
+          >
+            <span aria-hidden="true">🔊</span>
+          </button>
+        </div>
         <span>{entry.partOfSpeech}</span>
       </header>
       <p className="lexicon-gloss" lang="zh-CN">{entry.zhGloss}</p>

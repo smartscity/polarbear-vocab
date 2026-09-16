@@ -66,6 +66,7 @@ fn article_service_trims_content_and_rejects_invalid_articles() {
 #[derive(Default)]
 struct DatasetDouble {
     names: Mutex<Vec<String>>,
+    orders: Mutex<Vec<Vec<String>>>,
 }
 
 impl DatasetRepository for DatasetDouble {
@@ -83,6 +84,11 @@ impl DatasetRepository for DatasetDouble {
 
     fn rename_dataset(&self, _: &str, name: &str) -> Result<(), ApplicationError> {
         self.names.lock().unwrap().push(name.to_owned());
+        Ok(())
+    }
+
+    fn reorder_datasets(&self, dataset_ids: &[String]) -> Result<(), ApplicationError> {
+        self.orders.lock().unwrap().push(dataset_ids.to_vec());
         Ok(())
     }
 
@@ -136,6 +142,25 @@ fn dataset_service_trims_valid_names_and_rejects_invalid_names() {
         Err(ApplicationError::InvalidInput(_))
     ));
     assert_eq!(repository.names.lock().unwrap().len(), 1);
+}
+
+#[test]
+fn dataset_service_validates_reorder_ids() {
+    let repository = Arc::new(DatasetDouble::default());
+    let service = DatasetService::new(repository.clone(), Arc::new(ImportDouble));
+    let requested = vec!["second".to_owned(), "first".to_owned()];
+
+    service.reorder(&requested).unwrap();
+
+    assert_eq!(*repository.orders.lock().unwrap(), [requested]);
+    assert!(matches!(
+        service.reorder(&["same".to_owned(), "same".to_owned()]),
+        Err(ApplicationError::InvalidInput(_))
+    ));
+    assert!(matches!(
+        service.reorder(&[]),
+        Err(ApplicationError::InvalidInput(_))
+    ));
 }
 
 #[derive(Default)]

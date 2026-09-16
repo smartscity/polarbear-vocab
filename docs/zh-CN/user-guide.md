@@ -36,9 +36,9 @@ POLARBEAR_PRELOADED_DATASETS_DIR=/Users/liyunlong/Downloads/Polarbear_Vocab_Full
 
 ## 使用
 
-- 查词：搜索单词，查看音标、释义、例句和学习统计；可直接练习或加入“我的词汇”。
+- 查词：搜索单词，点击扬声器播放发音，查看音标、释义、例句和学习统计；可直接练习或加入“我的词汇”。
 - 首页/数据集：选择未学、错题或全部，再选 10/20/50 个词开始；结束后可练习本次错词。
-- 数据集：导入/更新 CSV 时选择“仅新增 / 更新已有 / 替换数据集”；管理区可导出、重命名、删除。必填列：`lemma`、`quiz_prompt_zh`；模板：[`data/examples/dataset-template.csv`](../../data/examples/dataset-template.csv)。
+- 数据集：在 macOS 或 iPhone 上拖动右侧手柄调整顺序，也支持键盘方向键；导入/更新 CSV 时选择“仅新增 / 更新已有 / 替换数据集”；管理区可导出、重命名、删除。必填列：`lemma`、`quiz_prompt_zh`；模板：[`data/examples/dataset-template.csv`](../../data/examples/dataset-template.csv)。
 - 听力：导入 UTF-8 `.txt`/`.md`，选择声音与 0.5×/1×/1.5×/2×；选中文章单词即可查词并加入“我的词汇”。
 - 错题：选择筛选条件，点击“练习这个集合”。
 - 设置：切换语言、外观、声音、语速，并导出/导入备份。

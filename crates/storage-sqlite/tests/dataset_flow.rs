@@ -94,6 +94,45 @@ fn import_strategies_add_update_and_replace_as_requested() {
     assert_eq!(summary.word_count, 1);
 }
 
+#[test]
+fn dataset_order_is_persisted_in_user_data() {
+    let fixture = Fixture::new();
+    let store = fixture.store();
+    let first = store.create_dataset("First").unwrap();
+    let second = store.create_dataset("Second").unwrap();
+
+    store
+        .reorder_datasets(&[second.id.clone(), first.id.clone()])
+        .unwrap();
+
+    let ids: Vec<String> = store
+        .list_datasets()
+        .unwrap()
+        .into_iter()
+        .map(|dataset| dataset.id)
+        .collect();
+    assert_eq!(ids, [second.id.clone(), first.id.clone()]);
+    drop(store);
+    let reopened_ids: Vec<String> = fixture
+        .store()
+        .list_datasets()
+        .unwrap()
+        .into_iter()
+        .map(|dataset| dataset.id)
+        .collect();
+    assert_eq!(reopened_ids, [second.id, first.id]);
+}
+
+#[test]
+fn dataset_order_rejects_incomplete_lists() {
+    let fixture = Fixture::new();
+    let store = fixture.store();
+    let first = store.create_dataset("First").unwrap();
+    store.create_dataset("Second").unwrap();
+
+    assert!(store.reorder_datasets(&[first.id]).is_err());
+}
+
 fn gloss(path: &std::path::Path, sense_uid: &str) -> String {
     Connection::open(path)
         .unwrap()

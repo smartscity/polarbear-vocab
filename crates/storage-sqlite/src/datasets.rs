@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use chrono::Utc;
 use polarbear_vocab_application::{ApplicationError, DatasetRepository};
 use polarbear_vocab_domain::{
@@ -6,7 +8,7 @@ use polarbear_vocab_domain::{
 use rusqlite::{OptionalExtension, Transaction, params};
 use uuid::Uuid;
 
-use crate::{SqliteStore, database_error, distractor_index, schema};
+use crate::{SqliteStore, database_error, dataset_order, distractor_index, read_model, schema};
 
 impl DatasetRepository for SqliteStore {
     fn create_dataset(&self, name: &str) -> Result<DatasetSummary, ApplicationError> {
@@ -30,6 +32,28 @@ impl DatasetRepository for SqliteStore {
             preloaded: false,
             word_count: 0,
         })
+    }
+
+    fn reorder_datasets(&self, dataset_ids: &[String]) -> Result<(), ApplicationError> {
+        let available: HashSet<String> = {
+            let content = self.content()?;
+            read_model::list_datasets(&content)
+                .map_err(database_error)?
+                .into_iter()
+                .map(|dataset| dataset.id)
+                .collect()
+        };
+        let requested: HashSet<&str> = dataset_ids.iter().map(String::as_str).collect();
+        if requested.len() != dataset_ids.len()
+            || available.len() != requested.len()
+            || !available.iter().all(|id| requested.contains(id.as_str()))
+        {
+            return Err(ApplicationError::InvalidInput(
+                "dataset order must contain every current dataset exactly once".to_owned(),
+            ));
+        }
+        let mut user = self.user()?;
+        dataset_order::write(&mut user, dataset_ids)
     }
 
     fn rename_dataset(&self, dataset_id: &str, name: &str) -> Result<(), ApplicationError> {

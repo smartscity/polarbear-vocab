@@ -36,9 +36,9 @@ When opened, a new local build adds missing preloaded entries to an existing app
 
 ## Use
 
-- Lexicon: search a word, view pronunciation, meaning, examples and learning statistics, then practice it or add it to My Vocabulary.
+- Lexicon: search a word, play its pronunciation, view meaning, examples and learning statistics, then practice it or add it to My Vocabulary.
 - Home/Datasets: choose Unseen, Mistakes, or All; choose 10/20/50 words; start. The summary can immediately practice mistakes.
-- Datasets: import or update CSV with Add only, Update existing, or Replace dataset. Export, rename, and delete are under Manage. Required columns: `lemma`, `quiz_prompt_zh`; template: [`data/examples/dataset-template.csv`](../data/examples/dataset-template.csv).
+- Datasets: drag the handle to reorder datasets on macOS or iPhone; the arrow keys also work. Import or update CSV with Add only, Update existing, or Replace dataset. Export, rename, and delete are under Manage. Required columns: `lemma`, `quiz_prompt_zh`; template: [`data/examples/dataset-template.csv`](../data/examples/dataset-template.csv).
 - Listening: import UTF-8 `.txt`/`.md`, choose a voice and 0.5×/1×/1.5×/2×. Select a word in the article to look it up and add it to My Vocabulary.
 - Mistakes: select a filter and choose **Practice this set**.
 - Settings: choose language, appearance, voice, rate, and export/import backup.

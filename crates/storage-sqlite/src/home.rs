@@ -5,12 +5,18 @@ use polarbear_vocab_application::{ApplicationError, HomeQueryPort};
 use polarbear_vocab_domain::{DailyActivity, DatasetProgress, DatasetSummary, HomeDto};
 use polarbear_vocab_statistics_engine::{WordStat, summarize};
 
-use crate::{SqliteStore, database_error, read_model};
+use crate::{SqliteStore, database_error, dataset_order, read_model};
 
 impl HomeQueryPort for SqliteStore {
     fn list_datasets(&self) -> Result<Vec<DatasetSummary>, ApplicationError> {
-        let content = self.content()?;
-        read_model::list_datasets(&content).map_err(database_error)
+        let mut datasets = {
+            let content = self.content()?;
+            read_model::list_datasets(&content).map_err(database_error)?
+        };
+        let user = self.user()?;
+        let order = dataset_order::read(&user)?;
+        dataset_order::apply(&mut datasets, &order);
+        Ok(datasets)
     }
 
     fn get_home(&self, dataset_id: &str) -> Result<HomeDto, ApplicationError> {

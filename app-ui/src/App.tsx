@@ -126,6 +126,7 @@ function ScreenView(props: ScreenViewProps) {
         onPractice={(senseUid) => void props.study.begin({ type: "custom", senseUids: [senseUid] })}
         onQueryChange={props.lexicon.setQuery}
         onSearch={() => void props.lexicon.search()}
+        onSpeak={(text) => void speak(text, speechLocale, speechRatePercent / 100, speechVoice).catch(props.data.reportError)}
         onToggleVocabulary={(entry) => void props.lexicon.toggleVocabulary(entry)}
         query={props.lexicon.query}
         results={props.lexicon.results}

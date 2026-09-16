@@ -7,6 +7,7 @@ import { ConfirmDialog, Modal } from "../../design-system/primitives/Dialogs";
 import type { DatasetSummary } from "../../lib/commands";
 import { useI18n } from "../../lib/i18n";
 import { ImportPreview } from "./ImportPreview";
+import { DatasetList } from "./DatasetList";
 import { useDatasetController } from "./useDatasetController";
 
 interface DatasetsViewProps {
@@ -34,7 +35,7 @@ export function DatasetsView(props: DatasetsViewProps) {
     <section className="datasets-page">
       <PageHeader actions={<CreateDatasetForm busy={controller.busy} name={controller.name} onChange={controller.setName} onSubmit={submitCreate} />} eyebrow={t("app.name")} title={t("dataset.title")} />
       <div className="dataset-layout">
-        <DatasetList datasets={props.datasets} onSelect={props.onSelect} selectedId={props.selectedDatasetId} />
+        <DatasetList busy={controller.busy} datasets={props.datasets} onReorder={controller.reorder} onSelect={props.onSelect} selectedId={props.selectedDatasetId} />
         {controller.selected ? <DatasetDetail busy={controller.busy} dataset={controller.selected} notice={controller.notice} onDelete={() => controller.setDeleteOpen(true)} onExport={controller.exportCsv} onImport={controller.chooseCsv} onRename={controller.beginRename} onStart={props.onStart} /> : <EmptyState>{t("dataset.select")}</EmptyState>}
       </div>
       {controller.pendingImport ? <ImportPreview busy={controller.busy} onCancel={() => controller.setPendingImport(null)} onConfirm={controller.confirmImport} onStrategyChange={controller.setImportStrategy} pending={controller.pendingImport} strategy={controller.importStrategy} /> : null}
@@ -51,19 +52,6 @@ function CreateDatasetForm(props: { busy: boolean; name: string; onChange: (name
       <input aria-label={t("dataset.name")} className="pb-input" disabled={props.busy} maxLength={80} onChange={(event) => props.onChange(event.target.value)} placeholder={t("dataset.name")} value={props.name} />
       <Button disabled={props.busy || !props.name.trim()} type="submit" variant="primary">{t("dataset.new")}</Button>
     </form>
-  );
-}
-
-function DatasetList(props: { datasets: DatasetSummary[]; onSelect: (id: string) => void; selectedId: string }) {
-  const { t } = useI18n();
-  return (
-    <div className="dataset-list">
-      {props.datasets.map((dataset) => (
-        <button data-active={dataset.id === props.selectedId} key={dataset.id} onClick={() => props.onSelect(dataset.id)} type="button">
-          <span>{dataset.name}</span><small>{t("dataset.words", { count: dataset.wordCount })}</small>
-        </button>
-      ))}
-    </div>
   );
 }
 

@@ -41,6 +41,35 @@
   min-width: 0;
 }
 
+.lexicon-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--pb-space-3);
+}
+
+.lexicon-speak {
+  width: 2.75rem;
+  height: 2.75rem;
+  display: inline-grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--pb-border);
+  border-radius: 999px;
+  color: var(--pb-text);
+  background: var(--pb-surface-subtle);
+  cursor: pointer;
+}
+
+.lexicon-speak:hover {
+  border-color: var(--pb-accent);
+  background: var(--pb-accent-soft);
+}
+
+.lexicon-speak:focus-visible {
+  outline: 3px solid var(--pb-accent-soft);
+  outline-offset: 2px;
+}
+
 .lexicon-card h2,
 .lexicon-example {
   overflow-wrap: anywhere;

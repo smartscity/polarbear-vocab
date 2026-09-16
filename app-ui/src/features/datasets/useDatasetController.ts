@@ -7,6 +7,7 @@ import {
   exportDatasetCsv,
   importDatasetCsv,
   previewDatasetCsv,
+  reorderDatasets,
   renameDataset,
   type CsvImportPreview,
   type DatasetImportStrategy,
@@ -76,13 +77,17 @@ export function useDatasetController(options: DatasetControllerOptions) {
     setRenameOpen(false);
     await options.onChanged(selected.id);
   });
+  const reorder = (datasetIds: string[]) => run(async () => {
+    await reorderDatasets(datasetIds);
+    await options.onChanged(options.selectedDatasetId);
+  });
   const confirmDelete = () => void run(async () => {
     if (!selected) return;
     await deleteDataset(selected.id);
     setDeleteOpen(false);
     await options.onChanged();
   });
-  return { beginRename, busy, chooseCsv, confirmDelete, confirmImport, confirmRename, create, deleteOpen, exportCsv, importStrategy, name, notice, pendingImport, renameName, renameOpen, selected, setDeleteOpen, setImportStrategy, setName, setPendingImport, setRenameName, setRenameOpen };
+  return { beginRename, busy, chooseCsv, confirmDelete, confirmImport, confirmRename, create, deleteOpen, exportCsv, importStrategy, name, notice, pendingImport, renameName, renameOpen, reorder, selected, setDeleteOpen, setImportStrategy, setName, setPendingImport, setRenameName, setRenameOpen };
 }
 
 function safeFileName(name: string): string {

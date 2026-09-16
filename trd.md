@@ -78,6 +78,8 @@ Optional columns include stable UID, IPA, gloss, part of speech, and examples. P
 
 Dataset detail shows source, update time, word count, Start, Import / Update, Export CSV, Rename, and Delete. Import behavior is explicit:
 
+Dataset list order is user-controlled through a pointer or touch drag handle, with arrow-key support. The ordered dataset IDs are stored as a user preference in `user.db`, so bundled content upgrades do not reset the order.
+
 - **Add only** adds membership and new senses without changing existing senses.
 - **Update existing** adds new entries and overwrites matching stable `sense_uid` content.
 - **Replace dataset** replaces membership with the imported file and updates matching content.

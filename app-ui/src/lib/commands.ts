@@ -215,6 +215,8 @@ export const createDataset = (name: string) =>
   invoke<DatasetSummary>("create_dataset", { name });
 export const renameDataset = (datasetId: string, name: string) =>
   invoke<void>("rename_dataset", { datasetId, name });
+export const reorderDatasets = (datasetIds: string[]) =>
+  invoke<void>("reorder_datasets", { datasetIds });
 export const deleteDataset = (datasetId: string) =>
   invoke<void>("delete_dataset", { datasetId });
 export const previewDatasetCsv = (path: string) =>

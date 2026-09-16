@@ -190,6 +190,17 @@ pub fn rename_dataset(
 }
 
 #[tauri::command]
+pub fn reorder_datasets(
+    runtime: State<'_, AppRuntime>,
+    dataset_ids: Vec<String>,
+) -> Result<(), String> {
+    runtime
+        .datasets
+        .reorder(&dataset_ids)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
 pub fn delete_dataset(runtime: State<'_, AppRuntime>, dataset_id: String) -> Result<(), String> {
     runtime
         .datasets

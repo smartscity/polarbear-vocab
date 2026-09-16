@@ -78,8 +78,17 @@ test("listening exposes every offline voice style", async ({ page }) => {
 async function waitForDarkThemePaint(page: import("@playwright/test").Page) {
   await expect.poll(() => page.locator("body").evaluate((element) => {
     const styles = getComputedStyle(element);
-    return { background: styles.backgroundColor, color: styles.color };
-  })).toEqual({ background: "rgb(17, 23, 19)", color: "rgb(237, 243, 238)" });
+    const display = document.querySelector<HTMLElement>(".pb-display");
+    return {
+      background: styles.backgroundColor,
+      color: styles.color,
+      displayColor: display ? getComputedStyle(display).color : styles.color,
+    };
+  })).toEqual({
+    background: "rgb(17, 23, 19)",
+    color: "rgb(237, 243, 238)",
+    displayColor: "rgb(237, 243, 238)",
+  });
   await page.evaluate(() => new Promise<void>((resolve) => {
     requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
   }));

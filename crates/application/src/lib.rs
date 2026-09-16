@@ -66,6 +66,7 @@ pub trait MistakeQueryPort: Send + Sync {
 
 pub trait DatasetRepository: Send + Sync {
     fn create_dataset(&self, name: &str) -> Result<DatasetSummary, ApplicationError>;
+    fn reorder_datasets(&self, dataset_ids: &[String]) -> Result<(), ApplicationError>;
     fn rename_dataset(&self, dataset_id: &str, name: &str) -> Result<(), ApplicationError>;
     fn delete_dataset(&self, dataset_id: &str) -> Result<(), ApplicationError>;
     fn import_dataset(
@@ -270,6 +271,20 @@ impl DatasetService {
     pub fn rename(&self, dataset_id: &str, name: &str) -> Result<(), ApplicationError> {
         self.repository
             .rename_dataset(dataset_id, validate_dataset_name(name)?)
+    }
+
+    pub fn reorder(&self, dataset_ids: &[String]) -> Result<(), ApplicationError> {
+        let unique: std::collections::HashSet<&str> =
+            dataset_ids.iter().map(String::as_str).collect();
+        if dataset_ids.is_empty()
+            || unique.len() != dataset_ids.len()
+            || dataset_ids.iter().any(|id| id.trim().is_empty())
+        {
+            return Err(ApplicationError::InvalidInput(
+                "dataset order must contain unique, non-empty ids".to_owned(),
+            ));
+        }
+        self.repository.reorder_datasets(dataset_ids)
     }
 
     pub fn delete(&self, dataset_id: &str) -> Result<(), ApplicationError> {
