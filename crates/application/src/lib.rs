@@ -91,6 +91,11 @@ pub trait SettingsPort: Send + Sync {
 pub trait ArticleRepository: Send + Sync {
     fn list_articles(&self) -> Result<Vec<ArticleDto>, ApplicationError>;
     fn save_article(&self, title: &str, body: &str) -> Result<ArticleDto, ApplicationError>;
+    fn save_article_translation(
+        &self,
+        article_id: &str,
+        translated_body: &str,
+    ) -> Result<(), ApplicationError>;
     fn delete_article(&self, article_id: &str) -> Result<(), ApplicationError>;
 }
 

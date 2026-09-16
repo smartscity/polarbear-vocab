@@ -114,6 +114,7 @@ export interface Article {
   id: string;
   title: string;
   body: string;
+  translatedBody: string | null;
   createdAt: number;
 }
 
@@ -210,6 +211,8 @@ export const resumeSpeech = () => invoke<void>("resume_speech");
 export const stopSpeech = () => invoke<void>("stop_speech");
 export const listArticles = () => invoke<Article[]>("list_articles");
 export const importArticle = (path: string) => invoke<Article>("import_article", { path });
+export const saveArticleTranslation = (articleId: string, translatedBody: string) =>
+  invoke<void>("save_article_translation", { articleId, translatedBody });
 export const deleteArticle = (articleId: string) => invoke<void>("delete_article", { articleId });
 export const createDataset = (name: string) =>
   invoke<DatasetSummary>("create_dataset", { name });

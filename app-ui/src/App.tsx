@@ -158,10 +158,12 @@ function ScreenView(props: ScreenViewProps) {
         onResume={() => void props.listening.resume()}
         onSelect={(articleId) => void props.listening.select(articleId)}
         onStop={() => void props.listening.stop()}
+        onTranslate={() => void props.listening.translate()}
         onVoiceChange={(voice) => void props.listening.changeVoice(voice)}
         playback={props.listening.playback}
         rate={props.listening.speechRatePercent}
         selected={props.listening.selected}
+        translating={props.listening.translating}
         voice={props.listening.speechVoice}
       />
     );

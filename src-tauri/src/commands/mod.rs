@@ -296,6 +296,18 @@ pub fn delete_article(runtime: State<'_, AppRuntime>, article_id: String) -> Res
 }
 
 #[tauri::command]
+pub fn save_article_translation(
+    runtime: State<'_, AppRuntime>,
+    article_id: String,
+    translated_body: String,
+) -> Result<(), String> {
+    runtime
+        .articles
+        .save_translation(&article_id, &translated_body)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
 pub fn speak(runtime: State<'_, AppRuntime>, request: SpeakRequest) -> Result<(), String> {
     runtime
         .speech

@@ -230,7 +230,7 @@ fn prepare_user_connection(connection: &mut Connection) -> Result<(), Applicatio
             .map_err(database_error)?;
         if let Some(version) = version {
             let number = version.parse::<u32>().unwrap_or_default();
-            if number == 0 || number > 5 {
+            if number == 0 || number > 6 {
                 return Err(ApplicationError::Infrastructure(format!(
                     "unsupported user database schema {version}"
                 )));

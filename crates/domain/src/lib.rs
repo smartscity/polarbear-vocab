@@ -249,6 +249,7 @@ pub struct ArticleDto {
     pub id: String,
     pub title: String,
     pub body: String,
+    pub translated_body: Option<String>,
     pub created_at: i64,
 }
 
