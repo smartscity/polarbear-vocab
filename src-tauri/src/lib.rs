@@ -22,6 +22,7 @@ pub fn run() {
             commands::get_app_info,
             commands::list_articles,
             commands::import_article,
+            commands::save_article_translation,
             commands::delete_article,
             commands::list_datasets,
             commands::get_home,

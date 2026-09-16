@@ -6,12 +6,13 @@ pub fn initialize_user_schema(connection: &mut Connection) -> rusqlite::Result<(
             key TEXT PRIMARY KEY,
             value TEXT NOT NULL
         );
-        INSERT OR IGNORE INTO schema_meta(key, value) VALUES ('version', '5');
+        INSERT OR IGNORE INTO schema_meta(key, value) VALUES ('version', '6');
 
         CREATE TABLE IF NOT EXISTS article (
             id TEXT PRIMARY KEY,
             title TEXT NOT NULL,
             body TEXT NOT NULL,
+            translated_body TEXT,
             created_at INTEGER NOT NULL
         );
 
@@ -86,6 +87,9 @@ pub fn initialize_user_schema(connection: &mut Connection) -> rusqlite::Result<(
         );",
     )?;
     migrate_v1_dataset_columns(connection)?;
+    if !has_column(connection, LegacyTable::Article, "translated_body")? {
+        connection.execute("ALTER TABLE article ADD COLUMN translated_body TEXT", [])?;
+    }
     if !has_column(connection, LegacyTable::StudySession, "new_word_count")? {
         connection.execute(
             "ALTER TABLE study_session ADD COLUMN new_word_count INTEGER NOT NULL DEFAULT 0",
@@ -102,7 +106,7 @@ pub fn initialize_user_schema(connection: &mut Connection) -> rusqlite::Result<(
         )?;
     }
     connection.execute(
-        "INSERT INTO schema_meta(key, value) VALUES ('version', '5')
+        "INSERT INTO schema_meta(key, value) VALUES ('version', '6')
          ON CONFLICT(key) DO UPDATE SET value = excluded.value",
         [],
     )?;
@@ -133,12 +137,14 @@ fn migrate_v1_dataset_columns(connection: &mut Connection) -> rusqlite::Result<(
 }
 
 enum LegacyTable {
+    Article,
     StudySession,
     ReviewEvent,
 }
 
 fn has_column(connection: &Connection, table: LegacyTable, column: &str) -> rusqlite::Result<bool> {
     let query = match table {
+        LegacyTable::Article => "PRAGMA table_info(article)",
         LegacyTable::StudySession => "PRAGMA table_info(study_session)",
         LegacyTable::ReviewEvent => "PRAGMA table_info(review_event)",
     };

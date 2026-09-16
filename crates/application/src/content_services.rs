@@ -36,13 +36,33 @@ impl ArticleService {
     }
 
     pub fn delete(&self, article_id: &str) -> Result<(), ApplicationError> {
-        if article_id.trim().is_empty() {
+        self.repository.delete_article(valid_article_id(article_id)?)
+    }
+
+    pub fn save_translation(
+        &self,
+        article_id: &str,
+        translated_body: &str,
+    ) -> Result<(), ApplicationError> {
+        let translated_body = translated_body.trim();
+        if translated_body.is_empty() || translated_body.chars().count() > 200_000 {
             return Err(ApplicationError::InvalidInput(
-                "article id must not be empty".to_owned(),
+                "article translation must contain between 1 and 200000 characters".to_owned(),
             ));
         }
-        self.repository.delete_article(article_id)
+        self.repository
+            .save_article_translation(valid_article_id(article_id)?, translated_body)
     }
+}
+
+fn valid_article_id(value: &str) -> Result<&str, ApplicationError> {
+    let value = value.trim();
+    if value.is_empty() || value.chars().count() > 200 {
+        return Err(ApplicationError::InvalidInput(
+            "article id must contain between 1 and 200 characters".to_owned(),
+        ));
+    }
+    Ok(value)
 }
 
 #[derive(Clone)]

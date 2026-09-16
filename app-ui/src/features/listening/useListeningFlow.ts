@@ -7,11 +7,13 @@ import {
   listArticles,
   pauseSpeech,
   resumeSpeech,
+  saveArticleTranslation,
   speak,
   stopSpeech,
   type Article,
 } from "../../lib/commands";
 import { useI18n } from "../../lib/i18n";
+import { translateEnglishMarkdown } from "./articleTranslation";
 
 export type PlaybackState = "idle" | "paused" | "playing";
 
@@ -26,6 +28,7 @@ export function useListeningFlow(onError: (error: unknown) => void) {
   const [articles, setArticles] = useState<Article[]>([]);
   const [selectedId, setSelectedId] = useState("");
   const [playback, setPlayback] = useState<PlaybackState>("idle");
+  const [translating, setTranslating] = useState(false);
   const selected = useMemo(
     () => articles.find((article) => article.id === selectedId) ?? articles[0],
     [articles, selectedId],
@@ -135,6 +138,23 @@ export function useListeningFlow(onError: (error: unknown) => void) {
     }
   };
 
+  const translate = async () => {
+    if (!selected || translating) return;
+    const articleId = selected.id;
+    setTranslating(true);
+    try {
+      const translatedBody = await translateEnglishMarkdown(selected.body);
+      await saveArticleTranslation(articleId, translatedBody);
+      setArticles((current) => current.map((article) => (
+        article.id === articleId ? { ...article, translatedBody } : article
+      )));
+    } catch (error) {
+      onError(error);
+    } finally {
+      setTranslating(false);
+    }
+  };
+
   return {
     articles,
     changeRate,
@@ -150,5 +170,7 @@ export function useListeningFlow(onError: (error: unknown) => void) {
     speechRatePercent,
     speechVoice,
     stop,
+    translate,
+    translating,
   };
 }

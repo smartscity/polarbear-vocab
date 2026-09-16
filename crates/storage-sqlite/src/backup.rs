@@ -267,7 +267,7 @@ fn validate_databases(directory: &Path) -> Result<(), ApplicationError> {
     let user = Connection::open(directory.join("user.db")).map_err(database_error)?;
     check_integrity(&user)?;
     let user_version = schema_version(&user)?.parse::<u32>().unwrap_or_default();
-    if user_version == 0 || user_version > 5 {
+    if user_version == 0 || user_version > 6 {
         return Err(invalid_backup("unsupported user database schema"));
     }
     check_required_tables(&user, &["study_session", "review_event", "setting"])?;

@@ -12,11 +12,18 @@
     "storybook:build": "storybook build -o storybook-static --disable-telemetry"
   },
   "dependencies": {
+    "@browsermt/bergamot-translator": "0.4.9",
     "@tauri-apps/api": "^2.0.0",
     "@tauri-apps/plugin-dialog": "^2.0.0",
+    "fflate": "^0.8.3",
     "radix-ui": "^1.6.7",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
+    "remark-parse": "^11.0.0",
+    "remark-stringify": "^11.0.0",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
     "@storybook/react-vite": "^10.6.0",
