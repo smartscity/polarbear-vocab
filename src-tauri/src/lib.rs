@@ -1,10 +1,11 @@
 mod commands;
+mod local_path;
 mod state;
 
 use std::path::PathBuf;
 
 use polarbear_vocab_storage_sqlite::{DatabasePaths, ensure_writable_content};
-use tauri::{Manager, path::BaseDirectory};
+use tauri::Manager;
 
 use crate::state::AppRuntime;
 
@@ -56,22 +57,19 @@ pub fn run() {
         .expect("failed to run Polarbear Vocab");
 }
 
-fn content_database_path(
-    app: &tauri::App,
-) -> Result<PathBuf, Box<dyn std::error::Error>> {
+fn content_database_path(app: &tauri::App) -> Result<PathBuf, Box<dyn std::error::Error>> {
     #[cfg(mobile)]
     let seed = app
         .path()
-        .resolve("content.db", BaseDirectory::Resource)?;
+        .resolve("content.db", tauri::path::BaseDirectory::Resource)?;
 
     #[cfg(all(not(mobile), debug_assertions))]
-    let seed = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../data/generated/content.db");
+    let seed = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../data/generated/content.db");
 
     #[cfg(all(not(mobile), not(debug_assertions)))]
     let seed = app
         .path()
-        .resolve("content.db", BaseDirectory::Resource)?;
+        .resolve("content.db", tauri::path::BaseDirectory::Resource)?;
 
     let destination = app.path().app_data_dir()?.join("content.db");
 

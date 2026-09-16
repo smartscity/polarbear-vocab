@@ -75,9 +75,11 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
   };
   const importData = async () => {
     const path = await open({
-      multiple: false,
       directory: false,
+      fileAccessMode: "copy",
       filters: [{ name: t("settings.backupFile"), extensions: ["polarbear-vocab-backup"] }],
+      multiple: false,
+      pickerMode: "document",
     });
     if (!path || !window.confirm(t("settings.restoreConfirm"))) return;
     setBackupBusy(true);

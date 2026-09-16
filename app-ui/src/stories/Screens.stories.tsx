@@ -82,13 +82,15 @@ const articles: Article[] = [
   {
     id: "article-1",
     title: "A Walk Through the Rain",
-    body: "The rain began just after breakfast. Maya opened her umbrella and walked toward the station. The streets were quiet, and every window reflected the silver sky. She slowed down to listen to the rhythm of the drops.",
+    body: "## A quiet morning\n\nThe rain began just after **breakfast**. Maya opened her umbrella and walked toward the station.\n\n> She slowed down to listen to the rhythm of the drops.",
+    translatedBody: "## 一个安静的早晨\n\n雨在**早餐**后不久开始下。玛雅撑开雨伞，向车站走去。\n\n> 她放慢脚步，聆听雨滴的节奏。",
     createdAt: 1,
   },
   {
     id: "article-2",
     title: "Small Habits",
     body: "Small habits become strong routines when we repeat them with care.",
+    translatedBody: null,
     createdAt: 2,
   },
 ];
@@ -114,7 +116,7 @@ export const DatasetDetail: Story = { render: () => <Screen screen="datasets"><D
 
 export const Lexicon: Story = { render: () => <Screen screen="lexicon"><LexiconView busy={false} onPractice={noOp} onQueryChange={noOp} onSearch={noOp} onSpeak={noOp} onToggleVocabulary={noOp} query="earn" results={lexiconResults} searched /></Screen> };
 
-export const Listening: Story = { render: () => <Screen screen="listening"><ListeningView articles={articles} onDelete={noOp} onError={noOp} onImport={noOp} onPause={noOp} onPlay={noOp} onRateChange={noOp} onResume={noOp} onSelect={noOp} onStop={noOp} onVoiceChange={noOp} playback="idle" rate={100} selected={articles[0]} voice="female" /></Screen> };
+export const Listening: Story = { render: () => <Screen screen="listening"><ListeningView articles={articles} onDelete={noOp} onError={noOp} onImport={noOp} onPause={noOp} onPlay={noOp} onRateChange={noOp} onResume={noOp} onSelect={noOp} onStop={noOp} onTranslate={noOp} onVoiceChange={noOp} playback="idle" rate={100} selected={articles[0]} translating={false} voice="female" /></Screen> };
 
 export const Study: Story = { render: () => <Screen screen="study"><StudyView complete={false} onAnswer={async () => true} onExit={noOp} onNext={noOp} onPracticeMistakes={noOp} onSpeak={noOp} question={question} result={null} summary={{ answered: 0, correct: 0, wrong: 0, newWords: 0 }} title="Everyday English" /></Screen> };
 

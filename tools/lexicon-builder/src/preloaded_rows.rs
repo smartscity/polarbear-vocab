@@ -185,6 +185,7 @@ fn quality(row: &Row) -> u8 {
 mod tests {
     use super::{FILES, HEADERS, Row, load, quality};
     use crate::model::{Dataset, Manifest, Source};
+    use std::collections::HashMap;
     use std::fs;
     use std::path::{Path, PathBuf};
 
@@ -314,5 +315,31 @@ mod tests {
             .expect("reject fixture");
         assert!(error.to_string().contains("duplicate sense_uid"));
         fs::remove_dir_all(&directory).expect("remove test fixture");
+    }
+
+    #[test]
+    fn repository_preloads_include_every_full_dataset() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
+        let manifest: Manifest = serde_json::from_slice(
+            &fs::read(root.join("data/source/manifest.json")).expect("read manifest"),
+        )
+        .expect("parse manifest");
+        let batch = load(&root.join("data/preloaded"), &manifest).expect("load repository data");
+        let mut counts = HashMap::<&str, usize>::new();
+        for membership in &batch.memberships {
+            *counts.entry(&membership.dataset_id).or_default() += 1;
+        }
+        assert_eq!(
+            counts,
+            HashMap::from([
+                ("primary-school", 819),
+                ("junior-high", 3_223),
+                ("senior-high", 6_008),
+                ("cet4", 7_508),
+                ("cet6", 5_651),
+                ("ielts", 7_002),
+            ])
+        );
+        assert_eq!(batch.rows.len(), 16_986);
     }
 }

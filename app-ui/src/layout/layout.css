@@ -84,7 +84,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  padding: var(--pb-space-2) max(var(--pb-space-2), env(safe-area-inset-right)) max(var(--pb-space-2), env(safe-area-inset-bottom)) max(var(--pb-space-2), env(safe-area-inset-left));
+  padding: var(--pb-space-2) max(var(--pb-space-2), env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(var(--pb-space-2), env(safe-area-inset-left));
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   border-top: 1px solid var(--pb-border);
@@ -94,12 +94,17 @@
 
 .pb-bottom-nav button {
   min-width: 0;
-  min-height: 48px;
+  min-height: 56px;
+  padding: var(--pb-space-1) 2px;
+  display: grid;
+  place-items: center;
   border: 0;
   border-radius: var(--pb-radius-md);
   color: var(--pb-text-muted);
   background: transparent;
-  font-size: clamp(0.7rem, 3vw, 0.9rem);
+  font-size: clamp(0.68rem, 2.8vw, 0.82rem);
+  line-height: 1.15;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .pb-bottom-nav button[data-active="true"] {
@@ -126,7 +131,7 @@
 }
 
 .pb-app-shell[data-layout="compact"] .pb-shell-main {
-  padding: max(var(--pb-space-4), env(safe-area-inset-top)) max(var(--pb-space-4), env(safe-area-inset-right)) calc(82px + env(safe-area-inset-bottom)) max(var(--pb-space-4), env(safe-area-inset-left));
+  padding: max(var(--pb-space-4), env(safe-area-inset-top)) max(var(--pb-space-4), env(safe-area-inset-right)) calc(96px + max(10px, env(safe-area-inset-bottom))) max(var(--pb-space-4), env(safe-area-inset-left));
 }
 
 .pb-app-shell[data-layout="compact"] .pb-topbar {

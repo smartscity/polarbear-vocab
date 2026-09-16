@@ -46,7 +46,13 @@ export function useDatasetController(options: DatasetControllerOptions) {
     await options.onChanged(created.id);
   });
   const chooseCsv = () => void run(async () => {
-    const path = await open({ multiple: false, directory: false, filters: [{ name: options.csvLabel, extensions: ["csv"] }] });
+    const path = await open({
+      directory: false,
+      fileAccessMode: "copy",
+      filters: [{ name: options.csvLabel, extensions: ["csv"] }],
+      multiple: false,
+      pickerMode: "document",
+    });
     if (typeof path === "string") setPendingImport({ path, preview: await previewDatasetCsv(path) });
   });
   const confirmImport = () => void run(async () => {

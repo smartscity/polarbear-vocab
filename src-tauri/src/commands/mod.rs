@@ -3,10 +3,9 @@ use polarbear_vocab_domain::{
     CsvImportPreview, CsvImportResult, DatasetImportStrategy, DatasetSummary, HomeDto,
     LexiconEntryDto, QuizQuestionDto, RestoreResultDto, SettingsDto, SpeakRequest, WrongWordDto,
 };
-use std::path::Path;
 use tauri::State;
 
-use crate::state::AppRuntime;
+use crate::{local_path, state::AppRuntime};
 
 #[tauri::command]
 pub fn get_app_info(runtime: State<'_, AppRuntime>) -> AppInfo {
@@ -149,6 +148,7 @@ pub fn export_backup(
     runtime: State<'_, AppRuntime>,
     path: String,
 ) -> Result<BackupStatusDto, String> {
+    let path = local_path::string_from_dialog(&path)?;
     runtime
         .backup
         .export(&path)
@@ -160,6 +160,7 @@ pub fn import_backup(
     runtime: State<'_, AppRuntime>,
     path: String,
 ) -> Result<RestoreResultDto, String> {
+    let path = local_path::string_from_dialog(&path)?;
     runtime
         .backup
         .import(&path)
@@ -213,6 +214,7 @@ pub fn preview_dataset_csv(
     runtime: State<'_, AppRuntime>,
     path: String,
 ) -> Result<CsvImportPreview, String> {
+    let path = local_path::string_from_dialog(&path)?;
     runtime
         .datasets
         .preview_csv(&path)
@@ -226,6 +228,7 @@ pub fn import_dataset_csv(
     path: String,
     strategy: DatasetImportStrategy,
 ) -> Result<CsvImportResult, String> {
+    let path = local_path::string_from_dialog(&path)?;
     runtime
         .datasets
         .import_csv(&dataset_id, &path, strategy)
@@ -238,6 +241,7 @@ pub fn export_dataset_csv(
     dataset_id: String,
     path: String,
 ) -> Result<u32, String> {
+    let path = local_path::string_from_dialog(&path)?;
     runtime
         .datasets
         .export_csv(&dataset_id, &path)
@@ -267,7 +271,8 @@ pub fn list_articles(runtime: State<'_, AppRuntime>) -> Result<Vec<ArticleDto>, 
 
 #[tauri::command]
 pub fn import_article(runtime: State<'_, AppRuntime>, path: String) -> Result<ArticleDto, String> {
-    let source = Path::new(&path);
+    let normalized = local_path::from_dialog(&path)?;
+    let source = normalized.as_path();
     let supported = source
         .extension()
         .and_then(|extension| extension.to_str())

@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet};
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use anyhow::{Context, ensure};
 use rusqlite::{Connection, params};
@@ -23,13 +23,22 @@ pub fn build(source_directory: &Path, output: &Path) -> anyhow::Result<()> {
     let mut connection = Connection::open(&temporary)?;
     create_schema(&connection)?;
     populate(&mut connection, &manifest, &entries)?;
-    if let Some(directory) = std::env::var_os("POLARBEAR_PRELOADED_DATASETS_DIR") {
-        let batch = preloaded_rows::load(Path::new(&directory), &manifest)?;
+    if let Some(directory) = preloaded_directory(source_directory) {
+        let batch = preloaded_rows::load(&directory, &manifest)?;
         preloaded_db::append(&mut connection, &batch)?;
     }
     connection.close().map_err(|(_, error)| error)?;
     fs::rename(&temporary, output)?;
     Ok(())
+}
+
+fn preloaded_directory(source_directory: &Path) -> Option<PathBuf> {
+    std::env::var_os("POLARBEAR_PRELOADED_DATASETS_DIR")
+        .map(PathBuf::from)
+        .or_else(|| {
+            let bundled = source_directory.parent()?.join("preloaded");
+            bundled.is_dir().then_some(bundled)
+        })
 }
 
 fn read_entries(path: &Path) -> anyhow::Result<Vec<Entry>> {

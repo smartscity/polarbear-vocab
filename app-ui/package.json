@@ -28,6 +28,7 @@
   "devDependencies": {
     "@storybook/react-vite": "^10.6.0",
     "@tailwindcss/vite": "^4.3.3",
+    "@types/mdast": "^4.0.4",
     "@types/node": "^22.20.2",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

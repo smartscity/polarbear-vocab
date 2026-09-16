@@ -48,8 +48,10 @@ export function useListeningFlow(onError: (error: unknown) => void) {
     try {
       const path = await open({
         directory: false,
+        fileAccessMode: "copy",
         filters: [{ name: "Text article", extensions: ["txt", "md"] }],
         multiple: false,
+        pickerMode: "document",
       });
       if (typeof path !== "string") return;
       const imported = await importArticle(path);

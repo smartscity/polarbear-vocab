@@ -1,5 +1,5 @@
 import { gunzipSync } from "fflate";
-import type { Text } from "mdast";
+import type { Root, Text } from "mdast";
 import remarkParse from "remark-parse";
 import remarkStringify from "remark-stringify";
 import { unified } from "unified";
@@ -8,6 +8,7 @@ import { visit } from "unist-util-visit";
 const MODEL_BASE = "https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-zh/llmaat_finetune10M_qe8_f2_ByQcSxGXQRqGi-UTxYE43g/exported";
 const MODEL_CACHE = "polarbear-vocab-en-zh-v1";
 const MODEL_HASH = "4e5accc141373565ddc8fa1565bceaa8d0c3482a82cab8131c719ebcc6c2157c";
+const TRANSLATION_BATCH_SIZE = 32;
 
 interface TextTranslator {
   translate(request: { from: string; to: string; text: string; html?: boolean }): Promise<{
@@ -25,12 +26,21 @@ export async function translateEnglishMarkdown(
   const tree = processor.parse(markdown);
   const nodes = collectEnglishTextNodes(tree);
   const engine = await translator();
-  const translations = await Promise.all(nodes.map((node) => translateText(engine, node.value)));
-  nodes.forEach((node, index) => { node.value = translations[index]; });
+  await translateNodes(engine, nodes);
   return processor.stringify(tree).trim();
 }
 
-function collectEnglishTextNodes(tree: ReturnType<ReturnType<typeof unified>["parse"]>): Text[] {
+async function translateNodes(translator: TextTranslator, nodes: Text[]): Promise<void> {
+  for (let start = 0; start < nodes.length; start += TRANSLATION_BATCH_SIZE) {
+    const batch = nodes.slice(start, start + TRANSLATION_BATCH_SIZE);
+    const translations = await Promise.all(
+      batch.map((node) => translateText(translator, node.value)),
+    );
+    batch.forEach((node, index) => { node.value = translations[index]; });
+  }
+}
+
+function collectEnglishTextNodes(tree: Root): Text[] {
   const nodes: Text[] = [];
   visit(tree, "text", (node: Text) => {
     if (/[A-Za-z]/.test(node.value)) nodes.push(node);
@@ -39,8 +49,12 @@ function collectEnglishTextNodes(tree: ReturnType<ReturnType<typeof unified>["pa
 }
 
 async function translateText(translator: TextTranslator, text: string): Promise<string> {
-  const response = await translator.translate({ from: "en", to: "zh", text, html: false });
-  return response.target.text.trim();
+  const leading = text.match(/^\s*/)?.[0] ?? "";
+  const trailing = text.match(/\s*$/)?.[0] ?? "";
+  const end = trailing.length > 0 ? -trailing.length : undefined;
+  const content = text.slice(leading.length, end);
+  const response = await translator.translate({ from: "en", to: "zh", text: content, html: false });
+  return `${leading}${response.target.text.trim()}${trailing}`;
 }
 
 async function loadTranslator(): Promise<TextTranslator> {

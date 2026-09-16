@@ -20,6 +20,13 @@ fn articles_are_persisted_listed_and_deleted() {
     let articles = store.list_articles().unwrap();
     assert_eq!(articles.len(), 1);
     assert_eq!(articles[0], saved);
+    store
+        .save_article_translation(&saved.id, "文章保存在本机。")
+        .unwrap();
+    assert_eq!(
+        store.list_articles().unwrap()[0].translated_body.as_deref(),
+        Some("文章保存在本机。")
+    );
     store.delete_article(&saved.id).unwrap();
     assert!(store.list_articles().unwrap().is_empty());
     assert!(matches!(

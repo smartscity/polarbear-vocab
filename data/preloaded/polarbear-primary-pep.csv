@@ -1,0 +1,820 @@
+﻿sense_uid,lemma,pos,quiz_prompt_zh,gloss_zh,ipa_us,ipa_uk,example_en,example_zh
+en:ruler:unknown:1,ruler,unknown,尺子,尺子,/'rulɚ/,/'ruːlə/,a 12-inch ruler,一把12英寸的尺子
+en:pencil:unknown:1,pencil,unknown,铅笔,铅笔,/'pɛnsl/,/'pens(ə)l; -sɪl/,a sharp pencil,尖尖的铅笔
+en:eraser:unknown:1,eraser,unknown,橡皮,橡皮,/ɪ'resɚ/,/ɪ'reɪzə/,"Press to bring up the eraser tool, orfind it in your Toolbox.",按调出橡皮擦工具，或在你的工具栏里找到它。
+en:crayon:unknown:1,crayon,unknown,蜡笔,蜡笔,/kreən/,/ˈkreɪən/,He coloured the picture with crayon.,他用蜡笔给画上色。
+en:bag:unknown:1,bag,unknown,包,包,/bæɡ/,/bæg/,I took the gift out of my bag.,我把礼物从我的包里拿出来。
+en:pen:unknown:1,pen,unknown,钢笔,钢笔,/pɛn/,/pen/,a ballpoint pen,圆珠笔
+en:pencil-box:unknown:1,pencil box,unknown,铅笔盒,铅笔盒,/'pɛnsl bɑks/,,Put the pen and pencil in the pencil box.,把钢笔和铅笔放在文具盒里。
+en:book:unknown:1,book,unknown,书,书,/bʊk/,/bʊk/,I’ve just started reading a book by Graham Greene.,我刚开始看格雷厄姆·格林写的一本书。
+en:no:unknown:1,no,unknown,不,不,/no/,/nəʊ/,"‘Are you Italian?’ ‘No, I’m Spanish.’",“你是意大利人吗？”“不，我是西班牙人。”
+en:your:unknown:1,your,unknown,你（们）的,你（们）的,/jʊər; jʊr/,/jɔ:(r)/,Could you move your car?,你能把你的车挪一下吗？
+en:red:unknown:1,red,unknown,红色；红色的,红色；红色的,/rɛd/,/red/,We painted the door bright red .,我们把门漆成鲜红色。
+en:green:unknown:1,green,unknown,绿色；绿色的,绿色；绿色的,/ɡrin/,/griːn/,beautiful green eyes,漂亮的碧眼
+en:yellow:unknown:1,yellow,unknown,黄色；黄色的,黄色；黄色的,/ˈjɛlo/,/'jeləʊ/,yellow flowers,黄花
+en:blue:unknown:1,blue,unknown,蓝色；蓝色的,蓝色；蓝色的,/blu/,/bluː/,the blue waters of the lake,蓝蓝的湖水
+en:black:unknown:1,black,unknown,黑色；黑色的,黑色；黑色的,/blæk/,/blæk/,a black evening dress,黑色晚礼服
+en:brown:unknown:1,brown,unknown,棕色；棕色的,棕色；棕色的,/braʊn/,/braʊn/,dark brown hair,深褐色的头发
+en:white:unknown:1,white,unknown,白色；白色的,白色；白色的,/hwaɪt/,/waɪt/,a white dress,白色连衣裙
+en:orange:unknown:1,orange,unknown,橙色；橙色的,橙色；橙色的,/'ɔrɪndʒ/,/'ɒrɪn(d)ʒ/,a bright shade of orange,鲜艳的橘黄色
+en:ok:unknown:1,OK,unknown,好；行,好；行,,,‘Can I take the car today?’ ‘Okay.’,“今天我能用这辆车吗？”“行啊。”
+en:mum:unknown:1,mum,unknown,妈妈,妈妈,/mʌm/,/mʌm/,I have understood my mum. She has done all the things for the sake of me.,现在我对未来充满了信心，我理解了妈妈，她所做的一切都是为了我。
+en:face:unknown:1,face,unknown,脸,脸,/fes/,/feɪs/,She had a beautiful face.,她面容秀美。
+en:ear:unknown:1,ear,unknown,耳朵,耳朵,/ɪr/,/ɪə/,She tucked her hair behind her ears.,她把头发拢到耳朵背后。
+en:eye:unknown:1,eye,unknown,眼睛,眼睛,/aɪ/,/aɪ/,He’s got beautiful eyes.,他有一双漂亮的眼睛。
+en:nose:unknown:1,nose,unknown,鼻子,鼻子,/noz/,/nəʊz/,Someone punched him on the nose.,有人一拳打在他的鼻子上。
+en:mouth:unknown:1,mouth,unknown,嘴,嘴,/maʊθ/,/maʊθ/,He lifted his glass to his mouth.,他把玻璃杯举到嘴边。
+en:arm:unknown:1,arm,unknown,胳膊,胳膊,/ɑrm/,/ɑːm/,in arms,怀抱着的；武装起来的
+en:hand:unknown:1,hand,unknown,手,手,/hænd/,/hænd/,Steve gripped the steering wheel tightly with both hands.,史蒂夫双手紧握方向盘。
+en:head:unknown:1,head,unknown,头,头,/hɛd/,/hed/,He kissed the top of her head.,他吻了一下她的头顶。
+en:body:unknown:1,body,unknown,身体,身体,/'bɑdi/,/'bɒdɪ/,the human body,人体
+en:leg:unknown:1,leg,unknown,腿,腿,/lɛɡ/,/leg/,a young boy with skinny legs,双腿干瘦的小男孩
+en:foot:unknown:1,foot,unknown,脚,脚,/fʊt/,/fʊt/,My foot hurts.,我脚痛。
+en:school:unknown:1,school,unknown,学校,学校,/skul/,/skuːl/,His mother always used to pick him up from school.,他母亲以前一直去学校接他。
+en:duck:unknown:1,duck,unknown,鸭子,鸭子,/dʌk/,/dʌk/,I bought her a toy duck that ran upon little wheels.,我给她买了一个靠小轮子行走的玩具鸭子。
+en:pig:unknown:1,pig,unknown,猪,猪,/pɪɡ/,/pɪg/,He kept pigs and poultry.,他养过猪和家禽。
+en:cat:unknown:1,cat,unknown,猫,猫,/kæt/,/kæt/,The police played an elaborate game of cat and mouse to trap him.,警方跟他玩了一场精心布局的猫捉老鼠游戏，诱他落网。
+en:bear:unknown:1,bear,unknown,熊,熊,/bɛr/,/beə/,bear oneself,举止，表现；为人处事
+en:dog:unknown:1,dog,unknown,狗,狗,/dɔɡ/,/dɒg/,I could hear a dog barking .,我听到了狗吠声。
+en:elephant:unknown:1,elephant,unknown,大象,大象,/ˈɛləfənt/,/'elɪf(ə)nt/,The hunter destroyed the elephant.,猎手射杀了那头大象。
+en:monkey:unknown:1,monkey,unknown,猴子,猴子,/'mʌŋki/,/'mʌŋkɪ/,The monkey engulfed the food whole.,这只猴子囫囵吞下食物。
+en:bird:unknown:1,bird,unknown,鸟,鸟,/bɝd/,/bɜːd/,wild birds,野鸟
+en:tiger:unknown:1,tiger,unknown,老虎,老虎,/'taɪɡɚ/,/'taɪgə/,A tiger lives off some small animals.,老虎靠吃一些小动物为生。
+en:panda:unknown:1,panda,unknown,大熊猫,大熊猫,/'pændə/,/'pændə/,The caged panda chafed against the bars.,笼子里的大熊猫贴在栅栏上蹭它的身体。
+en:zoo:unknown:1,zoo,unknown,动物园,动物园,/zu/,/zuː/,They taxied to the zoo.,他们乘出租车去动物园。
+en:funny:unknown:1,funny,unknown,滑稽的；好笑的,滑稽的；好笑的,/'fʌni/,/'fʌnɪ/,the funniest man in Britain,英国最滑稽的男人
+en:bread:unknown:1,bread,unknown,面包,面包,/brɛd/,/bred/,Would you like some bread with your soup?,你喝汤时要吃点面包吗？
+en:juice:unknown:1,juice,unknown,果汁,果汁,/dʒus/,/dʒuːs/,a carton of orange juice,一纸盒橙汁
+en:egg:unknown:1,egg,unknown,蛋,蛋,/ɛɡ/,/eg/,Blackbirds lay their eggs in March.,乌鸫在3月产蛋。
+en:milk:unknown:1,milk,unknown,牛奶,牛奶,/mɪlk/,/mɪlk/,a bottle of milk,一瓶奶
+en:water:unknown:1,water,unknown,水,水,/ˈwɔtɚ/,/'wɔːtə/,There’s water all over the bathroom floor.,浴室地面上都是水。
+en:cake:unknown:1,cake,unknown,蛋糕,蛋糕,/kek/,/keɪk/,We had cake and ice cream.,我们吃了蛋糕和冰激凌。
+en:fish:unknown:1,fish,unknown,鱼,鱼,/fɪʃ/,/fɪʃ/,"Over 1,500 different species of fish inhabit the waters around the reef.","那片礁石周围的水域生活着1,500多种不同的鱼类。"
+en:rice:unknown:1,rice,unknown,米饭,米饭,/raɪs/,/raɪs/,a tasty sauce served with rice or pasta,配米饭或意面的美味酱汁
+en:one:unknown:1,one,unknown,一,一,/wʌn/,/wʌn/,They had one daughter.,他们有一个女儿。
+en:two:unknown:1,two,unknown,二,二,/tu/,/tuː/,I’ll be away for almost two weeks.,我要离开差不多两周时间。
+en:three:unknown:1,three,unknown,三,三,/θri/,/θriː/,They’ve won their last three games.,他们赢了最近三场比赛。
+en:four:unknown:1,four,unknown,四,四,/fɔr/,/fɔː/,She is married with four children.,她已婚，有四个孩子。
+en:five:unknown:1,five,unknown,五,五,/faɪv/,/faɪv/,There is also a golf course five miles away.,五英里外还有个高尔夫球场。
+en:six:unknown:1,six,unknown,六,六,/sɪks/,/sɪks/,six months ago,六个月前
+en:seven:unknown:1,seven,unknown,七,七,/'sɛvn/,/'sev(ə)n/,The women visited cities in seven states.,这些女性访问了七个州的城市。
+en:eight:unknown:1,eight,unknown,八,八,/et/,/eɪt/,It’s only eight days till Christmas.,还有8天就到圣诞节了。
+en:nine:unknown:1,nine,unknown,九,九,/naɪn/,/naɪn/,He’s only been in this job for nine months.,他干这份工作才九个月。
+en:ten:unknown:1,ten,unknown,十,十,/tɛn/,/ten/,Snow had been falling steadily for ten days.,雪已经连续下了10天了。
+en:brother:unknown:1,brother,unknown,兄；弟,兄；弟,/'brʌðɚ/,/'brʌðə/,"I have two brothers, William and Mark.",我有两个兄弟，威廉和马克。
+en:plate:unknown:1,plate,unknown,盘子,盘子,/pleɪt/,/pleɪt/,The plates were piled high with rice.,盘子里都堆满了米饭。
+en:uk:unknown:1,UK,unknown,英国,英国,,,But we have the same problem in UK.,而在我们英国，也有同样的问题。
+en:canada:unknown:1,Canada,unknown,加拿大,加拿大,/'kænədə/,/'kænədə/,She was domiciliated in Canada.,她在加拿大定居。
+en:usa:unknown:1,USA,unknown,美国,美国,,,"For example, think about the differences we observe with people from different parts of the USA.",例如，想一想那些来自美国各地的人们，我们可以观察到他们之间的差异。
+en:china:unknown:1,China,unknown,中国,中国,,/ˈtʃaɪnə/,in china,在中国
+en:she:unknown:1,she,unknown,她；（指雌性动物）它,她；（指雌性动物）它,/ʃi/,/ʃiː/,You could always ask Beth – she’s got plenty of money.,你总是可以去问贝丝——她有很多钱。
+en:student:unknown:1,student,unknown,"学生, 学者","学生, 学者",/'studnt/,/'stjuːd(ə)nt/,The student trotted out his knowledge.,这个学生炫耀他的知识。
+en:pupil:unknown:1,pupil,unknown,小学生,小学生,/pjupl/,/'pjuːpɪl; -p(ə)l/,About 20 pupils study music here.,大约20名小学生在这里学习音乐。
+en:he:unknown:1,he,unknown,他；它（指雄性动物）,他；它（指雄性动物）,/hi/,/hiː/,‘Where’s Paul?’ ‘He’s gone to the cinema.’,“保罗在哪儿？”“他去看电影了。”
+en:teacher:unknown:1,teacher,unknown,"教师, 老师, 导师","教师, 老师, 导师",/'titʃɚ/,/'tiːtʃə/,a primary school teacher,小学教师
+en:boy:unknown:1,boy,unknown,"男孩, 儿子, 孩子气的人, 男仆","男孩, 儿子, 孩子气的人, 男仆",/bɔɪ/,/bɒɪ/,The boys wanted to play football.,男孩子们想踢足球。
+en:and:unknown:1,and,unknown,和,和,"/ənd, ən,ænd/",/ənd; (ə)n; ænd/,He’s gone to get some fish and chips.,他去买炸鱼薯条了。
+en:girl:unknown:1,girl,unknown,"女孩, 少女, 女仆, (商店等的)女工作人员","女孩, 少女, 女仆, (商店等的)女工作人员",/ɡɝl/,/gɜːl/,Both boys and girls can apply to join the choir.,男孩和女孩均可申请加入合唱团。
+en:new:unknown:1,new,unknown,新的，新近的；新来的；不熟悉的,新的，新近的；新来的；不熟悉的,/nu/,/njuː/,the city’s new hospital,市里新建的医院
+en:friend:unknown:1,friend,unknown,朋友，友人；支持者，同情者,朋友，友人；支持者，同情者,/frɛnd/,/frend/,"Jerry, this is my friend Sue.",杰里，这是我的朋友休。
+en:today:unknown:1,today,unknown,今天；现在，目前,今天；现在，目前,/tə'de/,/tə'deɪ/,I couldn’t go shopping yesterday so I’ll have to go today.,我昨天没能去买东西，所以今天我必须去。
+en:father:unknown:1,father,unknown,父亲；爸爸,父亲；爸爸,/'fɑðɚ/,/'fɑːðə/,Ask your father to help you.,叫你父亲帮你。
+en:dad:unknown:1,dad,unknown,（口语）爸爸；爹爹,（口语）爸爸；爹爹,/dæd/,/dæd/,She lives with her mom and dad.,她和爸爸妈妈一起住。
+en:man:unknown:1,man,unknown,男人,男人,/mæn/,/mæn/,There were two men and a woman in the car.,车上有两男一女。
+en:woman:unknown:1,woman,unknown,女人,女人,/'wʊmən/,/'wʊmən/,I was talking to a woman I met on the flight.,我正和一个在飞机上认识的女子交谈。
+en:mother:unknown:1,mother,unknown,母亲；妈妈,母亲；妈妈,/'mʌðɚ/,/'mʌðə/,His mother and father are both doctors.,他的父母都是医生。
+en:sister:unknown:1,sister,unknown,姐；妹,姐；妹,/'sɪstɚ/,/'sɪstə/,Janet and Abby are sisters.,珍妮特和阿比是两姐妹。
+en:grandmother:unknown:1,grandmother,unknown,（外）祖母,（外）祖母,/'ɡrænmʌðɚ/,/'græn(d)mʌðə/,Her grandmother lived to 84.,她的祖母活到了84岁。
+en:grandma:unknown:1,grandma,unknown,（口语）（外）祖母,（口语）（外）祖母,/ɡrænmɑ/,/'græn(d)mɑː/,,
+en:grandfather:unknown:1,grandfather,unknown,（外）祖父,（外）祖父,/'græn'fɑðɚ/,/'græn(d)fɑːðə/,His grandfather lies in the churchyard.,他祖父葬于教堂的墓地。
+en:grandpa:unknown:1,grandpa,unknown,（口语）（外）祖父,（口语）（外）祖父,/grandpa/,/ˈgrænpɑ:/,,
+en:family:unknown:1,family,unknown,家；家庭,家；家庭,/ˈfæməlɪ/,/ˈfæməlɪ/,Do you know the family next door?,你认识隔壁那家人吗？
+en:thin:unknown:1,thin,unknown,瘦的,瘦的,/θɪn/,/θɪn/,a thin gold chain,一条细细的金链
+en:fat:unknown:1,fat,unknown,胖的；肥的,胖的；肥的,/fæt/,/fæt/,Are you suggesting I’m too fat?,你是不是在说我太胖了？
+en:tall:unknown:1,tall,unknown,高的,高的,/tɔl/,/tɔːl/,He was young and tall.,他年轻，身材高大。
+en:short:unknown:1,short,unknown,矮的；短的,矮的；短的,/ʃɔrt/,/ʃɔːt/,a short meeting,一个短会
+en:long:unknown:1,long,unknown,长的,长的,/lɔŋ/,/lɒŋ/,a long table,一张长桌子
+en:small:unknown:1,small,unknown,小的,小的,/smɔl/,/smɔːl/,a small piece of paper,一小片纸
+en:big:unknown:1,big,unknown,大的,大的,/bɪɡ/,/bɪg/,a big house,大房子
+en:giraffe:unknown:1,giraffe,unknown,长颈鹿,长颈鹿,/dʒəˈræf; dʒəˈræf/,/dʒɪˈrɑ:f/,Can I get the mommy giraffe for Christmas?,我在圣诞节能得到一个长颈鹿妈妈吗？
+en:so:unknown:1,so,unknown,这么；那么,这么；那么,/so/,/səʊ/,"So, how was school today?",噢，今天上学怎么样？
+en:children:unknown:1,children,unknown,儿童,儿童,/'tʃɪldrən/,/'tʃɪldrən/,children of israel,n. 以色列人
+en:child:unknown:1,child,unknown,儿童,儿童,/tʃaɪld/,/tʃaɪld/,The hotel is ideal for families with young children.,这家宾馆对带小孩的家庭再合适不过。
+en:tail:unknown:1,tail,unknown,尾巴,尾巴,/tel/,/teɪl/,The dog wagged its tail .,那条狗摇了摇尾巴。
+en:on:unknown:1,on,unknown,在⋯⋯上,在⋯⋯上,/ɑn/,/ɒn/,I wanted to punch him on the nose.,我真想一拳打到他鼻子上。
+en:in:unknown:1,in,unknown,在⋯⋯里,在⋯⋯里,/ɪn/,/ɪn/,There’s some sugar in the cupboard.,碗橱里有一些糖。
+en:under:unknown:1,under,unknown,在⋯⋯下面,在⋯⋯下面,/'ʌndɚ/,/'ʌndə/,Wendy had hidden the box under her bed.,温迪把盒子藏在了自己的床底下。
+en:chair:unknown:1,chair,unknown,椅子,椅子,/tʃɛr/,/tʃeə/,a kitchen chair,厨房椅
+en:desk:unknown:1,desk,unknown,书桌,书桌,/dɛsk/,/desk/,Marie was sitting at her desk.,玛丽正坐在书桌前。
+en:cap:unknown:1,cap,unknown,帽子,帽子,/kæp/,/kæp/,He placed his cap and overcoat on a chair.,他把帽子和大衣搁在一张椅子上。
+en:ball:unknown:1,ball,unknown,球,球,/bɔl/,/bɔːl/,The ball drifted on the water.,那只皮球在水面上漂荡。
+en:car:unknown:1,car,unknown,小汽车,小汽车,/kɑr/,/kɑː/,Dan got out of the car and locked the door.,丹下了车，锁上车门。
+en:boat:unknown:1,boat,unknown,小船,小船,/bot/,/bəʊt/,a fishing boat,渔船
+en:map:unknown:1,map,unknown,地图,地图,/mæp/,/mæp/,According to the map we should turn left.,从地图上看，我们应该左拐。
+en:toy:unknown:1,toy,unknown,玩具,玩具,/tɔɪ/,/tɒɪ/,some toys for the baby,宝宝玩的一些玩具
+en:box:unknown:1,box,unknown,盒；箱,盒；箱,/bɑks/,/bɒks/,You should rip the cover off the box first.,你首先应当把这个盒子的封套扯掉。
+en:pear:unknown:1,pear,unknown,梨,梨,/pɛr/,/peə/,I took this apple for a pear until I tasted it.,我误将这个苹果当作梨子，直到我尝了才知道。
+en:apple:unknown:1,apple,unknown,苹果,苹果,/'æpl/,/'æp(ə)l/,apple pie,苹果馅饼
+en:banana:unknown:1,banana,unknown,香蕉,香蕉,/bə'nænə/,/bə'nɑːnə/,The area is under banana cultivation.,这个地区种植香蕉。
+en:watermelon:unknown:1,watermelon,unknown,西瓜,西瓜,/'wɔtɚmɛlən/,/'wɔːtəmelən/,"Oh, what a big watermelon!",喔唷， 这么大的西瓜!
+en:strawberry:unknown:1,strawberry,unknown,草莓,草莓,/'strɔbɛri/,/'strɔːb(ə)rɪ/,Do you have strawberry?,你们有卖草莓吗?
+en:grape:unknown:1,grape,unknown,葡萄,葡萄,/ɡrep/,/greɪp/,a bunch of grapes,一串葡萄
+en:buy:unknown:1,buy,unknown,买,买,/baɪ/,/baɪ/,People say the judge had been bought by the Mafia.,人们都说法官被黑手党收买了。
+en:fruit:unknown:1,fruit,unknown,水果,水果,/frut/,/fruːt/,Try to eat plenty of fresh fruit .,尽量多吃新鲜水果。
+en:eleven:unknown:1,eleven,unknown,十一,十一,/ɪ'lɛvn/,/ɪ'lev(ə)n/,She was sent to jail for eleven months.,她被判入狱11个月。
+en:twelve:unknown:1,twelve,unknown,十二,十二,/twɛlv/,/twelv/,He received a twelve-month jail sentence.,他获刑12个月。
+en:thirteen:unknown:1,thirteen,unknown,十三,十三,/'θɝ'tin/,/θɜː'tiːn; 'θɜːtiːn/,They’ve only sold thirteen tickets so far.,到目前为止他们仅仅售出13张票。
+en:fourteen:unknown:1,fourteen,unknown,十四,十四,"/,fɔr'tin/",/fɔː'tiːn; 'fɔːtiːn/,He used to work fourteen hours a day.,他过去一天工作14个小时。
+en:fifteen:unknown:1,fifteen,unknown,十五,十五,"/,fɪf'tin/",/fɪf'tiːn; 'fɪftiːn/,a coastal village fifteen miles south of Tourane,土伦以南15英里的一个滨海村落
+en:sixteen:unknown:1,sixteen,unknown,十六,十六,"/,sɪks'tin/",/sɪks'tiːn; 'sɪkstiːn/,sixteen years later,16年后
+en:seventeen:unknown:1,seventeen,unknown,十七,十七,"/,sɛvn'tin/",/sev(ə)n'tiːn; 'sev(ə)ntiːn/,a group of seventeen American military officers,由17名美国军官组成的团体
+en:eighteen:unknown:1,eighteen,unknown,十八,十八,"/,e'tin/",/eɪ'tiːn; 'eɪtiːn/,At least eighteen bullets were fired.,至少射出了18颗子弹。
+en:nineteen:unknown:1,nineteen,unknown,十九,十九,"/,naɪn'tin/",/naɪn'tiːn; 'naɪntiːn/,It was nineteen minutes past seven.,当时是7点19分。
+en:twenty:unknown:1,twenty,unknown,二十,二十,/'twɛnti/,/'twentɪ/,a small village twenty miles from Nairobi,距内罗毕20英里的一个小村庄
+en:kite:unknown:1,kite,unknown,风筝,风筝,/kaɪt/,/kaɪt/,She has a blue and green kite.,她有一只蓝色和绿色的风筝。
+en:beautiful:unknown:1,beautiful,unknown,美丽的,美丽的,/'bjʊtəfəl/,/ˈbju:tɪfl/,She was even more beautiful than I had remembered.,她比我记忆中更美。
+en:classroom:unknown:1,classroom,unknown,教室,教室,/'klæsrʊm/,/'klɑːsruːm; -rʊm/,A fence runs around our classroom.,我们的教室周围有一圈篱笆。
+en:window:unknown:1,window,unknown,窗户,窗户,/'wɪndo/,/'wɪndəʊ/,They climbed out through the window.,他们从窗户爬出来。
+en:blackboard:unknown:1,blackboard,unknown,黑板,黑板,/'blækbɔrd/,/'blækbɔːd/,She marked a square on the blackboard.,她在黑板上画了个正方形。
+en:light:unknown:1,light,unknown,电灯,电灯,/laɪt/,/laɪt/,We waited for the lights to change.,我们等着红绿灯转换。
+en:picture:unknown:1,picture,unknown,图画,图画,/'pɪktʃɚ/,/'pɪktʃə/,The room had several pictures on the walls.,那个房间墙上有几幅画。
+en:door:unknown:1,door,unknown,门,门,/dɔr/,/dɔː/,Could you open the door for me?,请你帮我开门好吗？
+en:teacher's-desk:unknown:1,teacher's desk,unknown,讲台,讲台,,,She stayed after class and went up to the teacher's desk. Jean thanked Mrs. Slaton and told her about her dream of becoming a pilot.,下课之后，她走到讲台前，感谢斯莱顿夫人，并且告诉斯莱顿夫人她的梦想是成为一名飞行员。
+en:computer:unknown:1,computer,unknown,计算机,计算机,/kəm'pjutɚ/,/kəm'pjuːtə/,a huge global computer network,巨大的全球计算机网络
+en:fan:unknown:1,fan,unknown,风扇,风扇,/fæn/,/fæn/,a ceiling fan,吊扇
+en:wall:unknown:1,wall,unknown,墙壁,墙壁,/wɔl/,/wɔːl/,the Great Wall of China,中国的长城
+en:floor:unknown:1,floor,unknown,地板,地板,/flɔr/,/flɔː/,a polished wooden floor,上过蜡的木地板
+en:really:unknown:1,really,unknown,真的,真的,"/ˈriəˌli, ˈrili/",/'rɪəlɪ/,Why don’t you tell us what really happened?,你为什么不把真相告诉我们？
+en:near:unknown:1,near,unknown,距离近,距离近,/nɪr/,/nɪə/,They live near London.,他们住在伦敦附近。
+en:tv:unknown:1,TV,unknown,电视,电视,/ˌti vi/,/ˌti: ˈvi:/,a new TV set,一台新电视机
+en:clean:unknown:1,clean,unknown,打扫,打扫,/klin/,/kliːn/,Mary cooked and cleaned for them.,玛丽为他们做饭、打扫卫生。
+en:help:unknown:1,help,unknown,帮助,帮助,/hɛlp/,/help/,"If there’s anything I can do to help, just give me a call.",如果需要我帮忙，就给我打个电话。
+en:schoolbag:unknown:1,schoolbag,unknown,书包,书包,/ˈskulˌbæɡ/,/'skuːlbæɡ/,The pupil tossed his schoolbag into the air.,小学生把书包扔向空中。
+en:maths-book:unknown:1,maths book,unknown,数学书,数学书,,,He has lost his maths book.,他（已经）把数学书丢了。
+en:english-book:unknown:1,English book,unknown,英语书,英语书,,,This is an English book.,这是一本英语书。
+en:chinese-book:unknown:1,Chinese book,unknown,语文书,语文书,,,Chinese book and an English book.,一本语文书和一本英语书。
+en:storybook:unknown:1,storybook,unknown,故事书,故事书,/'stɔrɪ'bʊk/,/'stɔːrɪbʊk/,colourful storybooks,彩色故事书
+en:candy:unknown:1,candy,unknown,糖果,糖果,/ˈkændɪ/,/'kændɪ/,a box of candies,一盒糖果
+en:notebook:unknown:1,notebook,unknown,笔记本,笔记本,/'notbʊk/,/'nəʊtbʊk/,Copy this page in your notebook.,把这一页抄到你的笔记本上。
+en:key:unknown:1,key,unknown,钥匙,钥匙,,/kiː/,They put the key in the door and entered.,他们用钥匙开了门然后走了进去。
+en:wow:unknown:1,wow,unknown,呀,呀,/wou/,/waʊ/,Wow! Look at that!,哇！看呀！
+en:lost:unknown:1,lost,unknown,丢失,丢失,/lɔst/,/lɒst/,two boys searching for a lost ball,在寻找一个丢失的球的两个男孩
+en:so-much:unknown:1,so much,unknown,非常地,非常地,,,I love your book so much.,我非常喜欢你的书。
+en:cute:unknown:1,cute,unknown,可爱的,可爱的,/kjʊt/,/kjuːt/,a cute little puppy,一只逗人爱的小狗
+en:strong:unknown:1,strong,unknown,强壮的,强壮的,/strɔŋ/,/strɒŋ/,He was a big strong man.,他高大健壮。
+en:friendly:unknown:1,friendly,unknown,友好的,友好的,/ˈfrɛndlɪ/,/ˈfrendlɪ/,a friendly smile,亲切的微笑
+en:quiet:unknown:1,quiet,unknown,安静的,安静的,/'kwaɪət/,/'kwaɪət/,We’ll have to be quiet so as not to wake the baby.,我们得安静点，免得吵醒宝宝。
+en:hair:unknown:1,hair,unknown,头发,头发,/hɛr/,/heə/,Her hair was short and dark.,她的头发又短又黑。
+en:shoe:unknown:1,shoe,unknown,鞋,鞋,/ʃu/,/ʃuː/,I sat down and took off my shoes and socks.,我坐下来脱掉鞋子和袜子。
+en:glasses:unknown:1,glasses,unknown,眼镜,眼镜,/'glæsɪz/,/'glɑːsɪz/,...the 140 million Americans who wear glasses or contact lenses.,…1.4亿戴眼镜或者隐性眼镜的美国人。
+en:his:unknown:1,his,unknown,他的,他的,/hɪz/,/hɪz/,Leo took off his coat and sat down.,利奥脱掉大衣坐了下来。
+en:or:unknown:1,or,unknown,或者,或者,/ɔr/,/ɔː/,Shall we go out to the cinema or stay at home?,我们是出去看电影还是待在家里？
+en:right:unknown:1,right,unknown,对的,对的,/raɪt/,/raɪt/,I think you’ve made the right decision.,我认为你作出了正确的决定。
+en:hat:unknown:1,hat,unknown,帽子,帽子,/hæt/,/hæt/,Maria was wearing a beautiful new hat.,玛丽亚戴着一顶漂亮的新帽子。
+en:her:unknown:1,her,unknown,她的,她的,/hɚ/,/hɜː/,She looked at her watch.,她看了一下表。
+en:bedroom:unknown:1,bedroom,unknown,卧室,卧室,/'bɛdrum/,/'bedruːm; -rʊm/,a hotel with 50 bedrooms,有50间客房的旅馆
+en:living-room:unknown:1,living room,unknown,客厅,客厅,/'lɪvɪŋ rum/,/'lɪvɪŋ ru:m/,,
+en:study:unknown:1,study,unknown,书房,书房,/'stʌdi/,/'stʌdɪ/,case study,个案研究；案例研究
+en:kitchen:unknown:1,kitchen,unknown,厨房,厨房,/'kɪtʃɪn/,/'kɪtʃɪn; -tʃ(ə)n/,Sam went into the kitchen to make a pot of tea.,萨姆走进厨房去沏一壶茶。
+en:bathroom:unknown:1,bathroom,unknown,浴室,浴室,/'bæθrum/,/'bɑːθruːm; -rʊm/,The water shed from the bathroom.,水是从浴室中溢出来的。
+en:bed:unknown:1,bed,unknown,床,床,/bɛd/,/bed/,You should go to bed early.,你应该早点上床。
+en:phone:unknown:1,phone,unknown,电话,电话,/fon/,/fəʊn/,Much of his work is done by phone .,他的工作大部分是通过电话进行的。
+en:table:unknown:1,table,unknown,桌子,桌子,/'tebl/,/'teɪb(ə)l/,The food was served on long tables.,食物放在长餐桌上供应。
+en:sofa:unknown:1,sofa,unknown,长沙发,长沙发,/'sofə/,/'səʊfə/,He sprang up from the sofa.,他从沙发上猛然跳了起来。
+en:fridge:unknown:1,fridge,unknown,冰箱,冰箱,/frɪdʒ/,/frɪdʒ/,It can be anything: spoiled milk from the back of your fridge right down to tar and feathers.,它可以是任何玩意儿：从你冰箱后面那些变质的牛奶到沥青和羽毛。
+en:find:unknown:1,find,unknown,找到,找到,/faɪnd/,/faɪnd/,I can’t find the car keys.,我找不到汽车钥匙。
+en:them:unknown:1,them,unknown,他们,他们,/ðɛm; ðəm/,/ðem; ðəm/,Has anyone seen my keys? I can’t find them anywhere.,有人见到我的钥匙吗？我哪儿都找不到。
+en:beef:unknown:1,beef,unknown,牛肉,牛肉,/bif/,/biːf/,roast beef,烤牛肉
+en:chicken:unknown:1,chicken,unknown,鸡肉,鸡肉,/ˈtʃɪkɪn/,/'tʃɪkɪn/,"Yes, it tastes like chicken.",是的，它的味道像鸡。
+en:noodles:unknown:1,noodles,unknown,面条,面条,/ˈnudlz/,/ˈnu:dlz/,Do you like rice or noodles?,你喜欢米饭还是面条？
+en:soup:unknown:1,soup,unknown,汤,汤,/sup/,/suːp/,homemade tomato soup,自制的番茄汤
+en:vegetable:unknown:1,vegetable,unknown,蔬菜,蔬菜,/ˈvɛdʒtəbl/,/ˈvedʒtəbl/,fresh fruit and vegetables,新鲜果蔬
+en:chopsticks:unknown:1,chopsticks,unknown,筷子,筷子,"/'tʃɑp,stɪks/",/'tʃɒpstɪks/,We still lack a pair of chopsticks.,还少一双筷子。
+en:bowl:unknown:1,bowl,unknown,碗,碗,/bol/,/bəʊl/,Mix all the ingredients thoroughly in a large bowl.,将所有配料放在大碗里搅拌均匀。
+en:fork:unknown:1,fork,unknown,餐叉,餐叉,/fɔrk/,/fɔːk/,Put the knives and forks on the table.,把刀叉摆放在桌子上。
+en:knife:unknown:1,knife,unknown,刀,刀,/naɪf/,/naɪf/,a knife and fork,一副刀叉
+en:spoon:unknown:1,spoon,unknown,"匙,勺子","匙,勺子",/spun/,/spuːn/,greasy spoon,低级小饭馆；经济小吃店
+en:dinner:unknown:1,dinner,unknown,正餐,正餐,/'dɪnɚ/,/'dɪnə/,What time do you usually have dinner?,你通常什么时候吃饭？
+en:ready:unknown:1,ready,unknown,准备好,准备好,/'rɛdi/,/'redɪ/,Come on. Aren’t you ready yet?,快点，你还没准备好吗？
+en:help-yourself:unknown:1,help yourself,unknown,为（自己）取用,为（自己）取用,,,,
+en:pass:unknown:1,pass,unknown,给,给,/pæs/,/pɑːs/,"Pass the salt, please.",请把盐递过来。
+en:try:unknown:1,try,unknown,试,试,/traɪ/,/traɪ/,Let’s have a rest and then we’ll try again.,我们休息一下，然后再试。
+en:parents:unknown:1,parents,unknown,父母,父母,/'pɛrənts/,/'peərənts/,Children need their parents.,孩子们需要父母。
+en:cousin:unknown:1,cousin,unknown,同辈表亲,同辈表亲,/'kʌzn/,/'kʌz(ə)n/,first cousin,堂兄弟姊妹
+en:uncle:unknown:1,uncle,unknown,叔叔,叔叔,/'ʌŋkl/,/'ʌŋk(ə)l/,Lily spent years caring for her sick uncle.,莉莉照顾了她生病的叔叔好多年。
+en:aunt:unknown:1,aunt,unknown,阿姨,阿姨,/ænt/,/ɑːnt/,Aunt Mary,玛丽姑妈
+en:baby-brother:unknown:1,baby brother,unknown,小弟弟,小弟弟,,,You've got a baby brother and a baby sister.,你有一个小弟弟和一个小妹妹。
+en:doctor:unknown:1,doctor,unknown,医生,医生,/'dɑktɚ/,/'dɒktə/,She was treated by her local doctor.,她由她的本区医生治疗。
+en:cook:unknown:1,cook,unknown,厨师,厨师,/kʊk/,/kʊk/,"They had a butler, a cook, and a maid.",他们有一位管家、一位厨师和一位女仆。
+en:driver:unknown:1,driver,unknown,司机,司机,/'draɪvɚ/,/'draɪvə/,a taxi driver,出租车司机
+en:farmer:unknown:1,farmer,unknown,农民,农民,/'fɑmɚ/,/'fɑːmə/,I have subleased a plot from the farmer.,我从农民那里租下了一小块地。
+en:nurse:unknown:1,nurse,unknown,护士,护士,/nɝs/,/nɜːs/,The nurse is coming to give you an injection.,护士会来给你打针。
+en:people:unknown:1,people,unknown,人们,人们,/'pipl/,/'piːp(ə)l/,How many people were at the meeting?,有多少人到会？
+en:but:unknown:1,but,unknown,但是,但是,/bʌt/,/bʌt; bət/,"It’s an old car, but it’s very reliable.",这是一辆旧车，但是性能非常可靠。
+en:little:unknown:1,little,unknown,小的,小的,/'lɪtl/,/'lɪt(ə)l/,a little house,小屋
+en:puppy:unknown:1,puppy,unknown,小狗,小狗,/'pʌpi/,/'pʌpɪ/,a six-month-old puppy,一只六个月大的小狗
+en:football-player:unknown:1,football player,unknown,足球运动员,足球运动员,,,He broke in as a football player.,他开始当一名足球运动员。
+en:job:unknown:1,job,unknown,工作,工作,,/dʒɒb/,Do you enjoy your job?,你喜欢自己的工作吗？
+en:basketball:unknown:1,basketball,unknown,篮球,篮球,/'bæskɪtbɔl/,/'bɑːskɪtbɔːl/,We love playing basketball.,我们爱打篮球。
+en:first-floor:unknown:1,first floor,unknown,一楼（美）；二楼（英）,一楼（美）；二楼（英）,,,a flat on the first floor,二楼的一套公寓
+en:second-floor:unknown:1,second floor,unknown,二楼,二楼,,,My watch still hangs together dropping from the second floor.,我的手表从三楼掉到了楼下，却依然完整无缺。
+en:teacher's-office:unknown:1,teacher's office,unknown,教师办公室,教师办公室,,,"We stood outside the teacher's office, eager to know the result of the examination.",我们站在老师办公室外面，期待着考试的结果。
+en:library:unknown:1,library,unknown,图书馆,图书馆,/laɪˌbrɛrɪ/,/ˈlaɪbrərɪ/,a public library,公共图书馆
+en:playground:unknown:1,playground,unknown,操场,操场,/'ple'graʊnd/,/'pleɪgraʊnd/,children shouting and running in the playground,在操场上叫嚷奔跑的孩子们
+en:computer-room:unknown:1,computer room,unknown,计算机房,计算机房,,,"Another classroom is computer room,where we have our computer lessons.",我们还有了计算机房，我们在那里上计算机课。
+en:art-room:unknown:1,art room,unknown,美术教室,美术教室,,,Mike: Is that the art room?,迈克：这是美术教室吗?。
+en:music-room:unknown:1,music room,unknown,音乐教室,音乐教室,,,We also have music room and art rooms in the building.,我们还有音乐教室和美术教室哦。
+en:next-to:unknown:1,next to,unknown,紧邻,紧邻,,,There was a little girl sitting next to him.,有个小女孩坐在他旁边。
+en:homework:unknown:1,homework,unknown,作业,作业,/'hom'wɝk/,/'həʊmwɜːk/,"For homework, finish the exercise on page 14.",家庭作业是完成第14页的练习。
+en:class:unknown:1,class,unknown,班级,班级,/klæs/,/klɑːs/,in class,在课堂上；上课中
+en:forty:unknown:1,forty,unknown,四十,四十,/'fɔrti/,/'fɔːtɪ/,She can't be more than forty.,她不可能超过四十岁。
+en:way:unknown:1,way,unknown,方向,方向,/we/,/weɪ/,There are several different ways we can tackle this problem.,我们可以用几种不同的方法处理这个问题。
+en:breakfast:unknown:1,breakfast,unknown,早餐,早餐,/'brɛkfəst/,/'brekfəst/,We had bacon and eggs for breakfast .,我们早餐吃了熏肉鸡蛋。
+en:english-class:unknown:1,English class,unknown,英语课,英语课,,,"It springs from the idea of a notebook full of doodles, like that of your typical teenager during English class.",这灵感来源于在笔记本上的涂鸦乱画，就像你十几岁时在英文课上所作的那样。
+en:lunch:unknown:1,lunch,unknown,午饭,午饭,/lʌntʃ/,/lʌn(t)ʃ/,What’s for lunch?,午饭吃什么？
+en:music-class:unknown:1,music class,unknown,音乐课,音乐课,,,"Here, prisoners and their instructor get down during a music class.",这儿服刑人员和他们的导师正在一起上音乐课。
+en:pe-class:unknown:1,PE class,unknown,体育课,体育课,,,"There are only 7 girls in our PE class, so the class is mostly boys.",在我们体育班仅有7个女孩，因此这个班大多数是男生。
+en:get-up:unknown:1,get up,unknown,起床,起床,,,I got up and walked over to where he was.,我站起来，走到他那里。
+en:go-to-school:unknown:1,go to school,unknown,上学,上学,,,“Why would you ever go to school so far from home?” my friends would ask.,我在那边的朋友们会问我：“为什么你回去离家那么远的地方上学？
+en:go-home:unknown:1,go home,unknown,回家,回家,,,I've got to go home and zonk out.,我只好回家睡大觉了。
+en:go-to-bed:unknown:1,go to bed,unknown,去睡觉,去睡觉,,,They wash their faces.They go to bed!,他们洗他们的脸.他们上床睡觉！
+en:over:unknown:1,over,unknown,结束,结束,/'ovɚ/,/'əʊvə/,all over,到处，遍及；浑身；全部结束
+en:now:unknown:1,now,unknown,现在,现在,/naʊ/,/naʊ/,She's a widow now.,她现在是一个寡妇。
+en:o'clock:unknown:1,o'clock,unknown,⋯⋯点钟,⋯⋯点钟,/ə'klɑk/,/ə'klɒk/,It's already 9 o'clock.,已经9点钟了。
+en:kid:unknown:1,kid,unknown,小孩,小孩,/kɪd/,/kɪd/,She’d always loved animals since she was a little kid.,她从小就喜爱动物。
+en:thirty:unknown:1,thirty,unknown,三十,三十,/'θɝti/,/'θɜːtɪ/,"There were thirty students present,reckoning without the girlstudents.",不算女生，有三十个学生出席。
+en:hurry-up:unknown:1,hurry up,unknown,快点,快点,/'hɝrɪ ʌp/,/'hʌrɪ ʌp/,...if you're not a traditionalist and you want to hurry up the process.,…如果你不是传统主义者而是想加快这一进程。
+en:come-on:unknown:1,come on,unknown,加油,加油,,,,
+en:just-a-minute:unknown:1,just a minute,unknown,稍等一会儿,稍等一会儿,,,,
+en:cold:unknown:1,cold,unknown,冷的,冷的,/kold/,/kəʊld/,She splashed her face with cold water.,她往脸上泼冷水。
+en:cool:unknown:1,cool,unknown,凉的,凉的,/kul/,/kuːl/,She swam out into the cool water.,她往外游向清凉的水里。
+en:warm:unknown:1,warm,unknown,温暖的,温暖的,/wɔrm/,/wɔːm/,The house was lovely and warm.,那房子漂亮温暖。
+en:hot:unknown:1,hot,unknown,热的,热的,/hɑt/,/hɒt/,a hot curry,一种辛辣的咖喱
+en:sunny:unknown:1,sunny,unknown,阳光充足的,阳光充足的,/'sʌni/,/'sʌnɪ/,a warm sunny day,温暖晴朗的一天
+en:windy:unknown:1,windy,unknown,多风的,多风的,/'wɪndi/,/'wɪndɪ/,It’s too windy for a picnic.,风太大，不适合野餐。
+en:cloudy:unknown:1,cloudy,unknown,多云的,多云的,/'klaʊdi/,/'klaʊdɪ/,a cloudy night with some light rain,伴有些许小雨的多云的夜晚
+en:snowy:unknown:1,snowy,unknown,下雪的,下雪的,/'snoɪ/,/'snəʊɪ/,the snowy fields,被雪覆盖的田野
+en:rainy:unknown:1,rainy,unknown,阴雨的,阴雨的,/'reni/,/'reɪnɪ/,a cold rainy day in October,十月里一个寒冷的雨天
+en:outside:unknown:1,outside,unknown,在户外,在户外,"/,aʊt'saɪd/",/aʊt'saɪd; 'aʊtsaɪd/,"It’s outside my experience, I’m afraid.",恐怕我没有这方面的经验。
+en:be-careful:unknown:1,be careful,unknown,小心,小心,,,,
+en:weather:unknown:1,weather,unknown,天气,天气,/'wɛðɚ/,/'weðə/,What’s the weather like today?,今天天气如何？
+en:new-york:unknown:1,New York,unknown,纽约,纽约,,,We embarked at Liverpool for New York.,我们在利物浦上船去纽约。
+en:how-about...:unknown:1,how about...,unknown,怎么样？,怎么样？,,,,
+en:degree:unknown:1,degree,unknown,度,度,/dɪ'ɡri/,/dɪ'griː/,Preheat the oven to 425 degrees.,把烘箱预热至425度。
+en:world:unknown:1,world,unknown,世界,世界,/wɝld/,/wɜːld/,Tuberculosis is still common in some parts of the world .,结核病在世界上某些地区仍很常见。
+en:london:unknown:1,London,unknown,伦敦,伦敦,/ˈlʌndən/,/ˈlʌndən/,I trained to London.,我乘火车到伦敦。
+en:moscow:unknown:1,Moscow,unknown,莫斯科,莫斯科,/ˈmɑsˌkaʊ/,/'mɔskəʊ/,Must go... to Moscow!,一定要去莫斯科！
+en:singapore:unknown:1,Singapore,unknown,新加坡城,新加坡城,/ˌsɪŋgə'pɔ:/,/ˌsɪŋgə'pɔ:/,I come from Singapore.,我来自新加坡。
+en:sydney:unknown:1,Sydney,unknown,悉尼,悉尼,/'sɪdnɪ/,/ˈsɪdnɪ/,My brother is living in Sydney.,我兄弟居住于悉尼。
+en:fly:unknown:1,fly,unknown,放（风筝）,放（风筝）,/flaɪ/,/flaɪ/,In the park people were walking their dogs or flying their kites.,公园里，人们或在遛狗，或在放风筝。
+en:love:unknown:1,love,unknown,爱你的,爱你的,/lʌv/,/lʌv/,"I love you, Tracy.",我爱你，特雷西。
+en:tomato:unknown:1,tomato,unknown,西红柿,西红柿,/tə'meto/,/tə'mɑːtəʊ/,He staked his tomato vines with bamboo.,他用竹竿支撑起西红柿秧。
+en:potato:unknown:1,potato,unknown,马铃薯,马铃薯,/pə'teto/,/pə'teɪtəʊ/,"Marie stood at the sink, peeling potatoes (= cutting off the skin ) .",玛丽站在洗涤槽边削土豆皮。
+en:green-beans:unknown:1,green beans,unknown,豆角,豆角,,,"You can save up to $23 per plant by building an edible garden with big ticket vegetables like tomatoes, cucumbers, and green beans.",通过建造一个农田你在每颗植物可以省到23美元，你可以种一些高价蔬菜像西红柿，黄瓜，和四季豆。
+en:carrot:unknown:1,carrot,unknown,胡萝卜,胡萝卜,/'kærət/,/'kærət/,grated carrots,磨碎的胡萝卜
+en:horse:unknown:1,horse,unknown,马,马,/hɔrs/,/hɔːs/,a horse and cart,一辆马车
+en:cow:unknown:1,cow,unknown,牛,牛,/kaʊ/,/kaʊ/,Our cow is carrying again.,我家的母牛又怀胎了。
+en:sheep:unknown:1,sheep,unknown,绵羊,绵羊,/ʃip/,/ʃiːp/,Sheep were grazing on the hillside.,羊群在山坡上吃草。
+en:hen:unknown:1,hen,unknown,母鸡,母鸡,/hɛn/,/hen/,The chickens gathered under the hen.,小鸡聚集在母鸡翅膀下面。
+en:these:unknown:1,these,unknown,这些,这些,/ðiz/,/ðiːz/,A committee has been formed. These people can make decisions in ten minutes which would take us months.,委员会已经成立。这些人能在10分钟内做出决定，换作我们则要花几个月。
+en:yum:unknown:1,yum,unknown,味道好,味道好,/jʌm/,/jʌm/,,
+en:animal:unknown:1,animal,unknown,动物,动物,/'ænɪml/,/'ænɪm(ə)l/,furry little animals,毛茸茸的小动物
+en:those:unknown:1,those,unknown,那些,那些,/ðoz/,/ðəʊz/,"Witnesses said that two people were killed, but those accounts could not be confirmed.",目击者说两人遇害，但那些说法都没法得到证实。
+en:garden:unknown:1,garden,unknown,花园,花园,/'ɡɑrdn/,/'gɑːd(ə)n/,He’s outside in the garden.,他在外面花园里。
+en:farm:unknown:1,farm,unknown,农场,农场,/fɑrm/,/fɑːm/,a 300-hectare farm,一座300公顷的农场
+en:goat:unknown:1,goat,unknown,山羊,山羊,/ɡot/,/gəʊt/,The tiger sprang on the goat.,老虎向山羊扑去。
+en:eat:unknown:1,eat,unknown,吃,吃,/it/,/iːt/,Felix chatted cheerfully as he ate.,费利克斯一边吃一边兴奋地聊天。
+en:clothes:unknown:1,clothes,unknown,服装,服装,/kloz/,/kləʊ(ð)z/,What sort of clothes was he wearing?,他穿着什么样的衣服？
+en:pants:unknown:1,pants,unknown,裤子,裤子,/pænts/,/pæn(t)s/,She was wearing dark blue pants and a white sweater.,她穿着深蓝色长裤和白色毛衣。
+en:dress:unknown:1,dress,unknown,连衣裙,连衣裙,/drɛs/,/dres/,Sheila wore a long red dress.,希拉穿了一条红色的连衣长裙。
+en:skirt:unknown:1,skirt,unknown,女裙,女裙,/skɝt/,/skɜːt/,She wore a white blouse and a plain black skirt.,她穿着白衬衣和纯黑的裙子。
+en:coat:unknown:1,coat,unknown,大衣,大衣,/kot/,/kəʊt/,"Billy! Put your coat on , it’s cold outside!",比利！穿上外套，外面很冷！
+en:sweater:unknown:1,sweater,unknown,毛衣,毛衣,/'swɛtɚ/,/'swetə/,The sweater is moth-eaten.,毛衣让蛀虫咬坏了。
+en:sock:unknown:1,sock,unknown,短袜,短袜,/sɑk/,/sɒk/,a pair of socks,一双短袜
+en:shorts:unknown:1,shorts,unknown,短裤,短裤,/ʃɔrts/,/ʃɔːts/,I pointed to my shorts and trotted on.,于是我指了指我的短裤，继续向前跑去。
+en:jacket:unknown:1,jacket,unknown,夹克衫,夹克衫,/'dʒækɪt/,/'dʒækɪt/,He unzipped his jacket.,他拉开夹克衫的拉链。
+en:shirt:unknown:1,shirt,unknown,衬衫,衬衫,/ʃɝt/,/ʃɜːt/,I have to wear a shirt and tie to work.,我上班要穿衬衫打领带。
+en:yours:unknown:1,yours,unknown,你的,你的,/jʊrz/,/jɔːz; jʊəz/,"This is our room, and yours is just across the hall.",这是我们的房间，你们的在走廊那边。
+en:whose:unknown:1,whose,unknown,谁的,谁的,/huz/,/huːz/,Whose is this?,这是谁的？
+en:mine:unknown:1,mine,unknown,我的,我的,/maɪn/,/maɪn/,"It was Glen’s idea, not mine.",这是格伦的主意，不是我的。
+en:pack:unknown:1,pack,unknown,收拾,收拾,/pæk/,/pæk/,a pack of,一包；（野兽等的）一群；一盒
+en:wait:unknown:1,wait,unknown,等待,等待,/wet/,/weɪt/,Hurry up! Everyone’s waiting.,快点！大家在等着呢。
+en:glove:unknown:1,glove,unknown,手套,手套,/ɡlʌv/,/glʌv/,a pair of gloves,一副手套
+en:scarf:unknown:1,scarf,unknown,围巾,围巾,/skɑrf/,/skɑːf/,"Hey, your scarf is slipping off.",喂， 你的围巾快掉了。
+en:umbrella:unknown:1,umbrella,unknown,伞,伞,/ʌm'brɛlə/,/ʌm'brelə/,"It started to rain, so Tricia stopped to put up her umbrella.",开始下雨了，所以特里西娅停下来撑起雨伞。
+en:sunglasses:unknown:1,sunglasses,unknown,太阳镜,太阳镜,/'sʌnɡlæsɪz/,/'sʌnglɑːsɪz/,What do you think of my new sunglasses?,你觉得我的新太阳镜怎么样？
+en:pretty:unknown:1,pretty,unknown,美丽的,美丽的,/ˈprɪtɪ/,/'prɪtɪ/,pretty soon,不久
+en:expensive:unknown:1,expensive,unknown,贵的,贵的,/ɪk'spɛnsɪv/,/ɪkˈspensɪv/,the most expensive restaurant in town,城里最贵的餐馆
+en:cheap:unknown:1,cheap,unknown,便宜的,便宜的,/tʃip/,/tʃiːp/,cheap rail fares,便宜的火车票
+en:nice:unknown:1,nice,unknown,好的,好的,/naɪs/,/naɪs/,They’ve got a very nice house.,他们的房子真漂亮。
+en:try-on:unknown:1,try on,unknown,试穿,试穿,,,Try on clothing and shoes to make sure they fit.,衣服和鞋要试穿以确保它们合适。
+en:size:unknown:1,size,unknown,尺码,尺码,/saɪz/,/saɪz/,"He’s a small boy, about John’s size.",他是个小男孩，个子和约翰差不多。
+en:of-course:unknown:1,of course,unknown,当然,当然,,,"Well, she won, of course.",噢，当然是她赢啦。
+en:too:unknown:1,too,unknown,太,太,/tu/,/tuː/,Do you think the music’s too loud?,你觉得音乐太响了吗？
+en:just:unknown:1,just,unknown,正好,正好,/dʒʌst/,/dʒʌst/,A good strong cup of coffee is just what I need right now.,我现在正需要喝一杯浓浓的咖啡。
+en:how-much:unknown:1,how much,unknown,多少钱,多少钱,/haʊ mʌtʃ/,/haʊ mʌtʃ/,Work out how much all these things will cost.,算计算计买这么多东西要多少钱。
+en:eighty:unknown:1,eighty,unknown,八十,八十,/ˈeti/,/'eɪtɪ/,I got an eighty something.,我考了八十几分.
+en:dollar:unknown:1,dollar,unknown,元,元,/'dɑlɚ/,/'dɒlə/,It cost three dollars.,它要三美元。
+en:sale:unknown:1,sale,unknown,特价销售,特价销售,/sel/,/seɪl/,Harvey gets a $50 commission every time he makes a sale (= sells something as part of his job ) .,哈维每做成一笔生意可得到50美元的佣金。
+en:more:unknown:1,more,unknown,更多的,更多的,/mɔr/,/mɔː/,More and more people are surviving heart attacks.,越来越多的人在心脏病发作后存活下来。
+en:us:unknown:1,us,unknown,我们,我们,/əs; ʌs/,/əs; ʌs/,Please help us.,请帮助我们。
+en:old:unknown:1,old,unknown,老的,老的,/old/,/əʊld/,a pair of old shoes,一双旧鞋
+en:young:unknown:1,young,unknown,年轻的,年轻的,/jʌŋ/,/jʌŋ/,a young child,幼儿
+en:kind:unknown:1,kind,unknown,体贴的,体贴的,/kaɪnd/,/kaɪnd/,This kind of speaker box was handcrafted.,这种音箱的箱体是手工制作的。
+en:strict:unknown:1,strict,unknown,严厉的,严厉的,/strɪkt/,/strɪkt/,a strict teacher,严格的老师
+en:polite:unknown:1,polite,unknown,有礼貌的,有礼貌的,/pə'laɪt/,/pə'laɪt/,She’s always very polite.,她总是很有礼貌。
+en:hard-working:unknown:1,hard-working,unknown,努力的,努力的,,/ˈhɑːdˈwɜːkɪŋ/,a hard-working teacher,努力工作的老师
+en:helpful:unknown:1,helpful,unknown,有用的,有用的,/'hɛlpfl/,/'helpfʊl; -f(ə)l/,Thank you for your advice; it’s been very helpful.,谢谢你的建议，它非常有用。
+en:clever:unknown:1,clever,unknown,聪明的,聪明的,/'klɛvɚ/,/'klevə/,a clever man,聪明的人
+en:shy:unknown:1,shy,unknown,羞怯的,羞怯的,/ʃaɪ/,/ʃaɪ/,He was a quiet shy man.,他是个话不多、害羞的男人。
+en:know:unknown:1,know,unknown,知道,知道,/no/,/nəʊ/,Who knows the answer?,谁知道答案？
+en:our:unknown:1,our,unknown,我们的,我们的,/aʊr/,/aʊə/,a picture of our grandchildren,我们孙辈的一张照片
+en:ms:unknown:1,Ms,unknown,女士,女士,,,"“I have to create good circumstances for him,” said Ms.",“我得为他创造良好的生活环境，” 王女士说。
+en:will:unknown:1,will,unknown,将要,将要,/wɪl/,/wɪl/,A meeting will be held next Tuesday at 3 p.m.,下星期二下午3点将召开一个会议。
+en:sometimes:unknown:1,sometimes,unknown,有时,有时,/'sʌmtaɪmz/,/'sʌmtaɪmz/,I sometimes have to work late.,我有时得工作到很晚。
+en:robot:unknown:1,robot,unknown,机器人,机器人,/'robɑt/,/'rəʊbɒt/,cars built by robots,机器人制造的汽车
+en:him:unknown:1,him,unknown,他,他,/hɪm/,/hɪm/,Are you in love with him?,你爱上他了吗？
+en:speak:unknown:1,speak,unknown,会说,会说,/spik/,/spiːk/,I was so shocked I couldn’t speak.,我震惊得说不出话来。
+en:finish:unknown:1,finish,unknown,完成,完成,/'fɪnɪʃ/,/'fɪnɪʃ/,You can’t go anywhere until you’ve finished your homework.,没完成家庭作业前你哪儿也不能去。
+en:monday:unknown:1,Monday,unknown,星期一,星期一,/ˈmʌnde; ˈmʌndɪ/,/ˈmʌndeɪ; ˈmʌndi/,The president announced Monday that he would cancel the debt.,总统周一宣布他会取消这笔债务。
+en:tuesday:unknown:1,Tuesday,unknown,星期二,星期二,/ˈtuzdɪ;-de/,/'tjuːzdeɪ; -dɪ/,I’ll see you Tuesday.,星期二见。
+en:wednesday:unknown:1,Wednesday,unknown,星期三,星期三,/ˈwɛnzdɪ/,/ˈwenzdɪ/,He undertook to finish the job by Wednesday.,他答应在星期三以前完成这项工作。
+en:thursday:unknown:1,Thursday,unknown,星期四,星期四,/ˈθɝzde; ˈθɝzdɪ/,/'θɜːzdeɪ; -dɪ/,She was working Thursday.,她星期四在工作。
+en:friday:unknown:1,Friday,unknown,星期五,星期五,,/ˈfraɪdeɪ/,Diane won’t be here Friday.,星期五黛安娜不来这里。
+en:saturday:unknown:1,Saturday,unknown,星期六,星期六,/sætɚdɪ; -de/,/ˈsætədɪ; -deɪ/,The festivities begin Saturday.,庆祝活动从星期六开始。
+en:sunday:unknown:1,Sunday,unknown,星期日,星期日,/ˈsʌnde; ˈsʌndi/,/ˈsʌndeɪ; ˈsʌndi/,What are you doing Sunday?,你星期天做什么？
+en:weekend:unknown:1,weekend,unknown,周末,周末,/ˈwikend/,/wiːkˈɛnd/,Are you doing anything nice this weekend?,这个周末你有什么好的安排？
+en:wash:unknown:1,wash,unknown,洗,洗,/wɔʃ/,/wɒʃ/,This shirt needs washing.,这件衬衫该洗洗了。
+en:wash-my-clothes:unknown:1,wash my clothes,unknown,洗我的衣服,洗我的衣服,,,Went in to a laundry to wash my clothes down.,走进一家洗衣店去清洗我的衣服。
+en:watch:unknown:1,watch,unknown,看,看,/wɑtʃ/,/wɒtʃ/,Do you mind if I watch?,你介意我看着吗？
+en:watch-tv:unknown:1,watch TV,unknown,看电视,看电视,,,I settled back to watch TV.,我舒适地仰坐着看电视。
+en:do:unknown:1,do,unknown,做,做,/du/,/duː/,‘Will Kay come?’ ‘She may do.’,“凯来吗？” “或许吧。”
+en:do-homework:unknown:1,do homework,unknown,做作业,做作业,,,Do you do homework every day?,你们每天都做家庭作业吗？
+en:read:unknown:1,read,unknown,看,看,/rid; rɛd/,/ri:d;red/,You can’t believe everything you read in the papers.,报纸上看到的东西，你不能全都相信。
+en:read-books:unknown:1,read books,unknown,看书,看书,,,We should read books of real worth.,我们应阅读真正有价值的书籍。
+en:play:unknown:1,play,unknown,玩,玩,/ple/,/pleɪ/,Kids were playing and chasing each other.,孩子们在互相追逐嬉闹。
+en:play-football:unknown:1,play football,unknown,踢足球,踢足球,,,He likes to play football.,他最爱踢足球。
+en:cooking:unknown:1,cooking,unknown,烹饪,烹饪,/'kʊkɪŋ/,/'kʊkɪŋ/,"He did the cooking, cleaning, laundry, and home repairs.",他做饭、打扫卫生、洗衣服，还在家修修补补。
+en:often:unknown:1,often,unknown,时常,时常,/ˈɔ:fn; ɔfən/,/'ɒf(tə)n/,She often works at the weekend.,她周末经常要上班。
+en:park:unknown:1,park,unknown,公园,公园,/pɑrk/,/pɑːk/,Let’s go for a walk in the park.,我们去公园散步吧。
+en:tired:unknown:1,tired,unknown,疲倦的,疲倦的,/ˈtaɪrd/,/taɪəd/,He looks tired out (= very tired ) .,他看起来累坏了。
+en:sport:unknown:1,sport,unknown,体育运动,体育运动,/spɔrt/,/spɔːt/,the sport of falconry,放鹰狩猎运动
+en:play-sports:unknown:1,play sports,unknown,做体育运动,做体育运动,,,"Exercise regularly if you can, play sports, toss a ball around with your family.",尽可能有规律地锻炼，可以做运动，或者和家人一起传球玩。
+en:should:unknown:1,should,unknown,应该,应该,/ʃəd; strong form ʃʊd/,/ʃəd; strong form ʃʊd/,What should I do? Should I trust him?,我该怎么办？我应该相信他吗？
+en:every:unknown:1,every,unknown,每一个,每一个,/'ɛvri/,/'evrɪ/,We looked carefully at every car that drove past.,我们仔细地看着驶过的每一辆汽车。
+en:day:unknown:1,day,unknown,一天,一天,/de/,/deɪ/,We spent three days in Paris.,我们在巴黎度过了三天。
+en:schedule:unknown:1,schedule,unknown,工作计划,工作计划,/ˈskedʒʊl; skɛdʒʊl/,/ˈʃedju:l/,How can he fit everything into his busy schedule ?,他是怎么把所有的事情都排进自己忙碌的时间表的？
+en:sandwich:unknown:1,sandwich,unknown,三明治,三明治,/'sænwɪtʃ/,/'sæn(d)wɪdʒ; -wɪtʃ/,a ham sandwich,火腿三明治
+en:salad:unknown:1,salad,unknown,沙拉,沙拉,/'sæləd/,/'sæləd/,Would you like some salad with your pasta?,你的意大利面要配些色拉吗？
+en:hamburger:unknown:1,hamburger,unknown,汉堡包,汉堡包,/hæmbɝ​ɡɚ/,/ˈhæmbɜ:gə/,The whole stadium stink of the hamburger.,整个体育场内散发着汉堡包的香味。
+en:ice-cream:unknown:1,ice cream,unknown,冰淇淋,冰淇淋,/aɪs krim/,/aɪs kri:m/,I like ice cream and cookies as much as the next guy. But I hate how it makes me feel afterward.,我喜欢冰淇淋和曲奇，但我又讨厌吃完之后所带给我的感受，疲倦，瞌睡，精力不集中等等。
+en:tea:unknown:1,tea,unknown,茶,茶,/ti/,/tiː/,I should like to have a good tea.,我想吃一顿好茶点。
+en:fresh:unknown:1,fresh,unknown,新鲜的,新鲜的,/frɛʃ/,/freʃ/,I’ll just make some fresh coffee.,我来重新煮点咖啡。
+en:healthy:unknown:1,healthy,unknown,健康的,健康的,/'hɛlθi/,/'helθɪ/,a healthy baby boy,健康的男婴
+en:delicious:unknown:1,delicious,unknown,美味的,美味的,/dɪ'lɪʃəs/,/dɪ'lɪʃəs/,"‘The meal was absolutely delicious,’ she said politely.",“这顿饭味道好极了。” 她礼貌地说道。
+en:sweet:unknown:1,sweet,unknown,甜的,甜的,/swit/,/swiːt/,This tea is too sweet.,这茶太甜了。
+en:drink:unknown:1,drink,unknown,喝,喝,/drɪŋk/,/drɪŋk/,You should drink plenty of water.,你应该大量喝水。
+en:thirsty:unknown:1,thirsty,unknown,渴的,渴的,/'θɝsti/,/'θɜːstɪ/,Can I have a glass of water? I’m really thirsty.,我能喝一杯水吗？ 我太渴了。
+en:favourite:unknown:1,favourite,unknown,特别喜欢的,特别喜欢的,/'fevərɪt/,/'feɪv(ə)rɪt/,a child’s favourite toy,孩子最喜欢的玩具
+en:food:unknown:1,food,unknown,食物,食物,/fud/,/fuːd/,The restaurant serves good food at affordable prices.,那家餐厅物美价廉。
+en:dear:unknown:1,Dear,unknown,亲爱的,亲爱的,/dɪr/,/dɪə/,Mrs. Cavendish is a dear friend of mine.,凯文迪许太太是我亲爱的朋友。
+en:onion:unknown:1,onion,unknown,洋葱,洋葱,/'ʌnjən/,/'ʌnjən/,Chop the onions finely.,把洋葱切碎。
+en:sing:unknown:1,sing,unknown,唱,唱,/sɪŋ/,/sɪŋ/,She can sing beautifully.,她唱歌很好听。
+en:song:unknown:1,song,unknown,歌曲,歌曲,/sɔŋ/,/sɒŋ/,We used to listen to pop songs on the radio.,我们以前常常听收音机里播放的流行歌曲。
+en:sing-english-songs:unknown:1,sing English songs,unknown,唱英文歌曲,唱英文歌曲,,,I heard him sing English songs over there.,我听见他在那边唱英语歌曲。
+en:play-the-pipa:unknown:1,play the pipa,unknown,弹琵琶,弹琵琶,,,,
+en:kung-fu:unknown:1,kung fu,unknown,功夫,功夫,"/,kʌŋ'fu/","/,kʌŋ'fu:/",In fact any ability resulting from practice and cultivation could accurately be said to embody kung fu.,实际上任何从实践和修养得来的能力都可被准确地视作包含了功夫在内。
+en:do-kung-fu:unknown:1,do kung fu,unknown,练武术,练武术,,,And sometimes it is just fun to watch a cartoon panda trying to do kung fu.,可有时候，练习武功的卡通熊猫却只是为了娱乐。
+en:dance:unknown:1,dance,unknown,跳舞,跳舞,/dæns/,/dɑːns/,The waltz is an easy dance to learn.,华尔兹这种舞很容易学。
+en:draw:unknown:1,draw,unknown,画,画,/drɔ/,/drɔː/,Katie had drawn a cottage with a little stream running next to it.,凯蒂画了一间小茅舍，旁边流淌着一条小溪。
+en:cartoon:unknown:1,cartoon,unknown,漫画,漫画,/kɑr'tun/,/kɑː'tuːn/,cartoon characters such as Donald Duck,唐老鸭一类的卡通人物
+en:draw-cartoons:unknown:1,draw cartoons,unknown,画漫画,画漫画,,,And now they draw cartoons about you.,而现在，他们却画漫画来讽刺你。
+en:swim:unknown:1,swim,unknown,游泳,游泳,/swɪm/,/swɪm/,Let’s go swimming this afternoon.,今天下午我们游泳去吧。
+en:play-basketball:unknown:1,play basketball,unknown,打篮球,打篮球,,,I play basketball every week with friends.,我每周都和朋友打篮球。
+en:ping-pong:unknown:1,ping-pong,unknown,乒乓球,乒乓球,,,Would you consider ping-pong an outdoor sport?,你认为乒乓球是一项户外运动吗？
+en:play-ping-pong:unknown:1,play ping-pong,unknown,打乒乓球,打乒乓球,,,"At the age of 4, she began to play ping-pong under her father's instructions.",4岁时，在父亲指导下开始打乒乓球。
+en:speak-english:unknown:1,speak English,unknown,说英语,说英语,,,Do you speak English?,你会说英语吗?
+en:we'll:unknown:1,we'll,unknown,我们将……（=we will）,我们将……（=we will）,/wɪl/,/wel/,This afternoon we'll block act two.,今天下午我们将排演第二幕。
+en:party:unknown:1,party,unknown,聚会,聚会,/'pɑrti/,/'pɑːtɪ/,We’re having a small party this evening to celebrate our wedding anniversary.,我们今晚有个小聚会，庆祝我们的结婚纪念日。
+en:next:unknown:1,next,unknown,下一个的,下一个的,/nɛkst/,/nekst/,I just missed my flight to Chicago. When’s the next one?,我刚错过去芝加哥的航班。下一班是几点钟？
+en:wonderful:unknown:1,wonderful,unknown,极好的,极好的,/ˈwʌndɚfəl/,/ˈwʌndə(r)fl/,"The cold, misty air felt wonderful on his face.",那凉凉的雾气使他脸上感觉好极了。
+en:learn:unknown:1,learn,unknown,学习,学习,/lɝn/,/lɜːn/,What’s the best way to learn a language?,学习语言的最佳方法是什么？
+en:any:unknown:1,any,unknown,任何的,任何的,/'ɛni/,/'enɪ/,Any child who breaks the rules will be punished.,凡违反规定的孩子都要受罚。
+en:problem:unknown:1,problem,unknown,没问题,没问题,/'prɑbləm/,/'prɒbləm/,"She was older than me, but that wasn’t really a problem.",她比我年长，不过那不算什么问题。
+en:no-problem:unknown:1,no problem,unknown,没问题,没问题,,,"I have no problem with the office, but I am concerned about the rent.",对这写字楼单位我没问题，但租金方面有没有折扣优惠呢？
+en:want:unknown:1,want,unknown,要,要,/wɔ:nt; wɔnt/,/wɒnt/,I really want a drink.,我很想喝一杯。
+en:send:unknown:1,send,unknown,邮寄,邮寄,/sɛnd/,/send/,Lyn sent some pictures of the wedding.,琳恩寄了几张婚礼照片。
+en:email:unknown:1,email,unknown,电子邮件,电子邮件,/'imel/,/'iːmeɪl/,It’s usually best to contact him by email.,一般最好是用电子邮件和他联络。
+en:at:unknown:1,at,unknown,（接邮件地址）,（接邮件地址）,/æt; ət/,/æt; ət/,They live at 18 Victoria Street.,他们住在维多利亚街18 号。
+en:clock:unknown:1,clock,unknown,时钟,时钟,/klɑk/,/klɒk/,I heard the clock strike six (= make six loud sounds ) .,我听到钟敲了六下。
+en:plant:unknown:1,plant,unknown,植物,植物,/plænt/,/plɑːnt/,Don’t forget to water the plants.,别忘记给植物浇水。
+en:bottle:unknown:1,bottle,unknown,瓶子,瓶子,/'bɑtl/,/'bɒt(ə)l/,an empty bottle,一个空瓶子
+en:water-bottle:unknown:1,water bottle,unknown,水瓶,水瓶,,,"But for a stroll in the park, no water bottle is necessary.",但对于在公园里散步，携带水瓶是没有必要的。
+en:bike:unknown:1,bike,unknown,自行车,自行车,/baɪk/,/baɪk/,Let’s go for a bike ride .,我们去骑会儿自行车吧。
+en:photo:unknown:1,photo,unknown,照片,照片,/'foto/,/'fəʊtəʊ/,Can you take a photo of me and Rachel?,你能给我和雷切尔拍张照吗？
+en:front:unknown:1,front,unknown,正面,正面,/frʌnt/,/frʌnt/,The tall man in the front blindfolded me.,前面的高个子男人挡住了我的视线。
+en:in-front-of:unknown:1,in front of,unknown,在⋯⋯前面,在⋯⋯前面,/ɪn frʌnt ʌv/,/ɪn frʌnt əv/,I'll not want to say in front of the reporters.,我不愿在记者面前谈论我的观点。
+en:between:unknown:1,between,unknown,在⋯⋯中间,在⋯⋯中间,/bəˈtwin/,/bɪ'twiːn/,I sat down between Sue and Jane.,我在苏和简中间坐了下来。
+en:above:unknown:1,above,unknown,在⋯⋯上面,在⋯⋯上面,/ə'bʌv/,/ə'bʌv/,Our office is above the hairdresser’s.,我们的办公室在理发店上面。
+en:beside:unknown:1,beside,unknown,在旁边,在旁边,/bɪ'saɪd/,/bɪ'saɪd/,Wendy came up and sat beside me.,温迪走过来，坐在我身边。
+en:behind:unknown:1,behind,unknown,在⋯⋯后面,在⋯⋯后面,/bɪ'haɪnd/,/bɪ'haɪnd/,I turned to speak to the person standing behind me.,我转身和站在我后面的那人说话。
+en:there:unknown:1,there,unknown,（存在或发生）,（存在或发生）,/ðɛr/,/ðeə; ðə/,Is there any milk left?,还有牛奶剩下吗？
+en:grandparent:unknown:1,grandparent,unknown,（外）祖父母,（外）祖父母,/'græn'pɛrənt/,/'græn(d)peər(ə)nt/,My grandparents live in Sussex.,我的祖父母住在萨塞克斯郡。
+en:their:unknown:1,their,unknown,他们的,他们的,/ðɛr/,/ðeə/,They washed their faces and went to bed.,他们洗过脸后上床睡觉去了。
+en:house:unknown:1,house,unknown,房子,房子,/haʊs/,/haʊs/,a four-bedroom house,一幢有四间卧室的房子
+en:lot:unknown:1,lot,unknown,大量,大量,/lɑt/,/lɒt/,We’ve spent a lot on the children’s education.,我们在孩子的教育上花费甚多。
+en:lots-of:unknown:1,lots of,unknown,大量,大量,,,There were lots of tourists rubbernecking in the street.,许多游客在大街上伸长了脖子东张西望。
+en:flower:unknown:1,flower,unknown,花,花,/'flaʊɚ/,/'flaʊə/,a lovely rose bush with delicate pink flowers,一簇开着娇嫩的粉红色花朵的美丽蔷薇
+en:move:unknown:1,move,unknown,搬家,搬家,/muv/,/muːv/,Please keep the doors closed while the train is moving.,火车行驶时请保持车门关闭。
+en:dirty:unknown:1,dirty,unknown,肮脏的,肮脏的,/ˈdɝ​tɪ/,/'dɜːtɪ/,a stack of dirty dishes in the sink,洗涤槽里的一堆脏碟子
+en:everywhere:unknown:1,everywhere,unknown,处处,处处,/'ɛvrɪwɛr/,/'evrɪweə/,I’ve looked everywhere but I can’t find the map.,我到处都找过了，但就是找不到地图。
+en:mouse:unknown:1,mouse,unknown,老鼠,老鼠,/maʊs/,/maʊs/,The cat laid a dead mouse at my feet.,猫把一只死老鼠放在我的脚边。
+en:live:unknown:1,live,unknown,住,住,/laɪv；lɪv/,/laɪv；lɪv/,He lives just across the street from me.,他就住在我街对面。
+en:nature:unknown:1,nature,unknown,自然界,自然界,/'netʃɚ/,/'neɪtʃə/,"We grew up in the countryside, surrounded by the beauties of nature.",我们在乡村长大，周围是美丽的大自然。
+en:forest:unknown:1,forest,unknown,森林,森林,/'fɔrɪst/,/'fɒrɪst/,a tropical forest,热带森林
+en:river:unknown:1,river,unknown,河,河,/'rɪvɚ/,/'rɪvə/,the Mississippi River,密西西比河
+en:lake:unknown:1,lake,unknown,湖,湖,/lek/,/leɪk/,Lake Michigan,密歇根湖
+en:mountain:unknown:1,mountain,unknown,山,山,/ˈmaʊntn/,/ˈmaʊntən/,the highest mountain in Austria,奥地利最高的山
+en:hill:unknown:1,hill,unknown,小山,小山,/hɪl/,/hɪl/,Their house is on a hill overlooking the sea.,他们的房子建在可以俯视大海的小山上。
+en:tree:unknown:1,tree,unknown,树,树,/tri/,/triː/,"As a kid, I loved to climb trees.",小时候，我喜欢爬树。
+en:bridge:unknown:1,bridge,unknown,桥,桥,/brɪdʒ/,/brɪdʒ/,The bridge buckled in the storm.,那座桥在暴风雨中塌陷了。
+en:building:unknown:1,building,unknown,建筑,建筑,/'bɪldɪŋ/,/'bɪldɪŋ/,The offices are on the top two floors of the building.,办公室在大楼最高的两层。
+en:village:unknown:1,village,unknown,村庄,村庄,/'vɪlɪdʒ/,/'vɪlɪdʒ/,a little fishing village,一座小渔村
+en:house.:unknown:1,house.,unknown,房屋,房屋,/haʊs/,/haʊs/,a four-bedroom house,一幢有四间卧室的房子
+en:boating:unknown:1,boating,unknown,划船,划船,/'bəutiŋ/,/'bəʊtɪŋ/,Let’s go boating on the lake.,我们到湖上划船去吧。
+en:go-boating:unknown:1,go boating,unknown,去划船,去划船,,,"If it is fine tomorrow, I think I'll go boating.",如果明天天气好，我想去划船。
+en:aren't:unknown:1,aren't,unknown,不是（= are not）,不是（= are not）,/ɑrnt/,/ɑ:nt/,"And that's the secret about cheap people: They aren't necessarily cheap on all fronts. Some spring for education or vacations, or they're generous with others if not with themselves.",这就是小气的人的奥密：他们不见得在方方面面都小气，有些人为他人支付教育或度假费用，或者说他们对自己不大方却对其他人大方。
+en:rabbit:unknown:1,rabbit,unknown,兔,兔,/'ræbɪt/,/'ræbɪt/,The hound nips at a rabbit.,猎犬在野兔身后紧追不舍。
+en:high:unknown:1,high,unknown,高的,高的,/haɪ/,/haɪ/,This is the highest mountain in Japan.,这是日本最高的山。
+en:eat-breakfast:unknown:1,eat breakfast,unknown,吃早饭,吃早饭,/it brɛkfəst/,,"When you eat breakfast together, how does it go?",当你们一起吃早餐的时候，情况怎么样？
+en:have...class:unknown:1,have...class,unknown,上⋯⋯课,上⋯⋯课,,,,
+en:exercise:unknown:1,exercise,unknown,活动,活动,/'ɛksɚsaɪz/,/'eksəsaɪz/,Try to fit some regular exercise into your daily routine.,尽量在日常生活中安排一些经常性的锻炼。
+en:do-morning-exercise:unknown:1,do morning exercise,unknown,做早操,做早操,,,When do you do morning exercise?,你什麽时候做早操？
+en:eat-dinner:unknown:1,eat dinner,unknown,吃晚饭,吃晚饭,,,We beseech thee to come eat dinner with us.,我们恳求你来和我们一起吃晚饭。
+en:clean-my-room:unknown:1,clean my room,unknown,打扫我的房间,打扫我的房间,,,"If don't clean my room,my mother won't____me meet my friends.",如果我不清理房间，我妈妈不让我见我的朋友。
+en:go-for-a-walk:unknown:1,go for a walk,unknown,散步,散步,,,"Take it outside, go for a walk or eat at your desk.",那就打包带走，边散步边吃，或者在办公桌上吃。
+en:go-shopping:unknown:1,go shopping,unknown,购物,购物,,,I usually go shopping with my aunt.,我通常和我阿姨一起去购物。
+en:take:unknown:1,take,unknown,上（课）,上（课）,/tek/,/teɪk/,take some,不大容易
+en:dancing:unknown:1,dancing,unknown,跳舞,跳舞,/'dænsɪŋ/,/'dɑːnsɪŋ/,All the schools have music and dancing as part of the curriculum.,每个学校都设有音乐课和舞蹈课。
+en:take-a-dancing-class:unknown:1,take a dancing class,unknown,上舞蹈课,上舞蹈课,,,"On Saturdays, I often take a dancing class in the morning .",周六上午我经常上舞蹈课。
+en:when:unknown:1,when,unknown,什么时候,什么时候,/hwen; hwɛn/,/wen/,When are we leaving?,我们什么时候走？
+en:after:unknown:1,after,unknown,在⋯⋯之后,在⋯⋯之后,/'æftɚ/,/'ɑːftə/,After the war many soldiers stayed in France.,战后，许多士兵留在法国。
+en:start:unknown:1,start,unknown,开始,开始,/stɑrt/,/stɑːt/,There’s so much to do. I don’t know where to start.,有那么多的事情要做，我都不知道从哪里开始。
+en:usually:unknown:1,usually,unknown,通常地,通常地,/juʒəlɪ/,/ˈjuːʒʊəlɪ/,Women usually live longer than men.,女人通常比男人长寿。
+en:spain:unknown:1,Spain,unknown,西班牙,西班牙,/spen/,/spein/,They are touring in Spain.,他们正在西班牙旅游。
+en:late:unknown:1,late,unknown,晚,晚,/let/,/leɪt/,Sorry I’m late – I overslept.,对不起，来晚了——我睡过头了。
+en:a.m.:unknown:1,a.m.,unknown,上午,上午,,,She adjourned the meeting until tomorrow at 9 a.m.,她把会议延至明天上午9点举行。
+en:p.m.:unknown:1,p.m.,unknown,下午,下午,,,The spa is open from 7:00 a.m. to 9:00 p.m. every day of the year.,温泉区全年从早上7:00到晚上9:00开放。
+en:why:unknown:1,why,unknown,为什么,为什么,/hwaɪ/,/waɪ/,Why are you crying?,你为什么哭？
+en:shop:unknown:1,shop,unknown,购物,购物,/ʃɑp/,/ʃɒp/,She always does the weekly shop on a Friday.,她总是在星期五进行每周一次的采购。
+en:work:unknown:1,work,unknown,工作,工作,/wɝk/,/wɜːk/,Where do you work?,你在哪里上班？
+en:last:unknown:1,last,unknown,上一个的,上一个的,/læst/,/lɑːst/,I hadn’t seen him since the last meeting.,自从上次会面后，我再没有见到他。
+en:sound:unknown:1,sound,unknown,听起来好像,听起来好像,/saʊnd/,/saʊnd/,"By the sound of it, things are worse than we thought.",听起来，情况比我们原来想的还要糟。
+en:also:unknown:1,also,unknown,还,还,/'ɔlso/,/'ɔːlsəʊ/,Information is also available on women’s health care.,还可以获得有关女性保健方面的资料。
+en:busy:unknown:1,busy,unknown,忙的,忙的,/ˈbɪzɪ/,/'bɪzɪ/,She’s busy now – can you phone later?,她现在正忙，你稍后打来好吗？
+en:need:unknown:1,need,unknown,需要,需要,/nid/,/niːd/,You don’t really need a car.,你其实并不需要一辆车。
+en:letter:unknown:1,letter,unknown,信,信,/'lɛtɚ/,/'letə/,She read out the letter to all of us.,她把那封信读给我们大家听。
+en:island:unknown:1,island,unknown,岛,岛,/'aɪlənd/,/'aɪlənd/,The Cayman Islands,开曼群岛
+en:always:unknown:1,always,unknown,总是,总是,/'ɔlwez/,/ˈɔ:lweɪz/,Always lock your bicycle to something secure.,每次都要把自行车锁在牢固的物体上。
+en:cave:unknown:1,cave,unknown,山洞,山洞,/kev/,/keɪv/,the entrance to a cave,洞穴的入口
+en:go-swimming:unknown:1,go swimming,unknown,去游泳,去游泳,,,I often go swimming on weekday.,我经常在周日去游泳。
+en:win:unknown:1,win,unknown,获胜,获胜,/wɪn/,/wɪn/,Who’s winning (= who is most successful at this point in the game )?,现在谁领先？
+en:spring:unknown:1,spring,unknown,春天,春天,/sprɪŋ/,/sprɪŋ/,spring flowers,春花
+en:summer:unknown:1,summer,unknown,夏天,夏天,/'sʌmɚ/,/'sʌmə/,the long hot summer of 1976,1976 年炎热漫长的夏天
+en:autumn:unknown:1,autumn,unknown,秋天,秋天,/'ɔtəm/,/'ɔːtəm/,autumn mists,秋天的雾霭
+en:winter:unknown:1,winter,unknown,冬天,冬天,/'wɪntɚ/,/'wɪntə/,Soon it will be winter.,很快要到冬天了。
+en:season:unknown:1,season,unknown,季节,季节,/'sizn/,/'siːz(ə)n/,the effect on plants as the seasons start to change,换季对植物的影响
+en:picnic:unknown:1,picnic,unknown,野餐,野餐,/'pɪknɪk/,/'pɪknɪk/,We decided to have a picnic down by the lake.,我们决定在湖边野餐。
+en:go-on-a-picnic:unknown:1,go on a picnic,unknown,去野餐,去野餐,,,I'd like to go on a picnic.,我想去野餐。
+en:pick:unknown:1,pick,unknown,摘,摘,/pɪk/,/pɪk/,We picked some blackberries to eat on the way.,途中我们采了一些黑莓吃。
+en:pick-apples:unknown:1,pick apples,unknown,摘苹果,摘苹果,,,We helped the farmers to pick apples.,我们帮助农民们摘苹果。
+en:snowman:unknown:1,snowman,unknown,雪人,雪人,/'snomæn/,/'snəʊmæn/,The children were balling up snow to make a snowman.,孩子们正在把雪堆成球状，做一个雪人。
+en:make-a-snowman:unknown:1,make a snowman,unknown,堆雪人,堆雪人,,,A：Certainly! Shall we make a snowman?,当然!我们堆雪人好吗?
+en:go-swimming.:unknown:1,go swimming.,unknown,去游泳,去游泳,,,I often go swimming on weekday.,我经常在周日去游泳。
+en:which:unknown:1,which,unknown,哪一个,哪一个,/wɪtʃ/,/wɪtʃ/,Which book are you looking for?,你在找哪本书？
+en:best:unknown:1,best,unknown,最,最,/bɛst/,/best/,He won the best actor award.,他获得最佳男演员奖。
+en:snow:unknown:1,snow,unknown,雪,雪,/sno/,/snəʊ/,Snow was falling heavily as we entered the village.,我们进村的时候雪下得正大。
+en:good-job:unknown:1,good job,unknown,做得好,做得好,,,How Not To get a good job.,如何不得到一个好工作。
+en:because:unknown:1,because,unknown,因为,因为,/bɪ'kɔz/,/bɪ'kɒz/,We didn’t enjoy the day because the weather was so awful.,那天我们很不尽兴，因为天气实在太糟。
+en:vacation:unknown:1,vacation,unknown,假期,假期,/veˈkeʃən/,/vəˈkeɪʃn/,We’re planning a vacation in Europe.,我们正计划去欧洲度假。
+en:all:unknown:1,all,unknown,完全,完全,/ɔl/,/ɔːl/,Have you done all your homework?,你作业都做完了吗？
+en:pink:unknown:1,pink,unknown,粉色,粉色,/pɪŋk/,/pɪŋk/,Hannah’s face went pink.,汉娜的脸上泛起了红晕。
+en:lovely:unknown:1,lovely,unknown,可爱的,可爱的,/'lʌvli/,/'lʌvlɪ/,She had a lovely face.,她有一张漂亮的脸蛋。
+en:leaf:unknown:1,leaf,unknown,叶子,叶子,/lif/,/liːf/,a flowering bush with large shiny leaves,叶子大而油亮的开花灌木
+en:fall:unknown:1,fall,unknown,落下,落下,/fɔl/,/fɔːl/,The tree was about to fall.,那棵树快要倒下了。
+en:paint:unknown:1,paint,unknown,绘画,绘画,/pent/,/peɪnt/,acrylic and oil paints,丙烯酸颜料和油画颜料
+en:january:unknown:1,January,unknown,一月,一月,/'dʒænjʊ'ɛri/,/'dʒænjʊ(ə)rɪ/,I will go to Shanghai in the coming January.,在即将到来的一月份，我将去上海。
+en:february:unknown:1,February,unknown,二月,二月,/ˈfebrʊerɪ;'fɛbrʊɛrɪ/,/ˈfebrʊərɪ/,These trees come into leaf in February.,这些树二月里长叶子。
+en:march:unknown:1,March,unknown,三月,三月,/mɑrtʃ/,/mɑːtʃ/,Fresh Salmon doesn't come in before March.,在三月份以前鲑鱼不会上市。
+en:april:unknown:1,April,unknown,四月,四月,/'eprəl/,/'eɪprəl/,"You can paint, do repairs, and if you have already hired contractors in April or earlier, continue to work on your plans.",你可以涂涂油漆，做点小修补，如果你已经在四月或更加之前就已经雇到承包商的话，按原计划进行没关系。
+en:may:unknown:1,May,unknown,五月,五月,/me/,/meɪ/,He will guarantee us possession of the house by May.,他保证我们在五月可搬入这间房子。
+en:june:unknown:1,June,unknown,六月,六月,/dʒun/,/dʒu:n/,The hillsides in June flame with azaleas.,六月的山坡一片杜鹃花红似火焰。
+en:july:unknown:1,July,unknown,七月,七月,/dʒʊˈlaɪ/,/dʒʊˈlaɪ/,"But from February through July, Joy sat around with nothing to do.",但是从二月到七月，乔伊又无事可做了。
+en:august:unknown:1,August,unknown,八月,八月,/ɔˈɡʌst/,/ɔ:ˈgʌst/,He moved to another city last August.,去年八月，他搬到另一座城市。
+en:september:unknown:1,September,unknown,九月,九月,/sɛp'tɛmbɚ/,/sep'tembə/,The product suddenly took off in September.,该产品在九月份突然热销起来。
+en:october:unknown:1,October,unknown,十月,十月,/ɑk'tobɚ/,/ɒk'təʊbə/,The club will convene in October.,俱乐部将于十月开会。
+en:november:unknown:1,November,unknown,十一月,十一月,/no'vɛmbɚ/,/nə(ʊ)'vembə/,And again in November.,在十一月又一次。
+en:december:unknown:1,December,unknown,十二月,十二月,/dɪ'sɛmbɚ/,/dɪ'sembə/,In the dark of December.,在十二月的黑夜里。
+en:few:unknown:1,few,unknown,不多,不多,/fju/,/fjuː/,She must have cooked a good few dinners over the years.,这些年她一定做过不少次晚餐。
+en:a-few:unknown:1,a few,unknown,一些,一些,,,The committee disinterred a few old studies done by the predecessors to prove their point.,该委员会再现了由前任作的一些旧研究以证明他们的观点。
+en:thing:unknown:1,thing,unknown,事情,事情,/θɪŋ/,/θɪŋ/,People say things they don’t mean when they are angry.,人生气时就会口不择言。
+en:meet:unknown:1,meet,unknown,集会,集会,/mit/,/miːt/,Meet me at 8.00.,八点钟来见我。
+en:sports-meet:unknown:1,sports meet,unknown,运动会,运动会,,,A number of records fell during the sports meet.,在运动会上破了多项记录。
+en:easter:unknown:1,Easter,unknown,复活节,复活节,/istəʳ/,/'i:stə/,on Easter Sunday,在复活节星期日
+en:trip:unknown:1,trip,unknown,旅行,旅行,/trɪp/,/trɪp/,Two lucky employees won a round-the-world trip.,两名幸运的雇员赢得一次环游世界的机会。
+en:year:unknown:1,year,unknown,年,年,/yir/,/jɪə; jɜː/,I arrived here two years ago.,我两年前来到这里。
+en:contest:unknown:1,contest,unknown,比赛,比赛,/kən'tɛst/,/'kɒntest/,Stone decided to hold a contest to see who could write the best song.,斯通决定举行一场比赛，看谁能够写出最佳歌曲。
+en:the-great-wall:unknown:1,the Great Wall,unknown,长城,长城,,,,
+en:national:unknown:1,national,unknown,国家的,国家的,/'næʃnəl/,/'næʃ(ə)n(ə)l/,Religion matters very much at a national level.,宗教事务在全国都非常重要。
+en:national-day:unknown:1,National Day,unknown,国庆日,国庆日,/ˈnæʃənəl de/,,We shall dress the hall up for the National Day.,我们要把大厅布置一新过国庆节。
+en:american:unknown:1,American,unknown,美国的,美国的,/əˈmɛrɪkən/,/əˈmerɪkən/,Her mother is American.,她妈妈是美国人。
+en:thanksgiving:unknown:1,Thanksgiving,unknown,感恩节,感恩节,,,That we all have Thanksgiving dinner together?,我们会一起用感恩节晚餐吗？
+en:christmas:unknown:1,Christmas,unknown,圣诞节,圣诞节,,/ˈkrɪsməs/,Are you going home for Christmas?,你回家过圣诞节吗？
+en:holiday:unknown:1,holiday,unknown,节日,节日,/'hɑləde/,/'hɒlɪdeɪ; -dɪ/,The school holidays start tomorrow.,学校假期从明天开始。
+en:game:unknown:1,game,unknown,游戏,游戏,/ɡem/,/geɪm/,The boys were playing a game in the backyard.,男孩们在后院里玩游戏。
+en:roll:unknown:1,roll,unknown,滚动,滚动,/rol/,/rəʊl/,roll out,铺开；滚出
+en:look-for:unknown:1,look for,unknown,寻找,寻找,,,"""What should I look for""?",是要我寻找什么吗？
+en:chocolate:unknown:1,chocolate,unknown,巧克力,巧克力,/ˈtʃɑkələt/,/'tʃɒk(ə)lət/,a chocolate bar,巧克力条
+en:bunny:unknown:1,bunny,unknown,兔子,兔子,/'bʌni/,/'bʌnɪ/,He said they invariably bring up the Easter bunny but don't know the significance of the holiday to Christianity.,他说学生们总是一成不变地提到复活节兔子但是不知道这个节日对于基督教的重要性。
+en:rsvp:unknown:1,RSVP,unknown,请赐复,请赐复,,,,
+en:by:unknown:1,by,unknown,在⋯⋯之前,在⋯⋯之前,/baɪ/,/baɪ/,The documents need to be ready by next Friday.,文件必须在下星期五之前准备好。
+en:first:unknown:1,first,unknown,第一,第一,/fɝst/,/fɜːst/,Ella was his first girlfriend.,埃拉是他的首任女友。
+en:second:unknown:1,second,unknown,第二,第二,/'sɛkənd/,/'sek(ə)nd/,the Second World War,第二次世界大战
+en:third:unknown:1,third,unknown,第三,第三,/θɝd/,/θɜːd/,in the third century,在3世纪
+en:fourth:unknown:1,fourth,unknown,第四,第四,/fɔrθ/,/fɔːθ/,in the fourth century,在四世纪
+en:fifth:unknown:1,fifth,unknown,第五,第五,/fɪfθ/,/fɪfθ/,in the fifth century,在五世纪
+en:twelfth:unknown:1,twelfth,unknown,第十二,第十二,/twɛlfθ/,/twelfθ/,He poled his twelfth home run in the sixth inning.,在第六回合他打出了他的第十二次本垒打。
+en:twentieth:unknown:1,twentieth,unknown,第二十,第二十,/ˈtwɛntɪɪθ/,/ˈtwentɪəθ/,This was how I stepped into my twentieth year.,我就是这样地跨进我的二十岁年纪。
+en:twenty-first:unknown:1,twenty-first,unknown,第二十一,第二十一,/'twenti'fə:st/,,"The answers, my friends, will be blowing through and creating the winds of the twenty-first century.",我的朋友，这些问题的答案将主导二十一世纪的风向，并将贯穿整个世纪。
+en:twenty-third:unknown:1,twenty-third,unknown,第二十三,第二十三,,,October twenty-third. Seteven is too slow.,十月二十三号。史蒂文的进度太慢了。
+en:thirtieth:unknown:1,thirtieth,unknown,第三十,第三十,/'θɝtɪɪθ/,/'θɜːtɪɪθ/,"Actually I'm not bored at all, "" I said, cupping my own breast for the thirtieth time.","实际上我一点也不。"" 我正说著，我托了托双乳，准备拍第十三张。"
+en:special:unknown:1,special,unknown,特殊的,特殊的,/ˈspɛʃəl/,/'speʃ(ə)l/,a special place in the classroom for reading,教室里的阅读专区
+en:fool:unknown:1,fool,unknown,蠢人,蠢人,/ful/,/fuːl/,What a fool she had been to think that he would stay.,她竟然那么傻，以为他会留下来。
+en:kitten:unknown:1,kitten,unknown,小猫,小猫,/'kɪtn/,/'kɪt(ə)n/,She nursed her kitten all evening.,整个晚上她一直抱着她的小猫咪。
+en:diary:unknown:1,diary,unknown,日记,日记,/'daɪəri/,/'daɪərɪ/,Inge kept a diary (= wrote in a diary ) during the war years.,英奇在战争年代里一直写日记。
+en:still:unknown:1,still,unknown,仍然,仍然,/stɪl/,/stɪl/,I still haven’t finished painting the spare room.,我还没粉刷完那间空房间。
+en:noise:unknown:1,noise,unknown,噪音,噪音,/nɔɪz/,/nɔɪz/,What’s that noise?,那是什么声音？
+en:fur:unknown:1,fur,unknown,动物皮毛,动物皮毛,/fɝ/,/fɜː/,"When the organ does appear, however, it is not only impressive in size, but its bright pink color makes it stand out against the dark fur.",然而当这个器官出现时，不仅是在尺寸上能让人留下深刻印象，它那淡粉色的颜色更是和黑色的毛皮形成鲜明对比。
+en:open:unknown:1,open,unknown,开着的,开着的,/'opən/,/'əʊp(ə)n/,He threw the door open and ran down the stairs.,他猛地打开门，往楼下跑去。
+en:walk:unknown:1,walk,unknown,行走,行走,/wɔk/,/wɔːk/,‘How did you get here?’ ‘We walked.’,“你们是怎么来这里的？”“我们是步行来的。”
+en:hers:unknown:1,hers,unknown,她的,她的,/hɝz/,/hɜːz/,He bent and touched his mouth to hers.,他俯身吻她的嘴唇。
+en:theirs:unknown:1,theirs,unknown,他们的,他们的,/ðɛrz/,/ðeəz/,"When our washing machine broke, our neighbours let us use theirs.",我们的洗衣机坏了的时候，邻居就让我们用他们的。
+en:ours:unknown:1,ours,unknown,我们的,我们的,/ɑrz/,/aʊəz/,I’ll show you to your room. Ours is next door.,我带你去你的房间，我们的房间在你的隔壁。
+en:climbing:unknown:1,climbing,unknown,攀登,攀登,/'klaɪmɪŋ/,/'klaɪmɪŋ/,a climbing rope,登山绳
+en:eating:unknown:1,eating,unknown,吃,吃,/'itɪŋ/,/'iːtɪŋ/,She rinsed her hands quickly before eating.,她吃东西以前很快洗了一下手。
+en:playing:unknown:1,playing,unknown,玩,玩,/'pleɪŋ/,/'pleɪŋ/,...invite the children over to play.,…邀请孩子们过来玩。
+en:jumping:unknown:1,jumping,unknown,跳,跳,/'dʒʌmpɪŋ/,/'dʒʌmpɪŋ/,I jumped over the fence.,我从篱笆上跳了过去。
+en:drinking:unknown:1,drinking,unknown,喝,喝,/'drɪŋkɪŋ/,/'drɪŋkɪŋ/,after a night of heavy drinking,狂饮一夜之后
+en:sleeping:unknown:1,sleeping,unknown,睡觉,睡觉,/'slipɪŋ/,/'sliːpɪŋ/,On the top floor we have sleeping quarters for women and children.,在顶楼我们有供妇女和孩子睡觉的地方。
+en:each:unknown:1,each,unknown,每个,每个,/itʃ/,/iːtʃ/,She had a bottle in each hand.,她两只手上各拿着一个瓶子。
+en:other:unknown:1,other,unknown,其他,其他,/'ʌðɚ/,/'ʌðə/,She excelled all other authors of her day.,她超过同时代的所有其他作家。
+en:each-other:unknown:1,each other,unknown,相互,相互,,,Susan and Robert kissed each other passionately.,苏珊和罗伯特深情地亲吻。
+en:excited:unknown:1,excited,unknown,兴奋地,兴奋地,/ɪk'saɪtɪd/,/ɪk'saɪtɪd/,Steve flies home tomorrow – we’re all really excited.,史蒂夫明天坐飞机回家——我们都非常激动。
+en:like:unknown:1,like,unknown,像⋯⋯那样,像⋯⋯那样,/laɪk/,/laɪk/,"You have to fold the corners back, like so.",你得把角折回去，像这样。
+en:doing-morning-exercises:unknown:1,doing morning exercises,unknown,做早操,做早操,,,"Every morning, we see many old people doing morning exercises.",每天早上我们看见许多老人在做早操。
+en:having...class:unknown:1,having...class,unknown,上⋯⋯课,上⋯⋯课,,,,
+en:eating-lunch:unknown:1,eating lunch,unknown,吃午饭,吃午饭,,,You practice it while eating lunch.,你一边吃午餐一边练习；
+en:reading-a-book:unknown:1,reading a book,unknown,看书,看书,,,I remember reading a book somewhere – it said that almost all of us are waiting for something.,我记得在哪里读过一本书--- 书上说我们大部分人都一直在等待着什么。
+en:listening-to-music:unknown:1,listening to music,unknown,听音乐,听音乐,,,"We spent the winter and some of the spring in my room—never hers—missing tests, listening to music, looking out my window to comment on people who wouldn't have given us a second thought.",我们整个冬天和春天的一段时间都是在我宿舍度过的——我们从不去她的房间——逃考，听音乐，在我房间探出头去，对那些压根不会注意到我们的人品头论足。
+en:keep:unknown:1,keep,unknown,保持,保持,/kip/,/kiːp/,You have to work hard to keep ahead in your class.,要想在全班保持成绩领先，你就必需努力学习。
+en:keep-to-the-right:unknown:1,keep to the right,unknown,靠右,靠右,,,All vehicles should keep to the right.,车辆一律靠右走。
+en:keep-your-desk-clean:unknown:1,keep your desk clean,unknown,保持课桌干净,保持课桌干净,,,It is your responsibility to keep your desk clean.,保持课桌清洁是你的责任。
+en:talk-quietly:unknown:1,talk quietly,unknown,小声讲话,小声讲话,,,We just have to talk quietly.,我们只能悄悄的讲话。
+en:turn:unknown:1,turn,unknown,顺序,顺序,/tɝn/,/tɜːn/,in turn,轮流，依次
+en:take-turns:unknown:1,take turns,unknown,按顺序来,按顺序来,,,,
+en:bamboo:unknown:1,bamboo,unknown,竹子,竹子,"/,bæm'bu/",/bæm'buː/,Everything there is made of bamboo.,那里什么都是竹子做的。
+en:its:unknown:1,its,unknown,它的,它的,/ɪts/,/ɪts/,Salzburg is famous for its beautiful buildings.,萨尔茨堡以美丽的建筑闻名。
+en:show:unknown:1,show,unknown,指导，引导,指导，引导,/ʃo/,/ʃəʊ/,It was very good of you to come. Let me show you to my study.,你能来真是太好了。让我带你看我的书房。
+en:anything:unknown:1,anything,unknown,任何事物,任何事物,/'ɛnɪ'θɪŋ/,/'enɪθɪŋ/,You can buy anything you want.,你想要什么都可以买。
+en:else:unknown:1,else,unknown,另外,另外,/ɛls/,/els/,There’s something else I’d like to talk about as well.,我还有其他事情要谈一谈。
+en:exhibition:unknown:1,exhibition,unknown,展览,展览,/ˌɛksəˈbɪʃən/,/ˌeksɪˈbɪʃn/,All visitors to the exhibition must report to the main service desk.,到展览会参观的人都必须先到总服务台报到。
+en:say:unknown:1,say,unknown,说；讲,说；讲,/se/,/seɪ/,"‘I’m so tired,’ she said.",“我太累了。”她说。
+en:have-a-look:unknown:1,have a look,unknown,看一看,看一看,,,She was greatly tempted to have a look at it.,她非常想看一看。
+en:sushi:unknown:1,sushi,unknown,寿司,寿司,/'sʊʃi/,/'suːʃɪ/,"No, I do not like sushi.",不，我不喜欢寿司。
+en:teach:unknown:1,teach,unknown,教,教,/titʃ/,/tiːtʃ/,She volunteered to teach in the school.,她自愿在学校教书。
+en:sure:unknown:1,sure,unknown,当然,当然,/ʃʊər; ʃʊr/,/ʃɔ:(r)/,‘Can you pick me up later?’ ‘Sure thing.’,“你过一会儿能来接我吗？”“没问题。”
+en:canadian:unknown:1,Canadian,unknown,加拿大的,加拿大的,/kə'nedɪən/,/kə'neɪdɪən/,What about the Canadian policy?,那么加拿大的政策呢？
+en:spanish:unknown:1,Spanish,unknown,西班牙的,西班牙的,/'spænɪʃ/,/'spænɪʃ/,"First-year students may elect French, Spanish, or German.",一年级学生可选修法语、西班牙语或德语。
+en:science:unknown:1,science,unknown,科学,科学,/'saɪəns/,/'saɪəns/,Many leading scientists do not consider that science can give absolutely reliable knowledge.,许多杰出科学家都不认为科学能够提供绝对可靠的知识。
+en:museum:unknown:1,museum,unknown,博物馆,博物馆,/mjuˈzɪəm/,/mjuː'zɪəm/,the Museum of Modern Art,现代艺术博物馆
+en:post-office:unknown:1,post office,unknown,邮局,邮局,/ˈpost ɔfɪs/,/ˈpəust ɔfis/,The hotel is opposite the post office.,邮局的对过是旅馆。
+en:bookstore:unknown:1,bookstore,unknown,书店,书店,/bʊkstɔr/,/'bʊkstɔː/,He lit upon some jest books in the bookstore.,他在书店偶然发现了一些笑话集。
+en:cinema:unknown:1,cinema,unknown,电影院,电影院,/'sɪnəmə/,/ˈsɪnəmɑ:ˈsɪnəmə/,It’s on at the local cinema.,此片正在当地影院上映。
+en:hospital:unknown:1,hospital,unknown,医院,医院,/'hɑspɪtl/,/'hɒspɪt(ə)l/,They are building a new hospital.,他们正在建一家新医院。
+en:crossing:unknown:1,crossing,unknown,十字路口,十字路口,/'krɔsɪŋ/,/'krɒsɪŋ/,Turn left at the first crossing.,在第一个十字路口左转。
+en:left:unknown:1,left,unknown,左,左,/lɛft/,/left/,She held out her left hand.,她伸出左手。
+en:on-foot:unknown:1,on foot,unknown,步行,步行,,,He vainly hope to travel round the world on foot.,他梦想步行周游世界。
+en:bus:unknown:1,bus,unknown,公共汽车,公共汽车,/bʌs/,/bʌs/,I took a bus to San Francisco.,我乘公共汽车去旧金山。
+en:plane:unknown:1,plane,unknown,飞机,飞机,/plen/,/pleɪn/,It is a big airline with a large fleet of planes.,这是一家大航空公司，拥有庞大的机群。
+en:taxi:unknown:1,taxi,unknown,出租汽车,出租汽车,/'tæksi/,/'tæksɪ/,They sent me home in a taxi.,他们用出租车把我送回家。
+en:ship:unknown:1,ship,unknown,船,船,/ʃɪp/,/ʃɪp/,the ship’s captain,这艘船的船长
+en:subway:unknown:1,subway,unknown,地铁,地铁,/'sʌbwe/,/'sʌbweɪ/,the New York City subway,纽约市的地铁
+en:train:unknown:1,train,unknown,火车,火车,/tren/,/treɪn/,We went all the way to Inverness by train.,我们一路坐火车到因弗内斯。
+en:slow:unknown:1,slow,unknown,慢的,慢的,/sloʊ/,/sləʊ/,The car was travelling at a very slow speed.,汽车正以非常慢的速度行驶。
+en:down:unknown:1,down,unknown,减少,减少,/daʊn/,/daʊn/,Keep your speed down.,速度放慢。
+en:slow-down:unknown:1,slow down,unknown,慢下来,慢下来,,,You will need to slow down for a while.,你将会需要放松一会儿。
+en:stop:unknown:1,stop,unknown,停下,停下,/stɑp/,/stɒp/,He stopped suddenly when he saw Ruth.,他一看到露丝，便突然停住了。
+en:mrs:unknown:1,Mrs,unknown,夫人,夫人,/ˈmɪsɪz/,,It is said that Mrs White rules her husband strictly.,据说怀特夫人对她的丈夫管得很严。
+en:early:unknown:1,early,unknown,早到的,早到的,/'ɝli/,/'ɜːlɪ/,the early morning sunshine,清晨的阳光
+en:helmet:unknown:1,helmet,unknown,头盔,头盔,/'hɛlmɪt/,/'helmɪt/,The Sword split the Knight's helmet and bit him fatally.,剑劈开了骑士的头盔并致命地刺进他。
+en:must:unknown:1,must,unknown,必须,必须,/mʌst/,/mʌst/,All passengers must wear seat belts.,所有乘客都必须系安全带。
+en:wear:unknown:1,wear,unknown,戴,戴,/wɛr/,/weə/,Susanna was wearing a black silk dress.,苏珊娜穿着一条黑色真丝连衣裙。
+en:attention:unknown:1,attention,unknown,注意,注意,/ə'tɛnʃən/,/ə'tenʃ(ə)n/,My attention wasn’t really on the game.,我的注意力其实不在比赛上。
+en:pay-attention-to:unknown:1,pay attention to,unknown,注意,注意,,,In this materialistic age we do not have time to pay attention to our surroundings.,在这唯物主义的时代里，我们没有时间去注意我们周围的世界。
+en:traffic:unknown:1,traffic,unknown,交通,交通,/'træfɪk/,/'træfɪk/,There wasn’t much traffic on the roads.,路上车辆不多。
+en:traffic-lights:unknown:1,traffic lights,unknown,交通信号灯,交通信号灯,,,It's so much safer to get across the road at the traffic lights.,在有交通红绿灯的地方横穿马路要安全得多。
+en:munich:unknown:1,Munich,unknown,慕尼黑,慕尼黑,/'mju:nik/,/'mju:nik/,And then we went to Munich.,然后我们去了慕尼黑。
+en:germany:unknown:1,Germany,unknown,德国,德国,/'dʒɝməni/,/'dʒɜːmənɪ/,Germany borders on France.,德国与法国接壤。
+en:alaska:unknown:1,Alaska,unknown,阿拉斯加州,阿拉斯加州,/ə'læskə/,/ə'læskə/,"Like I said, perfect, if you live in Alaska.",像我说过的，完美，如果你住在阿拉斯加的话。
+en:sled:unknown:1,sled,unknown,雪橇,雪橇,/slɛd/,/sled/,She tumbled over a sled.,她被雪橇绊了一跤。
+en:fast:unknown:1,fast,unknown,快的,快的,/fæst/,/fɑːst/,Slow down – you’re driving too fast.,慢点——你开得太快了。
+en:ferry:unknown:1,ferry,unknown,轮渡,轮渡,/'fɛri/,/'ferɪ/,I left my bag of film on the ferry.,我把装底片的旅行袋遗放在渡船上.
+en:papa-westray:unknown:1,Papa Westray,unknown,帕帕韦斯特雷岛,帕帕韦斯特雷岛,,,Papa Westray has a population of just 70 and no secondary school.,帕帕韦斯特雷岛人口只有70，岛上没有中学。
+en:scotland:unknown:1,Scotland,unknown,苏格兰,苏格兰,/'skɔtlənd/,/'skɔtlənd/,He traveled Scotland last year.,他去年在苏格兰旅行。
+en:visit:unknown:1,visit,unknown,拜访,拜访,/'vɪzɪt/,/'vɪzɪt/,Eric went to Seattle to visit his cousins.,埃里克到西雅图去看望他的表兄弟。
+en:film:unknown:1,film,unknown,电影,电影,/fɪlm/,/fɪlm/,Have you seen any good films recently?,你最近看过什么好的影片吗？
+en:see-a-film:unknown:1,see a film,unknown,看电影,看电影,,,"Plan a weekend to go out with friends to barbecue countryside, see a film, play electronic games, play footaball or barly take a walk together.",安排个周末跟朋友一起，一起去野外烧烤、看电影、玩电子游戏、踢足球、或者只是一起走走。
+en:take-a-trip:unknown:1,take a trip,unknown,去旅行,去旅行,,,Fred and Jeff are friends. They want to take a trip together.,国庆节快要来临了，弗雷德和杰夫是朋友，他们想一起去旅行。
+en:supermarket:unknown:1,supermarket,unknown,超市,超市,/'sʊpɚ'mɑrkɪt/,/'suːpəmɑːkɪt; 'sjuː-/,His eyes roved round the supermarket.,他的眼睛环视了一下超级市场。
+en:evening:unknown:1,evening,unknown,晚上,晚上,/'ivnɪŋ/,/'iːv(ə)nɪŋ/,I do most of my studying in the evening.,我学习大都在晚上。
+en:tonight:unknown:1,tonight,unknown,今晚,今晚,/tə'naɪt/,/tə'naɪt/,I think I’ll go to bed early tonight.,我想今晚我会早点上床睡觉。
+en:tomorrow:unknown:1,tomorrow,unknown,明天,明天,/tə'mɔro/,/tə'mɒrəʊ/,Our class is going to London tomorrow.,我们班明天要去伦敦。
+en:next-week:unknown:1,next week,unknown,下周,下周,/nɛkst wik/,/nekst wi:k/,He will speak to us next week.,下星期他将给我们做讲演。
+en:dictionary:unknown:1,dictionary,unknown,词典,词典,/'dɪkʃə'nɛri/,/'dɪkʃ(ə)n(ə)rɪ/,a German-English dictionary,一本德英词典
+en:comic:unknown:1,comic,unknown,滑稽的,滑稽的,/'kɑmɪk/,/'kɒmɪk/,a comic novel,滑稽小说
+en:comic-book:unknown:1,comic book,unknown,连环画,连环画,,,...comic book heroes such as Spider Man.,…连环漫画杂志中的男主角，如蜘蛛人。
+en:word:unknown:1,word,unknown,单词,单词,/wɝd/,/wɜːd/,Write an essay of about five hundred words.,写一篇约500字的文章。
+en:word-book:unknown:1,word book,unknown,单词书,单词书,/'wɝk'bʊk/,/'wɜːdbʊk/,,
+en:post-card:unknown:1,post card,unknown,明信片,明信片,,,Send them a post card.,寄给他们一张明信片。
+en:lesson:unknown:1,lesson,unknown,课,课,/'lɛsn/,/'les(ə)n/,piano lessons,钢琴课
+en:space:unknown:1,space,unknown,太空,太空,/spes/,/speɪs/,How much space is there on each disk?,每张磁盘有多大容量？
+en:travel:unknown:1,travel,unknown,旅行,旅行,/'trævl/,/'træv(ə)l/,They travelled 200 miles on the first day.,他们第一天行进了200英里。
+en:half:unknown:1,half,unknown,一半,一半,/hæf/,/hɑːf/,Only half the guests had arrived by seven o’clock.,7点钟前只来了一半客人。
+en:price:unknown:1,price,unknown,价格,价格,/praɪs/,/praɪs/,She balked at the price.,她对这价格犹豫不决。
+en:mid-autumn-festival:unknown:1,Mid-Autumn Festival,unknown,中秋节,中秋节,,,"Thus informed, the people rose together on the designated day to overthrow the Yuan, and since that time mooncakes have become an integral part of the Mid-Autumn Festival.",后来，人们在八月十五那天集合起来推翻了元朝统治。 从那以后，月饼成为中秋节不可或缺的元素。
+en:together:unknown:1,together,unknown,一起,一起,/tə'ɡɛðɚ/,/tə'geðə/,We’ve very much enjoyed working together .,我们在一起工作非常开心。
+en:get-together:unknown:1,get together,unknown,聚会,聚会,,,A whole range of people from all backgrounds can get together and enjoy themselves.,出身经历各异的人们可以聚在一起玩得很开心。
+en:mooncake:unknown:1,mooncake,unknown,月饼,月饼,/'munkeɪk/,/'mu:nkeɪk/,"Parents make mooncakes, moon masks, and lanterns with their children.",家长们与他们的孩子们一起制作月饼、月亮形面具和灯笼。
+en:poem:unknown:1,poem,unknown,诗,诗,/'poəm/,/'pəʊɪm/,You need to touch up the poem.,你需要给这首诗润色一下。
+en:moon:unknown:1,moon,unknown,月亮,月亮,/mun/,/muːn/,the craters on the surface of the moon,月球表面的环形山
+en:studies:unknown:1,studies,unknown,学习,学习,/'stʌdiz/,/'stʌdiz/,...a relaxed and happy atmosphere that will allow you to study to your full potential.,…一个将使你学习到充分发挥潜能的轻松又愉快的氛围。
+en:puzzle:unknown:1,puzzle,unknown,谜,谜,/'pʌzl/,/'pʌz(ə)l/,The meaning of the poem has always been a puzzle.,那首诗的含义始终是个谜。
+en:hiking:unknown:1,hiking,unknown,远足,远足,/'haɪkɪŋ/,/'haɪkɪŋ/,We’re going to do some hiking this summer.,今年夏天我们要去远足。
+en:pen-pal:unknown:1,pen pal,unknown,笔友,笔友,,,"She: In my high school French class, there was a pen pal requirement.",她 ：在高中的法语课上，要求每个人交一名笔友。
+en:hobby:unknown:1,hobby,unknown,业余爱好,业余爱好,/'hɑbi/,/'hɒbɪ/,What are your hobbies?,你有些什么爱好？
+en:jasmine:unknown:1,jasmine,unknown,茉莉,茉莉,/'dʒæzmɪn/,/'dʒæzmɪn; 'dʒæs-/,jasmine tea,茉莉花茶；香片
+en:idea:unknown:1,idea,unknown,主意,主意,/aɪ'diə/,/aɪ'dɪə/,You should talk to Ken – he's always full of good ideas.,你应该和肯谈谈，他总是满脑子好主意。
+en:canberra:unknown:1,Canberra,unknown,堪培拉,堪培拉,/'kænbərə/,/'kænbərə/,"In Australia, climate change is a political football, kicked about in the power game played in Canberra.",在澳大利亚，气候变化是政治足球，在堪培拉的权力游戏中被踢来踢去。
+en:amazing:unknown:1,amazing,unknown,令人惊奇的,令人惊奇的,/ə'mezɪŋ/,/ə'meɪzɪŋ/,He’s an amazing player to watch.,看他比赛那才叫精彩呢。
+en:shall:unknown:1,shall,unknown,表示征求意见,表示征求意见,/ʃəl/,/ʃæl; ʃ(ə)l/,Shall I get the keys?,我拿钥匙可以吗？
+en:goal:unknown:1,goal,unknown,射门,射门,/ɡol/,/gəʊl/,He dribbled past the fullback and scored a goal.,他越过对方后卫，趁势把球踢入球门。
+en:join:unknown:1,join,unknown,加入,加入,/dʒɔɪn/,/dʒɒɪn/,When did you join the Labour Party?,你何时加入工党的？
+en:club:unknown:1,club,unknown,俱乐部,俱乐部,/klʌb/,/klʌb/,Manchester United Football Club,曼联（队）足球俱乐部
+en:share:unknown:1,share,unknown,分享,分享,/ʃɛr/,/ʃeə/,We don’t have enough books so you’ll have to share.,我们书不够，所以你们得合着用。
+en:factory:unknown:1,factory,unknown,工厂,工厂,/'fæktri/,/'fækt(ə)rɪ/,a car factory,汽车制造厂
+en:worker:unknown:1,worker,unknown,工人,工人,/'wɝkɚ/,/'wɜːkə/,workers in the tourist industry,旅游行业工作者
+en:postman:unknown:1,postman,unknown,邮递员,邮递员,/'postmən/,/'pəʊs(t)mən/,That postman is in charge of this route.,那个邮递员负责这条投递线路。
+en:businessman:unknown:1,businessman,unknown,商人,商人,/'bɪznəsmæn/,/'bɪznɪsmən/,A businessman will grasp at any chance to make a profit.,一个商人会抓住任何一个机会赚钱。
+en:police-officer:unknown:1,police officer,unknown,警察,警察,/pəˈlis ˈɔfɪsɚ/,,The police officer said your country [Pakistan] is not secure but I still prefer to live there. I love my country.,警官说你们巴基斯坦现在也不安全，但是我仍然希望回到祖国去生活，我爱我的祖国。
+en:fisherman:unknown:1,fisherman,unknown,渔民,渔民,/'fɪʃɚmən/,/'fɪʃəmən/,"In scorn of that audience, he imagines another audience, another audience to write for and to emulate, an audience represented by the fisherman.",讽刺这个观众，他想象着另一个观众，可以为之写作，做榜样的观众，渔夫代表了这个观众。
+en:scientist:unknown:1,scientist,unknown,科学家,科学家,/'saɪəntɪst/,/'saɪəntɪst/,He is a scientist of high prestige.,他是一位有声望的科学家。
+en:pilot:unknown:1,pilot,unknown,飞行员,飞行员,/'paɪlət/,/'paɪlət/,an airline pilot,航空公司飞行员
+en:coach:unknown:1,coach,unknown,教练,教练,/kotʃ/,/kəʊtʃ/,a tennis coach,网球教练
+en:country:unknown:1,country,unknown,国家,国家,/'kʌntri/,/'kʌntrɪ/,the Scandinavian countries,斯堪的纳维亚国家
+en:head-teacher:unknown:1,head teacher,unknown,校长,校长,,,"The head teacher said pupils’, parents’ and other teachers’ opinions were sought before the uniform rules were changed.",校长说，在修改这一着装规定之前，已经征求过学生、家长和其他老师的意见。
+en:sea:unknown:1,sea,unknown,大海,大海,/si/,/siː/,Jay stripped his clothes off and ran into the sea.,杰伊脱光衣服奔入海里。
+en:stay:unknown:1,stay,unknown,保持,保持,/ste/,/steɪ/,Rollings will stay as chairman this year.,罗林斯今年将继续担任主席一职。
+en:university:unknown:1,university,unknown,大学,大学,"/,junɪ'vɝsəti/",/juːnɪ'vɜːsɪtɪ/,He teaches Esperanto at that university.,他在那所大学教世界语。
+en:gym:unknown:1,gym,unknown,体育馆,体育馆,/dʒɪm/,/dʒɪm/,I go to the gym as often as I can.,我一有空就去健身房健身。
+en:if:unknown:1,if,unknown,如果,如果,/ɪf/,/ɪf/,We’ll stay at home if it rains.,如果下雨，我们就待在家里。
+en:reporter:unknown:1,reporter,unknown,记者,记者,/rɪ'pɔrtɚ/,/rɪ'pɔːtə/,a news reporter,新闻记者
+en:use:unknown:1,use,unknown,使用,使用,/juz/,/juːz/,Can I use your phone?,我可以用一下你的电话吗？
+en:type:unknown:1,type,unknown,打字,打字,/taɪp/,/taɪp/,italic type,斜体字
+en:quickly:unknown:1,quickly,unknown,迅速地,迅速地,/'kwɪkli/,/'kwɪklɪ/,We need to get this finished as quickly as possible.,我们必须尽快完成此事。
+en:secretary:unknown:1,secretary,unknown,秘书,秘书,/'sɛkrətɛrɪ/,/ˈsekrətrɪ/,My secretary will fax you all the details.,我的秘书会把所有的细节发传真给你。
+en:angry:unknown:1,angry,unknown,生气的,生气的,/ˈæŋgrɪ/,/'æŋgrɪ/,I was angry because he hadn’t told me his plans.,我很生气，因为他没有告诉我他的计划。
+en:afraid:unknown:1,afraid,unknown,害怕,害怕,/ə'fred/,/ə'freɪd/,There’s no need to be afraid.,没有必要害怕。
+en:sad:unknown:1,sad,unknown,难过的,难过的,/sæd/,/sæd/,so sad,如此悲伤；如此难过
+en:worried:unknown:1,worried,unknown,担心的,担心的,/'wɝrɪd/,/'wʌrɪd/,She gave me a worried look.,她担心地看了我一眼。
+en:happy:unknown:1,happy,unknown,高兴的,高兴的,/'hæpɪ/,/'hæpɪ/,It’s a lovely house and we’ve been very happy here.,房子很漂亮，我们住在这里非常开心。
+en:see-a-doctor:unknown:1,see a doctor,unknown,看病,看病,,,"You're hacking these days, you should go to see a doctor.",这几天你总是干咳，你得找医生看一看啦。
+en:wear.:unknown:1,wear.,unknown,穿,穿,/wɛr/,/weə/,Susanna was wearing a black silk dress.,苏珊娜穿着一条黑色真丝连衣裙。
+en:deep:unknown:1,deep,unknown,深的,深的,/dip/,/diːp/,a deep wound,很深的伤口
+en:breath:unknown:1,breath,unknown,呼吸,呼吸,/brɛθ/,/breθ/,"Slow down, I need to catch my breath.",慢一点，我要喘口气。
+en:take-a-deep-breath:unknown:1,take a deep breath,unknown,深呼吸,深呼吸,,,I did just have to take a deep breath and push the publish button regardless of the fear.,我实在只需要深呼吸一口，然后不管什么恐惧，点一下发布按钮就好了。
+en:count:unknown:1,count,unknown,数数,数数,/kaʊnt/,/kaʊnt/,I was amazed at the number of plants - I counted 147.,我对植物的数量之多感到惊讶，我数了有147棵。
+en:count-to-ten:unknown:1,count to ten,unknown,数到十,数到十,,,Before you blow up and say something you'll regret later - count to ten.,在你自我膨胀并说出一些会后悔的话之前——先数到十吧。
+en:chase:unknown:1,chase,unknown,追赶,追赶,,/tʃeɪs/,The dogs saw him running and chased him.,那些狗看到他在跑就追他。
+en:mice:unknown:1,mice,unknown,老鼠,老鼠,/maɪs/,/maɪs/,Cats prey on birds and mice.,猫捕食鸟类及老鼠。
+en:bad:unknown:1,bad,unknown,邪恶的,邪恶的,/bæd/,/bæd/,The bad weather conditions prevented the plane from landing.,恶劣的天气使飞机无法着陆。
+en:hurt:unknown:1,hurt,unknown,受伤,受伤,/hɝ​t/,/hɜːt/,Was anyone hurt in the accident?,事故中有人受伤吗？
+en:ill:unknown:1,ill,unknown,有病,有病,/ɪl/,/ɪl/,Bridget can’t come – she’s ill.,布里奇特不能来了，她生病了。
+en:wrong:unknown:1,wrong,unknown,有毛病,有毛病,/rɔŋ/,/rɒŋ/,Is anything wrong? You haven’t said more than two words since you got here.,出什么事啦？你到这儿以后还没说超过两句话呢。
+en:feel:unknown:1,feel,unknown,觉得,觉得,/fil/,/fiːl/,Do you still feel hungry?,你还觉得饿吗？
+en:well:unknown:1,well,unknown,健康,健康,/wɛl/,/wel/,"He had the operation yesterday, and he’s doing very well.",他昨天做了手术，恢复得很好。
+en:sit:unknown:1,sit,unknown,坐,坐,/sɪt/,/sɪt/,The parliament building sits in a large square.,议会大楼位于一个大广场上。
+en:grass:unknown:1,grass,unknown,草坪,草坪,/ɡræs/,/grɑːs/,I walked across the grass.,我走在草地上。
+en:ant:unknown:1,ant,unknown,蚂蚁,蚂蚁,/ænt/,/ænt/,"In the dry season, it could be attacked by another species of ant.","在干燥的季节里,它可能会遭到另一个种类的蚂蚁攻击。"
+en:worry:unknown:1,worry,unknown,担心,担心,/ˈwʌrɪ/,/'wʌrɪ/,You’ve really got no need to worry about your weight.,你真的不必担心你的体重。
+en:stuck:unknown:1,stuck,unknown,陷住,陷住,/stʌk/,/stʌk/,Sara tried to open the window but it was stuck.,萨拉想打开窗户，但窗户卡住了。
+en:mud:unknown:1,mud,unknown,泥,泥,/mʌd/,/mʌd/,"By the end of the game, all the kids were covered in mud.",到了比赛快结束的时候，所有的孩子都浑身是泥。
+en:pull:unknown:1,pull,unknown,拉,拉,/pʊl/,/pʊl/,Mom! Davey’s pulling my hair!,妈妈! 戴维拽我的头发！
+en:everyone:unknown:1,everyone,unknown,每人,每人,/'ɛvrɪwʌn/,/'evrɪwʌn/,"If everyone is ready, I’ll begin.",如果大家都准备好了，我就开始。
+en:younger:unknown:1,younger,unknown,更年轻的,更年轻的,/'jʌŋɡɚ/,/'jʌŋɡə/,The younger people might not like the idea.,年轻一些的人可能不喜欢这个主意。
+en:older:unknown:1,older,unknown,更年长的,更年长的,/oldə/,/'əʊldə/,I like the older one.This one.,我喜欢年纪大点儿的这个。这个。
+en:taller:unknown:1,taller,unknown,更高的,更高的,/'tɔlɚ/,/'tɔ:lə(r)/,"Like you, a bit, but smarter, taller and better looking.",就像你，有一点点，但是更聪明、更高、更好看。
+en:shorter:unknown:1,shorter,unknown,更矮的,更矮的,,,"The idea is to finish a job in a shorter time as measured by an external clock, even if at the cost of more hardware and programming complexity.",其思想是按照外部时钟的步调在更短的时间内完成一项工作，即便要以更复杂的硬件和编程为代价也在所不惜。
+en:longer:unknown:1,longer,unknown,更长的,更长的,/'lɔŋɡɚ/,/'lɒŋɡə/,The article was abstracted from a longer new book.,这篇文章是从一本较长的新书中摘选出来的。
+en:thinner:unknown:1,thinner,unknown,更瘦的,更瘦的,/'θɪnɚ/,/'θɪnə/,"As she looked up to see who I meant — though already knowing, probably, from my tone — suddenly he looked at her, the thinner one, the boyish one, the youngest, perhaps.",当她抬头看向我所指的人时——也许从我的声音里就已经听出来了——忽然，他看着她，那个最瘦的，最孩子气的，也许是最年轻的男孩。
+en:heavier:unknown:1,heavier,unknown,更重的,更重的,/'hɛvɪɚðən'ɛr/,/'hevɪə/,"Just as in the sun, the chain reaction in the second stage fuses the hydrogen atoms into heavier helium atoms and releases vast amounts of energy in the process.",正如在太阳上所进行的反应一样，第二阶段连锁反应将氢原子聚合成较重的氦原子并在这一过程中释放出巨大的能量。
+en:bigger:unknown:1,bigger,unknown,更大的,更大的,/bɪgə(r)/,/bɪgə(r)/,That uncertain thing was swelled bigger.,那个不知叫什么的东西膨胀得更大了。
+en:smaller:unknown:1,smaller,unknown,更小的,更小的,/smɔlər/,/smɔ:lə(r)/,Inside the reactor the large molecules are cracked into smaller molecules.,在反应堆内部大的分子被裂解为较小的分子。
+en:stronger:unknown:1,stronger,unknown,更强壮的,更强壮的,/strɔ:ŋɡər/,/strɒŋgə(r)/,Then you must be stronger than us.,那么你一定比我们强壮。
+en:dinosaur:unknown:1,dinosaur,unknown,恐龙,恐龙,/ˈdaɪnəˌsɔr/,/'daɪnəsɔː/,How then would this dinosaur have moved?,那么这种恐龙要如何移动呢？
+en:hall:unknown:1,hall,unknown,大厅,大厅,/hɔl/,/hɔːl/,a huge tiled entrance hall,铺着地砖的大门厅
+en:metre:unknown:1,metre,unknown,米,米,/ˈmitɚ/,/'mi:tə(r)/,Let me congratulate you on your winning first place in the 100 metre dash.,祝贺你获得百米赛跑第一名。
+en:meter:unknown:1,meter,unknown,米,米,/mitɚ/,/ˈmi:tə(r)/,He came in third in the hundred-meter dash.,在百米竞赛中他跑了第三名。
+en:than:unknown:1,than,unknown,比,比,/ðæn/,/ðæn; ð(ə)n/,Natalie was prettier than her sister.,纳塔莉比她姐姐漂亮。
+en:both:unknown:1,both,unknown,两个都,两个都,/boθ/,/bəʊθ/,Both Helen’s parents are doctors.,海伦的父母都是医生。
+en:kilogram:unknown:1,kilogram,unknown,千克,千克,/'kɪləɡræm/,/ˈkɪləɡræm/,"For example, the kilogram scale allows you to assign a number to an object indicating its weight based upon standardized displacements of measuring instruments.",例如，千克尺度允许您给一个物体分配数字，根据测量仪器的标准化的偏移量指示该物体的重量。
+en:countryside:unknown:1,countryside,unknown,乡村,乡村,/'kʌntrɪsaɪd/,/'kʌntrɪsaɪd/,The house had lovely views over open countryside .,这房子望出去是开阔的乡村美景。
+en:lower:unknown:1,lower,unknown,更低地,更低地,/'loɚ/,/'ləʊə/,"Don't lower yourself, don't be the way they are.",不要贬低自己的身份，别像他们那样。
+en:shadow:unknown:1,shadow,unknown,影子,影子,/'ʃædo/,/'ʃædəʊ/,the long dark shadow of an old oak tree,一棵老橡树长长的影子
+en:smarter:unknown:1,smarter,unknown,更聪明的,更聪明的,,/'smɑ:tə/,"If he is smarter than you ,he is great,but you are fool.",如果他比你聪明，他就是有智慧，而你是傻瓜。
+en:become:unknown:1,become,unknown,变成,变成,/bɪ'kʌm/,/bɪ'kʌm/,The weather became warmer.,天气变暖和了。
+en:cleaned:unknown:1,cleaned,unknown,打扫,打扫,/klind/,/kliːnd/,Mary cooked and cleaned for them.,玛丽为他们做饭、打扫卫生。
+en:stayed:unknown:1,stayed,unknown,待,待,,,stayed home,呆在家里
+en:washed:unknown:1,washed,unknown,洗,洗,/wɔʃt/,/wɔʃt/,We did odd jobs like farm work and washing dishes.,我们做了一些诸如干农活儿和洗盘子之类的零活儿。
+en:watched:unknown:1,watched,unknown,看,看,/wɑtʃ/,/wɒtʃ/,The man was standing in his doorway watching him.,那个男人正站在自家门道里看着他。
+en:had:unknown:1,had,unknown,得病（例如 had a cold 得了感冒）,得病（例如 had a cold 得了感冒）,/hæd/,/hæd/,had been,已经（过去完成时）
+en:had-a-cold:unknown:1,had a cold,unknown,感冒,感冒,,,He had a cold and spoke with a slight snuffle.,他感冒了， 说话有点齉鼻儿。
+en:slept:unknown:1,slept,unknown,睡觉,睡觉,/slɛpt/,/slept/,I slept during the football game.,足球比赛的时候我睡觉。
+en:saw:unknown:1,saw,unknown,看,看,/sɔ/,/sɔː/,He saw you and I.,他看见你和我了。
+en:yesterday:unknown:1,yesterday,unknown,昨天,昨天,/ˈjɛstɚdɪ;-de/,/ˈjestədɪ;-deɪ/,What did you do yesterday?,昨天你做了什么？
+en:before:unknown:1,before,unknown,在⋯⋯之前,在⋯⋯之前,/bɪ'fɔr/,/bɪ'fɔː/,Say goodbye before you go.,你走之前要告别。
+en:drank:unknown:1,drank,unknown,喝,喝,/dræŋk/,/dræŋk/,They drank one bottle of wine.,他们喝了一瓶葡萄酒。
+en:magazine:unknown:1,magazine,unknown,杂志,杂志,/'mæɡəzin/,/mægə'ziːn/,a magazine article,杂志中的文章
+en:better:unknown:1,better,unknown,更好的,更好的,/'bɛtɚ/,/'betə/,Your stereo is better than mine.,你的音响比我的好。
+en:faster:unknown:1,faster,unknown,更快的,更快的,/'fastə/,/fɑ:stə(r)/,Orders are starting to backlog faster than we can process them.,订货单正开始积压得比我们能对它们进行处理更快。(或：订单开始形成积压，我们来不及处理。)
+en:hotel:unknown:1,hotel,unknown,旅馆,旅馆,/ho'tɛl/,/həʊˈtel/,I’ve booked the flights and the hotel.,我已订好机票和酒店。
+en:fixed:unknown:1,fixed,unknown,修理,修理,/fɪkst/,/fɪkst/,fixed point,定点；固定点
+en:broken:unknown:1,broken,unknown,破损的,破损的,/'brokən/,/'brəʊk(ə)n/,Mind the broken glass.,当心碎玻璃。
+en:lamp:unknown:1,lamp,unknown,台灯,台灯,/læmp/,/læmp/,The light is on.; The lamp is lit up.,灯着了。
+en:loud:unknown:1,loud,unknown,大声的,大声的,/laʊd/,/laʊd/,The book fell to the floor with a loud bang.,书砰的一声掉落到地上。
+en:enjoy:unknown:1,enjoy,unknown,享受⋯⋯的乐趣,享受⋯⋯的乐趣,/ɪn'dʒɔɪ/,/ɪnˈdʒɔɪ/,Sandra enjoys her job in the city.,桑德拉很喜欢她在城里的这份工作。
+en:went:unknown:1,went,unknown,去,去,/wɛnt/,/went/,We all went except him.,除他以外， 我们都去了。
+en:camp:unknown:1,camp,unknown,野营,野营,/kæmp/,/kæmp/,Let’s go back to camp – it’s getting dark.,我们回营地吧，天快黑了。
+en:went-camping:unknown:1,went camping,unknown,去野营,去野营,,,"On a day of brilliant sunshine,we went camping.",在一个阳光明媚的日子，我们去野营。
+en:went-fishing:unknown:1,went fishing,unknown,去钓鱼,去钓鱼,,,Yesterday we went fishing.,昨天我们去钓鱼了。
+en:rode:unknown:1,rode,unknown,骑,骑,/rod/,/rəʊd/,His mother rode him on her back.,他的母亲让他骑在她的背上。
+en:ate:unknown:1,ate,unknown,吃,吃,/ɛt; et/,/et; eit/,The boy ate several dishfuls of ice cream.,那小男孩吃了好几满盘冰淇淋。
+en:took:unknown:1,took,unknown,拍照,拍照,/tʊk/,/tʊk/,took place,发生；进行
+en:took-pictures:unknown:1,took pictures,unknown,照相,照相,,,"In Chicago I took pictures of landmarks like the Water Tower and Lake Shore Drive, and after we got home I developed them in my darkroom (photography was another of my hobbies).",在芝加哥我拍摄了很多地标照片，诸如水塔和湖滨道，回家后我在暗房里把照片冲冼出来（摄影是我的另一项爱好）。
+en:bought:unknown:1,bought,unknown,买,买,/bɔt/,/bɔːt/,She bought an English dictionary for me.,她给我买了一本英语词典。
+en:gift:unknown:1,gift,unknown,礼物,礼物,/ɡɪft/,/gɪft/,The earrings were a gift from my aunt.,这副耳环是我姑姑送给我的礼物。
+en:fell:unknown:1,fell,unknown,摔倒,摔倒,/fɛl/,/fel/,fell in,排队；到期
+en:off:unknown:1,off,unknown,落下,落下,/ɔf/,/ɒf/,I’ll get off at the next stop.,我将在下一站下车。
+en:labour-day:unknown:1,Labour Day,unknown,劳动节,劳动节,,,"1Kathmandu, Nepal: A Nepalese man whose head has been painted with the communist hammer and sickle symbol joins a procession to mark International Labour Day Photograph: PRAKASH MATHEMA/AFP",1/13泊尔加德满都（Kathmandu Nepal）：为庆祝“五一”国际劳动节，游行队伍中一名尼泊尔男子在头上用颜料涂上象征着共产主义的锤子和镰刀。
+en:mule:unknown:1,mule,unknown,骡子,骡子,/mjul/,/mjuːl/,"If I had that much money, I'd buy another mule.",要是我有那么多钱，我早就另买一头骡子了。
+en:turpan:unknown:1,Turpan,unknown,吐鲁番,吐鲁番,,,"Ahmed then took me for a drive outside Turpan to a small Uyghur village at the foot of a mountain where I could see their style of housing, farming, etc.",然后，艾哈迈德载我去吐鲁番郊外的、山脚下的一个维族小村庄，在那我可以看到他们的建筑风格，以及农事等等。
+en:could:unknown:1,could,unknown,能,能,/kəd; kʊd/,/kəd; kʊd/,"By the time she was eight, she could read Greek and Latin.",她八岁时就会读希腊文和拉丁文了。
+en:till:unknown:1,till,unknown,直到,直到,/tɪl/,/tɪl/,I didn’t have a boyfriend till I was 17.,我直到17岁才有男朋友。
+en:beach:unknown:1,beach,unknown,沙滩,沙滩,/bitʃ/,/biːtʃ/,a sandy beach,沙滩
+en:basket:unknown:1,basket,unknown,篮子,篮子,/'bæskɪt/,/'bɑːskɪt/,a shopping basket,购物篮
+en:part:unknown:1,part,unknown,角色,角色,/pɑrt/,/pɑːt/,"Could someone take the part of Romeo, please?",能请谁来扮演罗密欧吗？
+en:licked:unknown:1,licked,unknown,舔,舔,/lɪk/,/lɪk/,"She folded up her letter, licking the envelope flap with relish.",她把信折起来，享受地舔着信封盖。
+en:laughed:unknown:1,laughed,unknown,笑,笑,,,"He was about to offer an explanation, but she was beginning to laugh.",他刚要加以解释，她就开始笑起来了。
+en:dining-hall:unknown:1,dining hall,unknown,饭厅,饭厅,,,"The next morning, each one went down to get breakfast in the dining hall of their respective dorms.",第二天早上，男女双方径直回到自己的宿舍餐厅吃早饭。
+en:ago:unknown:1,ago,unknown,以前,以前,/ə'ɡo/,/ə'gəʊ/,They moved to a new house some time ago (= a fairly long time ago ) .,他们搬进新居已有些日子了。
+en:cycling:unknown:1,cycling,unknown,骑自行车运动,骑自行车运动,/'saɪklɪŋ/,/'saɪklɪŋ/,But the traffic worries me! I’m not sure about cycling in such heavy traffic.,但是交通使我担心！ 在这么拥挤的车辆中骑自行车我不太肯定。
+en:go-cycling:unknown:1,go cycling,unknown,去骑自行车,去骑自行车,,,"If it rains, I won’t go cycling.",如果下雨，我就不去骑车了。
+en:ice-skate:unknown:1,ice-skate,unknown,滑冰,滑冰,/'aisskeit/,,A: I can't believe you're going to teach me how to ice-skate!,没想到会是你教我滑冰！
+en:badminton:unknown:1,badminton,unknown,羽毛球运动,羽毛球运动,/'bædmɪntən/,/'bædmɪnt(ə)n/,I like playing basketball and badminton.,我喜欢的篮球和羽毛球。
+en:star:unknown:1,star,unknown,星,星,/stɑr/,/stɑː/,I lay on my back and looked up at the stars.,我仰卧着看天上的星星。
+en:easy:unknown:1,easy,unknown,容易的,容易的,/'izi/,/'iːzɪ/,The test was easy.,考试很容易。
+en:look-up:unknown:1,look up,unknown,查阅,查阅,,,I looked your address up in the personnel file.,我从人事档案里查到了你的地址。
+en:internet:unknown:1,Internet,unknown,互联网,互联网,/'ɪntɚnɛt/,/'ɪntənet/,on the internet,在网上
+en:different:unknown:1,different,unknown,不同的,不同的,/'dɪfrənt/,/ˈdɪfrənt/,The place looks completely different now.,这地方现在完全变了。
+en:active:unknown:1,active,unknown,活跃的,活跃的,/'æktɪv/,/'æktɪv/,games for active youngsters,活跃好动的年轻人玩的游戏
+en:race:unknown:1,race,unknown,赛跑,赛跑,/res/,/reɪs/,I'll race you to the bus stop.,我要和你赛一赛，看谁先跑到汽车站。
+en:nothing:unknown:1,nothing,unknown,没有什么,没有什么,/'nʌθɪŋ/,/'nʌθɪŋ/,Nothing ever happens in this town.,这镇上从来都不会发生什么特别的事。
+en:thought:unknown:1,thought,unknown,想,想,/θɔt/,/θɔːt/,It’s an interesting thought.,这想法很有趣。
+en:felt:unknown:1,felt,unknown,感觉,感觉,/fɛlt/,/felt/,He felt the press of modern life.,他感觉到现代生活的压力。
+en:cheetah:unknown:1,cheetah,unknown,猎豹,猎豹,/'tʃitə/,/'tʃiːtə/,Imagine you’re a cheetah and you see two juicy gazelles grazing in the grass.,"想像你是一个猎豹, 你看见两只味道鲜美的瞪羚正在草地上吃草."
+en:woke:unknown:1,woke,unknown,醒,醒,/wok/,/wəʊk/,"And yet, when they woke Jesus, he said to them, “Why are you afraid?",可是，他们叫醒主耶稣时，主耶稣对他们说：“你们这小信的人哪！
+en:dream:unknown:1,dream,unknown,梦,梦,/drim/,/driːm/,I had lots of dreams last night.,昨晚我做了很多梦。
+en:straight:unknown:1,straight,unknown,笔直的,笔直的,/stret/,/streɪt/,She was looking straight at me.,她直直地看着我。
+en:ask:unknown:1,ask,unknown,问,问,/æsk/,/ɑːsk/,‘What’s your name?’ she asked.,“你叫什么名字？”她问道 。
+en:sir:unknown:1,sir,unknown,先生,先生,/sɝ/,/sɜː/,"‘Report back to me in an hour, sergeant.’ ‘Yes, sir.’",“一小时后向我报告，中士。”“是，长官。”
+en:interesting:unknown:1,interesting,unknown,有趣的,有趣的,/'ɪntrəstɪŋ/,/ˈɪntrəstɪŋ/,That’s an interesting question.,那是一个有趣的问题。
+en:italian:unknown:1,Italian,unknown,意大利的,意大利的,/ɪˈtæljən/,/ɪˈtælɪən/,Her beauty is of the Italian type.,她的美是意大利型的。
+en:restaurant:unknown:1,restaurant,unknown,餐馆,餐馆,/ˈrestərənt; rɛstərənt/,/ˈrestrɒnt/,He took her out for a five-course dinner in a fancy restaurant.,他带她到一家豪华餐厅吃了一顿有五道菜的晚餐。
+en:pizza:unknown:1,pizza,unknown,比萨饼,比萨饼,/'pitsə/,/'piːtsə; 'pɪtsə/,...the last piece of pizza.,…最后一块比萨饼。
+en:street:unknown:1,street,unknown,大街,大街,/strit/,/striːt/,We moved to Center Street when I was young.,在我小时候，我们搬到了中心大街。
+en:get:unknown:1,get,unknown,到达,到达,/ɡɛt/,/get/,She got loads of presents.,她收到了许多礼物。
+en:gps:unknown:1,GPS,unknown,全球（卫星）,全球（卫星）,,,"With GPS, they also now know where you are whenever you have your phone.",利用全球定位系统，只要你带着电话，他们就知道你在哪里。
+en:gave:unknown:1,gave,unknown,提供,提供,/ɡev/,/ɡeɪv/,give oneself,（为...）献身
+en:feature:unknown:1,feature,unknown,特点,特点,/'fitʃɚ/,/'fiːtʃə/,Air bags are a standard feature in most new cars.,气囊是大多数新车的标准配置。
+en:follow:unknown:1,follow,unknown,跟着,跟着,/'fɑlo/,/'fɒləʊ/,Are those men following us?,那些人在跟着我们吗？
+en:far:unknown:1,far,unknown,较远的,较远的,/fɑr/,/fɑː/,"He started to explain, but he didn’t get far (= he did not succeed in saying very much ) before Mary interrupted him.",他开始解释起来，但没说几句就被玛丽打断了。
+en:tell:unknown:1,tell,unknown,告诉,告诉,,/tel/,I’ll tell you all about it when I get back.,我回来再告诉你这一切。

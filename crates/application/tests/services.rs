@@ -28,8 +28,21 @@ impl ArticleRepository for ArticleDouble {
             id: "article".to_owned(),
             title: title.to_owned(),
             body: body.to_owned(),
+            translated_body: None,
             created_at: 1,
         })
+    }
+
+    fn save_article_translation(
+        &self,
+        _: &str,
+        translated_body: &str,
+    ) -> Result<(), ApplicationError> {
+        self.saved
+            .lock()
+            .unwrap()
+            .push(("translation".to_owned(), translated_body.to_owned()));
+        Ok(())
     }
 
     fn delete_article(&self, _: &str) -> Result<(), ApplicationError> {
@@ -61,6 +74,13 @@ fn article_service_trims_content_and_rejects_invalid_articles() {
         service.import("Long", &"x".repeat(100_001)),
         Err(ApplicationError::InvalidInput(_))
     ));
+    service
+        .save_translation("article", "  一篇短文。  ")
+        .unwrap();
+    assert_eq!(
+        repository.saved.lock().unwrap().last().unwrap(),
+        &("translation".to_owned(), "一篇短文。".to_owned())
+    );
 }
 
 #[derive(Default)]

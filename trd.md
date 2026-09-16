@@ -19,6 +19,7 @@ This document consolidates the implemented design through v0.17:
 | v0.15 | Dataset update strategies, CSV export, rename, and delete lifecycle |
 | v0.16 | Listening text selection to Lexicon and My Vocabulary |
 | v0.17 | iPhone document-picker, background speech, interruption, checkpoint, and data-transfer behavior |
+| v0.18 | Markdown listening reader, local English-to-Chinese translation, bilingual copy, and deterministic full datasets |
 
 Non-goals: scheduler, spaced repetition, due dates, streaks, daily targets, accounts, cloud sync, remote dataset sources, and online TTS.
 
@@ -57,7 +58,7 @@ Dependencies point inward. The UI does not access SQLite, the filesystem, or nat
 
 Stores preloaded and imported datasets, dataset membership, words, senses, IPA, translations, and examples. User imports are transactional: any invalid row aborts the full import.
 
-The builder can additionally read six supplied full CSV datasets from `POLARBEAR_PRELOADED_DATASETS_DIR` during a local build. It validates headers and identifiers, preserves every dataset membership, chooses one deterministic richer record for shared `sense_uid`s, and generates three distinct-lemma quiz distractors per sense. The CSVs are not checked into this repository while redistribution permission remains unverified; the source record marks locally built content as not cleared for redistribution.
+The builder reads the six supplied full CSV datasets from `data/preloaded` on every desktop and iOS build. It validates headers and identifiers, preserves every dataset membership, chooses one deterministic richer record for shared `sense_uid`s, and generates three distinct-lemma quiz distractors per sense. `POLARBEAR_PRELOADED_DATASETS_DIR` is an optional development override. Builds do not download dataset content. The source record marks this content as not cleared for redistribution until upstream rights are audited.
 
 On startup, the app hashes the bundled seed and applies each new seed once to the writable `content.db`. The upgrade backs up the existing database, transactionally inserts missing senses and preloaded memberships, and preserves user-created datasets and existing stable UIDs. Failed upgrades restore the backup. Lexicon search queries all senses in the merged content database, independent of the active dataset.
 
@@ -65,7 +66,7 @@ On startup, the app hashes the bundled seed and applies each new seed once to th
 
 Stores append-only answer history, study sessions, My Vocabulary, derived progress/statistics, imported articles, UI language, theme, and speech preferences. Correct and mistake collections are derived from history; a later correct answer does not erase an earlier mistake.
 
-Stable identifiers use `dataset_id` and `sense_uid`. Current content schema is v3 and user schema is v5. Migrations convert legacy `dataset_uid` columns, add dataset update timestamps and persisted session new-word counts, and make a consistent SQLite backup before changing `user.db`.
+Stable identifiers use `dataset_id` and `sense_uid`. Current content schema is v3 and user schema is v6. Migrations convert legacy `dataset_uid` columns, add dataset update timestamps, persisted session new-word counts, and article translations, and make a consistent SQLite backup before changing `user.db`.
 
 ## 4. Dataset import
 
@@ -119,11 +120,13 @@ Themes are `system`, `light`, and `dark`. The initial system theme is applied be
 
 ## 7. Article listening
 
-The user imports a UTF-8 `.txt` or `.md` file. The Tauri adapter reads it locally, the application layer validates a 1–160 character title and 1–100,000 character body, and `user.db` stores it in the `article` table. No document content leaves the device.
+The user imports a UTF-8 `.txt` or `.md` file. The Tauri adapter reads it locally, the application layer validates a 1–160 character title and 1–100,000 character body, and `user.db` stores it in the `article` table. Markdown is rendered as document structure rather than raw syntax.
 
 The Listening screen provides a local article library, readable text, and play, pause, resume, stop, and delete actions. Playback uses `AVSpeechSynthesizer` with exact rates 0.5×, 1×, 1.5×, and 2×. Voice choices are male, female, American English (`en-US`), British English (`en-GB`), Hong Kong English (`en-HK`), Indian English (`en-IN`), and Japanese English (`ja-JP`); unavailable voices fall back to a system voice.
 
 Selecting an English word in an article performs a local Lexicon lookup. The result shows lemma, IPA, and Chinese gloss and can be added to My Vocabulary, which is a practiceable collection.
+
+English-to-Chinese translation runs in the WebView with Bergamot. The first translation downloads the language model from the configured Mozilla model storage and caches it; article text is processed locally and is not sent to a translation service. The translated Markdown is stored in `user.db`. Wide readers show English and Chinese side by side; compact iPhone readers stack them vertically. English, Chinese, or the bilingual document can be copied independently.
 
 ## 8. Lexicon search
 
@@ -145,7 +148,7 @@ The manifest contains `schema_version`, `app_version`, and `created_at`. Export 
 
 | Situation | Behavior |
 | --- | --- |
-| Import CSV/TXT/Markdown/backup | Tauri dialog opens the iOS Document Picker; files may be opened in place |
+| Import CSV/TXT/Markdown/backup | Tauri dialog opens the iOS Document Picker, copies the selected file into the app sandbox, then converts the returned `file://` URL to a local path |
 | Call, Siri, or route interruption | AVFoundation owns interruption and route handling; if speech does not resume, the user can Stop and Play again. Automatic interruption recovery has not been verified on a physical iPhone |
 | Screen lock or background | `AVAudioSessionCategoryPlayback` plus `UIBackgroundModes=audio` makes Listening speech eligible to continue; physical-device verification remains required |
 | Quiz background/termination | Every accepted answer updates `study_session` and `session_item` in the same transaction; Home offers Resume for the newest incomplete session |
@@ -178,3 +181,5 @@ pnpm tauri dev
 ```
 
 Build an installer with `pnpm tauri build`. See [中文用户手册](docs/zh-CN/user-guide.md) or [English User Guide](docs/user-guide.md).
+
+For a USB-connected iPhone, use `pnpm tauri ios run`. Use `pnpm tauri ios build --open` to regenerate the iOS project resources and open Xcode. Both commands run the deterministic lexicon builder before packaging, so the iPhone and macOS receive the same seed database.

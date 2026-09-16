@@ -36,7 +36,8 @@ impl ArticleService {
     }
 
     pub fn delete(&self, article_id: &str) -> Result<(), ApplicationError> {
-        self.repository.delete_article(valid_article_id(article_id)?)
+        self.repository
+            .delete_article(valid_article_id(article_id)?)
     }
 
     pub fn save_translation(
