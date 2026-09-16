@@ -6,7 +6,8 @@
     "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
     "tsBuildInfoFile": "../node_modules/.cache/polarbear-ui-node.tsbuildinfo",
-    "noEmit": true
+    "noEmit": true,
+    "types": ["node"]
   },
   "include": ["vite.config.ts"]
 }

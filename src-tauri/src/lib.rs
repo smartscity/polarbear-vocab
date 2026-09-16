@@ -55,12 +55,24 @@ pub fn run() {
         .expect("failed to run Polarbear Vocab");
 }
 
-fn content_database_path(app: &tauri::App) -> Result<PathBuf, Box<dyn std::error::Error>> {
-    let seed = if cfg!(debug_assertions) {
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../data/generated/content.db")
-    } else {
-        app.path().resolve("content.db", BaseDirectory::Resource)?
-    };
+fn content_database_path(
+    app: &tauri::App,
+) -> Result<PathBuf, Box<dyn std::error::Error>> {
+    #[cfg(mobile)]
+    let seed = app
+        .path()
+        .resolve("content.db", BaseDirectory::Resource)?;
+
+    #[cfg(all(not(mobile), debug_assertions))]
+    let seed = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../data/generated/content.db");
+
+    #[cfg(all(not(mobile), not(debug_assertions)))]
+    let seed = app
+        .path()
+        .resolve("content.db", BaseDirectory::Resource)?;
+
     let destination = app.path().app_data_dir()?.join("content.db");
+
     Ok(ensure_writable_content(&seed, &destination)?)
 }
