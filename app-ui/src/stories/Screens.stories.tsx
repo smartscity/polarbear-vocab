@@ -116,7 +116,7 @@ export const DatasetDetail: Story = { render: () => <Screen screen="datasets"><D
 
 export const Lexicon: Story = { render: () => <Screen screen="lexicon"><LexiconView busy={false} onPractice={noOp} onQueryChange={noOp} onSearch={noOp} onSpeak={noOp} onToggleVocabulary={noOp} query="earn" results={lexiconResults} searched /></Screen> };
 
-export const Listening: Story = { render: () => <Screen screen="listening"><ListeningView articles={articles} onDelete={noOp} onError={noOp} onImport={noOp} onPause={noOp} onPlay={noOp} onRateChange={noOp} onResume={noOp} onSelect={noOp} onStop={noOp} onTranslate={noOp} onVoiceChange={noOp} playback="idle" rate={100} selected={articles[0]} translating={false} voice="female" /></Screen> };
+export const Listening: Story = { render: () => <Screen screen="listening"><ListeningView articles={articles} importPhase={null} onDelete={noOp} onError={noOp} onImport={noOp} onPause={noOp} onPlay={noOp} onRateChange={noOp} onResume={noOp} onSelect={noOp} onStop={noOp} onTranslate={noOp} onVoiceChange={noOp} playback="idle" rate={100} selected={articles[0]} translating={false} voice="female" /></Screen> };
 
 export const Study: Story = { render: () => <Screen screen="study"><StudyView complete={false} onAnswer={async () => true} onExit={noOp} onNext={noOp} onPracticeMistakes={noOp} onSpeak={noOp} question={question} result={null} summary={{ answered: 0, correct: 0, wrong: 0, newWords: 0 }} title="Everyday English" /></Screen> };
 

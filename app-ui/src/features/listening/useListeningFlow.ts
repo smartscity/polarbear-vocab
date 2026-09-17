@@ -16,6 +16,7 @@ import { useI18n } from "../../lib/i18n";
 import { translateEnglishMarkdown } from "./articleTranslation";
 
 export type PlaybackState = "idle" | "paused" | "playing";
+export type ArticleImportPhase = "choosing" | "importing";
 
 export function useListeningFlow(onError: (error: unknown) => void) {
   const {
@@ -28,6 +29,7 @@ export function useListeningFlow(onError: (error: unknown) => void) {
   const [articles, setArticles] = useState<Article[]>([]);
   const [selectedId, setSelectedId] = useState("");
   const [playback, setPlayback] = useState<PlaybackState>("idle");
+  const [importPhase, setImportPhase] = useState<ArticleImportPhase | null>(null);
   const [translating, setTranslating] = useState(false);
   const selected = useMemo(
     () => articles.find((article) => article.id === selectedId) ?? articles[0],
@@ -45,6 +47,8 @@ export function useListeningFlow(onError: (error: unknown) => void) {
   }, [onError, refresh]);
 
   const chooseFile = async () => {
+    if (importPhase) return;
+    setImportPhase("choosing");
     try {
       const path = await open({
         directory: false,
@@ -54,10 +58,13 @@ export function useListeningFlow(onError: (error: unknown) => void) {
         pickerMode: "document",
       });
       if (typeof path !== "string") return;
+      setImportPhase("importing");
       const imported = await importArticle(path);
       await refresh(imported.id);
     } catch (error) {
       onError(error);
+    } finally {
+      setImportPhase(null);
     }
   };
 
@@ -162,6 +169,7 @@ export function useListeningFlow(onError: (error: unknown) => void) {
     changeRate,
     changeVoice,
     chooseFile,
+    importPhase,
     pause,
     playback,
     play,

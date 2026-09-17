@@ -1,11 +1,13 @@
 import { Modal } from "../../design-system/primitives/Dialogs";
 import { Button } from "../../design-system/primitives/Button";
+import { ProgressStatus } from "../../design-system/components/ProgressStatus";
 import { useI18n } from "../../lib/i18n";
 import type { PendingImport } from "./useDatasetController";
 import type { DatasetImportStrategy } from "../../lib/commands";
 
 interface ImportPreviewProps {
   busy: boolean;
+  importing: boolean;
   onCancel: () => void;
   onConfirm: () => void;
   pending: PendingImport;
@@ -31,9 +33,12 @@ export function ImportPreview(props: ImportPreviewProps) {
           </select>
         </label>
         {hasIssues ? <div className="import-issues"><strong>{t("dataset.csvIssues")}</strong>{preview.issues.map((issue, index) => <p key={`${issue.row}-${index}`}>#{issue.row}: {issue.message}</p>)}</div> : null}
+        {props.importing ? <ProgressStatus label={t("dataset.importStatus.importing")} /> : null}
         <div className="pb-dialog-actions">
           <Button disabled={props.busy} onClick={props.onCancel}>{t("common.cancel")}</Button>
-          <Button disabled={props.busy || hasIssues || preview.validRows === 0} onClick={props.onConfirm} variant="primary">{t("dataset.csvImport", { count: preview.validRows })}</Button>
+          <Button aria-busy={props.importing} disabled={props.busy || hasIssues || preview.validRows === 0} onClick={props.onConfirm} variant="primary">
+            {props.importing ? t("dataset.importStatus.importing") : t("dataset.csvImport", { count: preview.validRows })}
+          </Button>
         </div>
       </div>
     </Modal>

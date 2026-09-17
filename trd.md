@@ -126,7 +126,7 @@ The Listening screen provides a local article library, readable text, and play, 
 
 Selecting an English word in an article performs a local Lexicon lookup. The result shows lemma, IPA, and Chinese gloss and can be added to My Vocabulary, which is a practiceable collection.
 
-English-to-Chinese translation runs in the WebView with Bergamot. The first translation downloads the language model from the configured Mozilla model storage and caches it; article text is processed locally and is not sent to a translation service. The translated Markdown is stored in `user.db`. Wide readers show English and Chinese side by side; compact iPhone readers stack them vertically. English, Chinese, or the bilingual document can be copied independently.
+English-to-Chinese translation runs in the WebView with Bergamot. The compressed language model is bundled under `app-ui/public/models/en-zh`; translation requires no network, and article text never leaves the device. The translated Markdown is stored in `user.db`. Wide readers show English and Chinese side by side; compact iPhone readers stack them vertically. English, Chinese, or the bilingual document can be copied independently.
 
 ## 8. Lexicon search
 

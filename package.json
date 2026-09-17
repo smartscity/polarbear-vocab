@@ -8,8 +8,10 @@
   ],
   "scripts": {
     "lexicon:build": "cargo run -p polarbear-lexicon-builder -- data/source data/generated/content.db",
-    "dev": "pnpm run lexicon:build && pnpm --filter @polarbear/vocab-ui run dev",
-    "build": "pnpm run lexicon:build && pnpm --filter @polarbear/vocab-ui run build",
+    "ios:sync-icons": "node scripts/sync-ios-icons.mjs",
+    "translation-model:verify": "node scripts/verify-translation-model.mjs",
+    "dev": "pnpm run lexicon:build && pnpm run translation-model:verify && pnpm run ios:sync-icons && pnpm --filter @polarbear/vocab-ui run dev",
+    "build": "pnpm run lexicon:build && pnpm run translation-model:verify && pnpm run ios:sync-icons && pnpm --filter @polarbear/vocab-ui run build",
     "typecheck": "pnpm --filter @polarbear/vocab-ui run typecheck",
     "test": "cargo test --workspace && pnpm --filter @polarbear/vocab-ui run test",
     "test:visual": "playwright test --config tests/visual/playwright.config.ts",

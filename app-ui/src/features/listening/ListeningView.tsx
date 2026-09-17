@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 
 import { EmptyState } from "../../design-system/components/EmptyState";
 import { PageHeader } from "../../design-system/components/PageHeader";
+import { ProgressStatus } from "../../design-system/components/ProgressStatus";
 import { Button } from "../../design-system/primitives/Button";
 import { ConfirmDialog } from "../../design-system/primitives/Dialogs";
 import { SelectControl } from "../../design-system/primitives/SelectControl";
@@ -16,7 +17,7 @@ import {
 } from "../../lib/commands";
 import { useI18n } from "../../lib/i18n";
 import { copyText } from "./clipboard";
-import type { PlaybackState } from "./useListeningFlow";
+import type { ArticleImportPhase, PlaybackState } from "./useListeningFlow";
 import { lexiconLookupCandidates } from "./wordLookup";
 
 interface ListeningViewProps {
@@ -32,6 +33,7 @@ interface ListeningViewProps {
   onTranslate: () => void;
   onRateChange: (rate: number) => void;
   onVoiceChange: (voice: SpeechVoice) => void;
+  importPhase: ArticleImportPhase | null;
   playback: PlaybackState;
   rate: number;
   selected?: Article;
@@ -45,10 +47,15 @@ export function ListeningView(props: ListeningViewProps) {
   return (
     <section className="listening-page">
       <PageHeader
-        actions={<Button onClick={props.onImport} variant="primary">{t("listening.import")}</Button>}
+        actions={(
+          <Button aria-busy={props.importPhase !== null} disabled={props.importPhase !== null} onClick={props.onImport} variant="primary">
+            {props.importPhase ? t(`listening.importStatus.${props.importPhase}`) : t("listening.import")}
+          </Button>
+        )}
         eyebrow={t("app.name")}
         title={t("listening.title")}
       />
+      {props.importPhase ? <ProgressStatus label={t(`listening.importStatus.${props.importPhase}`)} /> : null}
       {!props.selected ? <EmptyState><p>{t("listening.empty")}</p></EmptyState> : (
         <div className="listening-layout">
           <ArticleLibrary {...props} />

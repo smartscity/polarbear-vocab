@@ -75,6 +75,24 @@ select:focus-visible {
   color: var(--pb-danger);
 }
 
+.pb-progress-status {
+  width: min(100%, 32rem);
+  padding: var(--pb-space-3) var(--pb-space-4);
+  display: grid;
+  gap: var(--pb-space-2);
+  border: 1px solid var(--pb-border);
+  border-radius: var(--pb-radius-md);
+  color: var(--pb-text);
+  background: var(--pb-surface-raised);
+  font-size: 0.88rem;
+}
+
+.pb-progress-status progress {
+  width: 100%;
+  height: 0.45rem;
+  accent-color: var(--pb-accent-strong);
+}
+
 .pb-input {
   min-width: 0;
   padding: 0 var(--pb-space-3);

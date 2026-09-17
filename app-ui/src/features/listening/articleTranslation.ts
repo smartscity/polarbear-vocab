@@ -5,9 +5,13 @@ import remarkStringify from "remark-stringify";
 import { unified } from "unified";
 import { visit } from "unist-util-visit";
 
-const MODEL_BASE = "https://storage.googleapis.com/moz-fx-translations-data--303e-prod-translations-data/models/en-zh/llmaat_finetune10M_qe8_f2_ByQcSxGXQRqGi-UTxYE43g/exported";
-const MODEL_CACHE = "polarbear-vocab-en-zh-v1";
-const MODEL_HASH = "4e5accc141373565ddc8fa1565bceaa8d0c3482a82cab8131c719ebcc6c2157c";
+const MODEL_BASE = "/models/en-zh";
+const MODEL_HASHES = {
+  lex: "8575d8daa10e2dbff316dcdf8e1ce475357bcc2c92bdc63b736a2d5add22f681",
+  model: "4e5accc141373565ddc8fa1565bceaa8d0c3482a82cab8131c719ebcc6c2157c",
+  srcvocab: "bd9b65504acc6d9726dd281f7defc2adb7c2c22d0688fe2f84697de25197c8c5",
+  trgvocab: "aded6993c36e440284d11cec3f6b8aef9c0e43188a772d80be342a713adf223d",
+} as const;
 const TRANSLATION_BATCH_SIZE = 32;
 
 interface TextTranslator {
@@ -78,32 +82,29 @@ async function createModelBacking() {
     }
 
     override async fetch(url: string, checksum?: string, options?: { signal?: AbortSignal }) {
-      const compressed = await fetchCached(url, options?.signal);
-      const bytes = gunzipSync(new Uint8Array(compressed));
+      const response = await fetch(url, { credentials: "same-origin", signal: options?.signal });
+      if (!response.ok) throw new Error(`Bundled translation model is missing (${response.status})`);
+      const compressed = await response.arrayBuffer();
+      const downloaded = new Uint8Array(compressed);
+      const bytes = decodeBundledModel(downloaded);
       if (checksum) await verifySha256(bytes, checksum);
       return exactBuffer(bytes);
     }
   })({ downloadTimeout: 300_000 });
 }
 
-function modelFiles() {
-  return {
-    lex: { name: `${MODEL_BASE}/lex.50.50.enzh.s2t.bin.gz` },
-    model: { name: `${MODEL_BASE}/model.enzh.intgemm.alphas.bin.gz`, expectedSha256Hash: MODEL_HASH },
-    srcvocab: { name: `${MODEL_BASE}/srcvocab.enzh.spm.gz` },
-    trgvocab: { name: `${MODEL_BASE}/trgvocab.enzh.spm.gz` },
-  };
+export function decodeBundledModel(bytes: Uint8Array): Uint8Array {
+  const isGzip = bytes.length >= 2 && bytes[0] === 0x1f && bytes[1] === 0x8b;
+  return isGzip ? gunzipSync(bytes) : bytes;
 }
 
-async function fetchCached(url: string, signal?: AbortSignal): Promise<ArrayBuffer> {
-  const cache = "caches" in window ? await caches.open(MODEL_CACHE) : undefined;
-  let response = await cache?.match(url);
-  if (!response) {
-    response = await fetch(url, { credentials: "omit", signal });
-    if (!response.ok) throw new Error(`Translation model download failed (${response.status})`);
-    await cache?.put(url, response.clone());
-  }
-  return response.arrayBuffer();
+function modelFiles() {
+  return {
+    lex: { name: `${MODEL_BASE}/lex.50.50.enzh.s2t.bin.gz`, expectedSha256Hash: MODEL_HASHES.lex },
+    model: { name: `${MODEL_BASE}/model.enzh.intgemm.alphas.bin.gz`, expectedSha256Hash: MODEL_HASHES.model },
+    srcvocab: { name: `${MODEL_BASE}/srcvocab.enzh.spm.gz`, expectedSha256Hash: MODEL_HASHES.srcvocab },
+    trgvocab: { name: `${MODEL_BASE}/trgvocab.enzh.spm.gz`, expectedSha256Hash: MODEL_HASHES.trgvocab },
+  };
 }
 
 async function verifySha256(bytes: Uint8Array, expected: string): Promise<void> {

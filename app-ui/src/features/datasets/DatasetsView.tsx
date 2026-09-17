@@ -2,6 +2,7 @@ import type { FormEvent } from "react";
 
 import { EmptyState } from "../../design-system/components/EmptyState";
 import { PageHeader } from "../../design-system/components/PageHeader";
+import { ProgressStatus } from "../../design-system/components/ProgressStatus";
 import { Button } from "../../design-system/primitives/Button";
 import { ConfirmDialog, Modal } from "../../design-system/primitives/Dialogs";
 import type { DatasetSummary } from "../../lib/commands";
@@ -34,11 +35,14 @@ export function DatasetsView(props: DatasetsViewProps) {
   return (
     <section className="datasets-page">
       <PageHeader actions={<CreateDatasetForm busy={controller.busy} name={controller.name} onChange={controller.setName} onSubmit={submitCreate} />} eyebrow={t("app.name")} title={t("dataset.title")} />
+      {controller.importPhase && controller.importPhase !== "importing" ? (
+        <ProgressStatus label={t(`dataset.importStatus.${controller.importPhase}`)} />
+      ) : null}
       <div className="dataset-layout">
         <DatasetList busy={controller.busy} datasets={props.datasets} onReorder={controller.reorder} onSelect={props.onSelect} selectedId={props.selectedDatasetId} />
-        {controller.selected ? <DatasetDetail busy={controller.busy} dataset={controller.selected} notice={controller.notice} onDelete={() => controller.setDeleteOpen(true)} onExport={controller.exportCsv} onImport={controller.chooseCsv} onRename={controller.beginRename} onStart={props.onStart} /> : <EmptyState>{t("dataset.select")}</EmptyState>}
+        {controller.selected ? <DatasetDetail busy={controller.busy} dataset={controller.selected} importPhase={controller.importPhase} notice={controller.notice} onDelete={() => controller.setDeleteOpen(true)} onExport={controller.exportCsv} onImport={controller.chooseCsv} onRename={controller.beginRename} onStart={props.onStart} /> : <EmptyState>{t("dataset.select")}</EmptyState>}
       </div>
-      {controller.pendingImport ? <ImportPreview busy={controller.busy} onCancel={() => controller.setPendingImport(null)} onConfirm={controller.confirmImport} onStrategyChange={controller.setImportStrategy} pending={controller.pendingImport} strategy={controller.importStrategy} /> : null}
+      {controller.pendingImport ? <ImportPreview busy={controller.busy} importing={controller.importPhase === "importing"} onCancel={() => controller.setPendingImport(null)} onConfirm={controller.confirmImport} onStrategyChange={controller.setImportStrategy} pending={controller.pendingImport} strategy={controller.importStrategy} /> : null}
       <RenameDialog controller={controller} />
       {controller.selected ? <ConfirmDialog cancelLabel={t("common.cancel")} confirmLabel={t("common.delete")} description={t("dataset.deleteConfirm", { name: controller.selected.name })} onConfirm={controller.confirmDelete} onOpenChange={controller.setDeleteOpen} open={controller.deleteOpen} title={t("dataset.delete")} /> : null}
     </section>
@@ -55,7 +59,7 @@ function CreateDatasetForm(props: { busy: boolean; name: string; onChange: (name
   );
 }
 
-function DatasetDetail(props: { busy: boolean; dataset: DatasetSummary; notice: string | null; onDelete: () => void; onExport: () => void; onImport: () => void; onRename: () => void; onStart: (id: string) => void }) {
+function DatasetDetail(props: { busy: boolean; dataset: DatasetSummary; importPhase: DatasetController["importPhase"]; notice: string | null; onDelete: () => void; onExport: () => void; onImport: () => void; onRename: () => void; onStart: (id: string) => void }) {
   const { t } = useI18n();
   return (
     <article className="dataset-detail">
@@ -66,7 +70,9 @@ function DatasetDetail(props: { busy: boolean; dataset: DatasetSummary; notice: 
       <h3>{t("dataset.manage")}</h3>
       <div className="dataset-actions">
         <Button disabled={props.busy || props.dataset.wordCount === 0} onClick={() => props.onStart(props.dataset.id)} variant="primary">{t("dataset.start")}</Button>
-        <Button disabled={props.busy} onClick={props.onImport}>{t("dataset.importUpdate")}</Button>
+        <Button aria-busy={props.importPhase !== null} disabled={props.busy} onClick={props.onImport}>
+          {props.importPhase ? t(`dataset.importStatus.${props.importPhase}`) : t("dataset.importUpdate")}
+        </Button>
         <Button disabled={props.busy || props.dataset.wordCount === 0} onClick={props.onExport}>{t("dataset.exportCsv")}</Button>
         <Button disabled={props.busy} onClick={props.onRename}>{t("dataset.rename")}</Button>
         <Button disabled={props.busy} onClick={props.onDelete} variant="danger">{t("dataset.delete")}</Button>

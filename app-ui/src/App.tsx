@@ -160,6 +160,7 @@ function ScreenView(props: ScreenViewProps) {
         onStop={() => void props.listening.stop()}
         onTranslate={() => void props.listening.translate()}
         onVoiceChange={(voice) => void props.listening.changeVoice(voice)}
+        importPhase={props.listening.importPhase}
         playback={props.listening.playback}
         rate={props.listening.speechRatePercent}
         selected={props.listening.selected}

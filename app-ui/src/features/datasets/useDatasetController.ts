@@ -29,10 +29,13 @@ export interface PendingImport {
   preview: CsvImportPreview;
 }
 
+export type DatasetImportPhase = "choosing" | "previewing" | "importing";
+
 export function useDatasetController(options: DatasetControllerOptions) {
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [pendingImport, setPendingImport] = useState<PendingImport | null>(null);
+  const [importPhase, setImportPhase] = useState<DatasetImportPhase | null>(null);
   const [importStrategy, setImportStrategy] = useState<DatasetImportStrategy>("updateExisting");
   const [notice, setNotice] = useState<string | null>(null);
   const [renameOpen, setRenameOpen] = useState(false);
@@ -46,21 +49,33 @@ export function useDatasetController(options: DatasetControllerOptions) {
     await options.onChanged(created.id);
   });
   const chooseCsv = () => void run(async () => {
-    const path = await open({
-      directory: false,
-      fileAccessMode: "copy",
-      filters: [{ name: options.csvLabel, extensions: ["csv"] }],
-      multiple: false,
-      pickerMode: "document",
-    });
-    if (typeof path === "string") setPendingImport({ path, preview: await previewDatasetCsv(path) });
+    setImportPhase("choosing");
+    try {
+      const path = await open({
+        directory: false,
+        fileAccessMode: "copy",
+        filters: [{ name: options.csvLabel, extensions: ["csv"] }],
+        multiple: false,
+        pickerMode: "document",
+      });
+      if (typeof path !== "string") return;
+      setImportPhase("previewing");
+      setPendingImport({ path, preview: await previewDatasetCsv(path) });
+    } finally {
+      setImportPhase(null);
+    }
   });
   const confirmImport = () => void run(async () => {
     if (!selected || !pendingImport) return;
-    const result = await importDatasetCsv(selected.id, pendingImport.path, importStrategy);
-    setPendingImport(null);
-    setNotice(options.successMessage(result.importedItems));
-    await options.onChanged(selected.id);
+    setImportPhase("importing");
+    try {
+      const result = await importDatasetCsv(selected.id, pendingImport.path, importStrategy);
+      setPendingImport(null);
+      setNotice(options.successMessage(result.importedItems));
+      await options.onChanged(selected.id);
+    } finally {
+      setImportPhase(null);
+    }
   });
   const exportCsv = () => void run(async () => {
     if (!selected) return;
@@ -93,7 +108,7 @@ export function useDatasetController(options: DatasetControllerOptions) {
     setDeleteOpen(false);
     await options.onChanged();
   });
-  return { beginRename, busy, chooseCsv, confirmDelete, confirmImport, confirmRename, create, deleteOpen, exportCsv, importStrategy, name, notice, pendingImport, renameName, renameOpen, reorder, selected, setDeleteOpen, setImportStrategy, setName, setPendingImport, setRenameName, setRenameOpen };
+  return { beginRename, busy, chooseCsv, confirmDelete, confirmImport, confirmRename, create, deleteOpen, exportCsv, importPhase, importStrategy, name, notice, pendingImport, renameName, renameOpen, reorder, selected, setDeleteOpen, setImportStrategy, setName, setPendingImport, setRenameName, setRenameOpen };
 }
 
 function safeFileName(name: string): string {

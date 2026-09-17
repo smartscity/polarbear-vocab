@@ -2,6 +2,7 @@ import { open, save } from "@tauri-apps/plugin-dialog";
 import { useEffect, useState } from "react";
 
 import { PageHeader } from "../../design-system/components/PageHeader";
+import { ProgressStatus } from "../../design-system/components/ProgressStatus";
 import { SettingsSection } from "../../design-system/components/SettingsSection";
 import { Button } from "../../design-system/primitives/Button";
 import { SelectControl } from "../../design-system/primitives/SelectControl";
@@ -21,6 +22,7 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
   const [backupStatus, setBackupStatus] = useState<BackupStatus>({});
   const [backupBusy, setBackupBusy] = useState(false);
   const [backupMessage, setBackupMessage] = useState("");
+  const [backupImportPhase, setBackupImportPhase] = useState<"choosing" | "restoring" | null>(null);
   const {
     language,
     setLanguage,
@@ -74,17 +76,20 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
     }
   };
   const importData = async () => {
-    const path = await open({
-      directory: false,
-      fileAccessMode: "copy",
-      filters: [{ name: t("settings.backupFile"), extensions: ["polarbear-vocab-backup"] }],
-      multiple: false,
-      pickerMode: "document",
-    });
-    if (!path || !window.confirm(t("settings.restoreConfirm"))) return;
+    if (backupBusy) return;
     setBackupBusy(true);
+    setBackupImportPhase("choosing");
     setBackupMessage("");
     try {
+      const path = await open({
+        directory: false,
+        fileAccessMode: "copy",
+        filters: [{ name: t("settings.backupFile"), extensions: ["polarbear-vocab-backup"] }],
+        multiple: false,
+        pickerMode: "document",
+      });
+      if (!path || !window.confirm(t("settings.restoreConfirm"))) return;
+      setBackupImportPhase("restoring");
       const result = await importBackup(path);
       setBackupStatus(await getBackupStatus());
       window.alert(t("settings.restoreComplete", { path: result.automaticBackupPath }));
@@ -93,6 +98,7 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
       onError(error);
     } finally {
       setBackupBusy(false);
+      setBackupImportPhase(null);
     }
   };
   return (
@@ -128,8 +134,11 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
         <SettingsSection description={t("settings.dataHint")} label={t("settings.data")}>
           <div className="settings-data-actions">
             <Button disabled={backupBusy} onClick={() => void exportData()}>{t("settings.exportBackup")}</Button>
-            <Button disabled={backupBusy} onClick={() => void importData()}>{t("settings.importBackup")}</Button>
+            <Button aria-busy={backupImportPhase !== null} disabled={backupBusy} onClick={() => void importData()}>
+              {backupImportPhase ? t(`settings.importStatus.${backupImportPhase}`) : t("settings.importBackup")}
+            </Button>
           </div>
+          {backupImportPhase ? <ProgressStatus label={t(`settings.importStatus.${backupImportPhase}`)} /> : null}
           <p className="pb-muted">
             {t("settings.lastBackup")}: {formatBackupDate(backupStatus.lastBackupAt, t("settings.never"))}
           </p>

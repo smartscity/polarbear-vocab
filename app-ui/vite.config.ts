@@ -10,6 +10,9 @@ const host = process.env.TAURI_DEV_HOST;
 export default defineConfig({
   plugins: [tailwindcss(), react(), bergamotRuntimeAssets()],
   clearScreen: false,
+  optimizeDeps: {
+    exclude: ["@browsermt/bergamot-translator"],
+  },
 
   server: {
     host: host || false,

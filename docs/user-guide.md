@@ -39,7 +39,7 @@ Both commands rebuild and package the same full `content.db` used by macOS. A ne
 - Lexicon: search a word, play its pronunciation, view meaning, examples and learning statistics, then practice it or add it to My Vocabulary.
 - Home/Datasets: choose Unseen, Mistakes, or All; choose 10/20/50 words; start. The summary can immediately practice mistakes.
 - Datasets: drag the handle to reorder datasets on macOS or iPhone; the arrow keys also work. Import or update CSV with Add only, Update existing, or Replace dataset. Export, rename, and delete are under Manage. Required columns: `lemma`, `quiz_prompt_zh`; template: [`data/examples/dataset-template.csv`](../data/examples/dataset-template.csv).
-- Listening: import UTF-8 `.txt`/`.md`, choose a voice and 0.5×/1×/1.5×/2×. Markdown is rendered as a document. Translate English to Chinese, then copy English, Chinese, or both. Wide screens place both languages side by side; iPhone stacks them. The first translation downloads and caches the offline model. Select an English word to look it up and add it to My Vocabulary.
+- Listening: import UTF-8 `.txt`/`.md`, choose a voice and 0.5×/1×/1.5×/2×. Markdown is rendered as a document. Translate English to Chinese, then copy English, Chinese, or both. Wide screens place both languages side by side; iPhone stacks them. The translation model is bundled and never needs a network connection. Select an English word to look it up and add it to My Vocabulary.
 - Mistakes: select a filter and choose **Practice this set**.
 - Settings: choose language, appearance, voice, rate, and export/import backup.
 
