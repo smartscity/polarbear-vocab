@@ -1,17 +1,16 @@
 use std::fs::File;
 use std::io::{Read, Write};
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use chrono::{SecondsFormat, Utc};
 use polarbear_vocab_application::{ApplicationError, BackupRepository};
-use polarbear_vocab_domain::{BackupManifest, BackupStatusDto, RestoreResultDto};
+use polarbear_vocab_domain::{BackupManifest, BackupStatusDto, BackupVersionDto, RestoreResultDto};
 use rusqlite::{Connection, MAIN_DB, OptionalExtension, params};
 use tempfile::TempDir;
-use uuid::Uuid;
 use zip::write::SimpleFileOptions;
 use zip::{CompressionMethod, ZipArchive, ZipWriter};
 
-use crate::{SqliteStore, database_error, migrate_content_schema, schema};
+use crate::{SqliteStore, backup_versions, database_error, migrate_content_schema, schema};
 
 const BACKUP_FORMAT: &str = "polarbear-vocab-backup";
 const BACKUP_SCHEMA_VERSION: u32 = 1;
@@ -32,6 +31,24 @@ impl BackupRepository for SqliteStore {
         Ok(BackupStatusDto {
             last_backup_at: value.and_then(|json| serde_json::from_str(&json).ok()),
         })
+    }
+
+    fn ensure_automatic_backup(
+        &self,
+        app_version: &str,
+    ) -> Result<Vec<BackupVersionDto>, ApplicationError> {
+        let versions = backup_versions::list(&self.paths.user)?;
+        if backup_versions::automatic_due(&versions) {
+            let path = backup_versions::new_path(&self.paths.user, "automatic")?;
+            self.export_backup(&path.to_string_lossy(), app_version)?;
+            backup_versions::prune(&self.paths.user)?;
+            return backup_versions::list(&self.paths.user);
+        }
+        Ok(versions)
+    }
+
+    fn list_backup_versions(&self) -> Result<Vec<BackupVersionDto>, ApplicationError> {
+        backup_versions::list(&self.paths.user)
     }
 
     fn export_backup(
@@ -75,8 +92,9 @@ impl BackupRepository for SqliteStore {
         let extracted = tempfile::tempdir().map_err(io_error)?;
         extract_archive(Path::new(path), &extracted)?;
         validate_databases(extracted.path())?;
-        let automatic_path = self.automatic_backup_path();
+        let automatic_path = backup_versions::new_path(&self.paths.user, "pre-restore")?;
         let safety_status = self.export_backup(&automatic_path.to_string_lossy(), app_version)?;
+        backup_versions::prune(&self.paths.user)?;
         let safety = tempfile::tempdir().map_err(io_error)?;
         extract_archive(&automatic_path, &safety)?;
         if let Err(error) = self.restore_databases(extracted.path()) {
@@ -95,6 +113,15 @@ impl BackupRepository for SqliteStore {
             automatic_backup_path: automatic_path.to_string_lossy().into_owned(),
         })
     }
+
+    fn restore_backup_version(
+        &self,
+        id: &str,
+        app_version: &str,
+    ) -> Result<RestoreResultDto, ApplicationError> {
+        let path = backup_versions::resolve(&self.paths.user, id)?;
+        self.import_backup(&path.to_string_lossy(), app_version)
+    }
 }
 
 impl SqliteStore {
@@ -112,15 +139,6 @@ impl SqliteStore {
             )
             .map_err(database_error)?;
         Ok(())
-    }
-
-    fn automatic_backup_path(&self) -> PathBuf {
-        let directory = self.paths.user.parent().unwrap_or_else(|| Path::new("."));
-        directory.join(format!(
-            "before-restore-{}-{}.polarbear-vocab-backup",
-            Utc::now().format("%Y%m%d-%H%M%S"),
-            Uuid::new_v4()
-        ))
     }
 
     fn restore_databases(&self, directory: &Path) -> Result<(), ApplicationError> {

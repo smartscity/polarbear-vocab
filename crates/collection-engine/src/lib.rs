@@ -9,6 +9,7 @@ pub struct WordProgress {
     pub correct_count: u32,
     pub wrong_count: u32,
     pub last_result: Option<String>,
+    pub last_answered_at: Option<i64>,
     pub last_wrong_at: Option<i64>,
 }
 
@@ -68,6 +69,7 @@ mod tests {
                     correct_count: 2,
                     wrong_count: 2,
                     last_result: Some("correct".to_owned()),
+                    last_answered_at: Some(15),
                     last_wrong_at: Some(10),
                 },
             ),
@@ -78,6 +80,7 @@ mod tests {
                     correct_count: 1,
                     wrong_count: 5,
                     last_result: Some("wrong".to_owned()),
+                    last_answered_at: Some(20),
                     last_wrong_at: Some(20),
                 },
             ),

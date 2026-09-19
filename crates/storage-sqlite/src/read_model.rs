@@ -8,9 +8,11 @@ use crate::session_random;
 
 pub fn list_datasets(connection: &Connection) -> rusqlite::Result<Vec<DatasetSummary>> {
     let mut statement = connection.prepare(
-        "SELECT d.id, d.name, d.created_at, d.updated_at, d.preloaded, COUNT(di.sense_uid)
+        "SELECT d.id, d.name, d.created_at, d.updated_at, d.preloaded,
+                COUNT(DISTINCT s.word_id)
          FROM dataset d
          LEFT JOIN dataset_item di ON di.dataset_id = d.id
+         LEFT JOIN sense s ON s.uid = di.sense_uid
          GROUP BY d.id
          ORDER BY d.preloaded DESC, d.created_at, d.name",
     )?;
@@ -33,9 +35,11 @@ pub fn dataset_summary(
 ) -> rusqlite::Result<Option<DatasetSummary>> {
     connection
         .query_row(
-            "SELECT d.id, d.name, d.created_at, d.updated_at, d.preloaded, COUNT(di.sense_uid)
+            "SELECT d.id, d.name, d.created_at, d.updated_at, d.preloaded,
+                    COUNT(DISTINCT s.word_id)
              FROM dataset d
              LEFT JOIN dataset_item di ON di.dataset_id = d.id
+             LEFT JOIN sense s ON s.uid = di.sense_uid
              WHERE d.id = ?1
              GROUP BY d.id",
             [dataset_id],
@@ -58,19 +62,33 @@ pub fn dataset_sense_uids(
     dataset_id: &str,
 ) -> rusqlite::Result<Vec<String>> {
     let mut statement = connection.prepare(
-        "SELECT s.uid
-         FROM dataset_item di
-         JOIN sense s ON s.uid = di.sense_uid
-         WHERE di.dataset_id = ?1
-         ORDER BY di.sequence, s.uid",
+        "SELECT uid FROM (
+           SELECT s.uid, di.sequence,
+             ROW_NUMBER() OVER (
+               PARTITION BY s.word_id ORDER BY di.sequence, s.uid
+             ) AS word_rank
+           FROM dataset_item di
+           JOIN sense s ON s.uid = di.sense_uid
+           WHERE di.dataset_id = ?1
+         ) WHERE word_rank = 1 ORDER BY sequence, uid",
     )?;
     let rows = statement.query_map([dataset_id], |row| row.get(0))?;
     rows.collect()
 }
 
 pub fn all_sense_uids(connection: &Connection) -> rusqlite::Result<Vec<String>> {
-    let mut statement = connection.prepare("SELECT uid FROM sense ORDER BY uid")?;
+    let mut statement =
+        connection.prepare("SELECT MIN(uid) FROM sense GROUP BY word_id ORDER BY MIN(uid)")?;
     let rows = statement.query_map([], |row| row.get(0))?;
+    rows.collect()
+}
+
+pub fn sense_word_uids(connection: &Connection) -> rusqlite::Result<HashMap<String, String>> {
+    let mut statement = connection.prepare(
+        "SELECT sense.uid, word.uid
+         FROM sense JOIN word ON word.id = sense.word_id",
+    )?;
+    let rows = statement.query_map([], |row| Ok((row.get(0)?, row.get(1)?)))?;
     rows.collect()
 }
 

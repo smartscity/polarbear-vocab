@@ -16,7 +16,11 @@ pub fn run() {
         .setup(|app| {
             let content = content_database_path(app)?;
             let user = app.path().app_data_dir()?.join("user.db");
-            app.manage(AppRuntime::open(&DatabasePaths { content, user })?);
+            let runtime = AppRuntime::open(&DatabasePaths { content, user })?;
+            if let Err(error) = runtime.backup.ensure_automatic() {
+                eprintln!("automatic backup failed: {error}");
+            }
+            app.manage(runtime);
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -31,8 +35,11 @@ pub fn run() {
             commands::add_to_my_vocabulary,
             commands::remove_from_my_vocabulary,
             commands::get_backup_status,
+            commands::ensure_automatic_backup,
+            commands::list_backup_versions,
             commands::export_backup,
             commands::import_backup,
+            commands::restore_backup_version,
             commands::start_collection,
             commands::next_question,
             commands::get_resumable_session,

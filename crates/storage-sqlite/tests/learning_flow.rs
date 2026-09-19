@@ -143,6 +143,53 @@ fn stale_question_cannot_create_a_duplicate_history_event() {
 }
 
 #[test]
+fn dataset_practice_treats_multiple_senses_as_one_word() {
+    let fixture = Fixture::new();
+    fixture.add_second_sense_for_word_one();
+    let store = fixture.store();
+    let session = store
+        .start_collection(
+            &CollectionSpec::Custom {
+                sense_uids: vec!["word1.n.02".to_owned()],
+            },
+            None,
+        )
+        .unwrap();
+    let question = store
+        .next_question(&session.collection_id)
+        .unwrap()
+        .unwrap();
+    let correct = question
+        .options
+        .iter()
+        .find(|option| option.sense_uid == question.sense_uid)
+        .unwrap();
+    store
+        .submit_answer(
+            &session.collection_id,
+            &question.question_id,
+            &correct.option_id,
+            None,
+        )
+        .unwrap();
+
+    let unseen = store
+        .start_collection(
+            &CollectionSpec::Unseen {
+                dataset_id: "test".to_owned(),
+            },
+            None,
+        )
+        .unwrap();
+    let home = store.get_home("test").unwrap();
+
+    assert_eq!(unseen.total_count, 4);
+    assert_eq!(home.dataset.word_count, 5);
+    assert_eq!(home.progress.answered, 1);
+    assert_eq!(home.progress.unseen, 4);
+}
+
+#[test]
 fn settings_round_trip_all_preferences_together() {
     let fixture = Fixture::new();
     let store = fixture.store();
@@ -336,6 +383,22 @@ impl Fixture {
 
     fn user_path(&self) -> std::path::PathBuf {
         self.directory.path().join("user.db")
+    }
+
+    fn add_second_sense_for_word_one(&self) {
+        Connection::open(self.directory.path().join("content.db"))
+            .unwrap()
+            .execute_batch(
+                "INSERT INTO sense VALUES
+                   (6, 'word1.n.02', 1, 1, 'noun', '另一提示', '另一释义', '', 'A1');
+                 INSERT INTO pronunciation VALUES (6, 6, 'en-US', '/test/');
+                 INSERT INTO example VALUES (6, 6, 'Second example.', '第二例句。', 1);
+                 INSERT INTO dataset_item VALUES ('test', 'word1.n.02', 6);
+                 INSERT INTO distractor_edge VALUES ('word1.n.02', 'word2.n.01', 0.9, 'fixture');
+                 INSERT INTO distractor_edge VALUES ('word1.n.02', 'word3.n.01', 0.8, 'fixture');
+                 INSERT INTO distractor_edge VALUES ('word1.n.02', 'word4.n.01', 0.7, 'fixture');",
+            )
+            .unwrap();
     }
 }
 

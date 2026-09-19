@@ -1,7 +1,8 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use chrono::{Duration, Local};
 use polarbear_vocab_application::{ApplicationError, HomeQueryPort};
+use polarbear_vocab_collection_engine::WordProgress;
 use polarbear_vocab_domain::{DailyActivity, DatasetProgress, DatasetSummary, HomeDto};
 use polarbear_vocab_statistics_engine::{WordStat, summarize};
 
@@ -29,37 +30,11 @@ impl HomeQueryPort for SqliteStore {
                 read_model::dataset_sense_uids(&content, dataset_id).map_err(database_error)?;
             (dataset, sense_uids)
         };
+        let stats = self.load_progress()?;
         let user = self.user()?;
-        let stats = load_word_stats(&user)?;
         let daily_activity = load_daily_activity(&user)?;
         Ok(build_home(dataset, &sense_uids, &stats, daily_activity))
     }
-}
-
-fn load_word_stats(
-    connection: &rusqlite::Connection,
-) -> Result<HashMap<String, WordStat>, ApplicationError> {
-    let mut statement = connection
-        .prepare(
-            "SELECT sense_uid, attempt_count, correct_count, wrong_count, last_result
-             FROM word_stat",
-        )
-        .map_err(database_error)?;
-    let rows = statement
-        .query_map([], |row| {
-            Ok((
-                row.get::<_, String>(0)?,
-                WordStat {
-                    attempt_count: row.get(1)?,
-                    correct_count: row.get(2)?,
-                    wrong_count: row.get(3)?,
-                    last_result: row.get(4)?,
-                },
-            ))
-        })
-        .map_err(database_error)?;
-    rows.collect::<rusqlite::Result<_>>()
-        .map_err(database_error)
 }
 
 fn load_daily_activity(
@@ -104,16 +79,21 @@ fn load_daily_activity(
 fn build_home(
     dataset: DatasetSummary,
     sense_uids: &[String],
-    stats: &HashMap<String, WordStat>,
+    stats: &HashMap<String, WordProgress>,
     daily_activity: Vec<DailyActivity>,
 ) -> HomeDto {
-    let included: HashSet<&str> = sense_uids.iter().map(String::as_str).collect();
-    let relevant: Vec<&WordStat> = stats
+    let relevant: Vec<WordStat> = sense_uids
         .iter()
-        .filter(|(uid, _)| included.contains(uid.as_str()))
-        .map(|(_, stat)| stat)
+        .filter_map(|uid| stats.get(uid))
+        .map(|stat| WordStat {
+            attempt_count: stat.attempt_count,
+            correct_count: stat.correct_count,
+            wrong_count: stat.wrong_count,
+            last_result: stat.last_result.clone(),
+        })
         .collect();
-    let summary = summarize(&relevant);
+    let relevant_refs: Vec<&WordStat> = relevant.iter().collect();
+    let summary = summarize(&relevant_refs);
     HomeDto {
         progress: DatasetProgress {
             total: sense_uids.len() as u32,

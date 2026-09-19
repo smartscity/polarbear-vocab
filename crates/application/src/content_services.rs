@@ -1,6 +1,8 @@
 use std::sync::Arc;
 
-use polarbear_vocab_domain::{ArticleDto, BackupStatusDto, LexiconEntryDto, RestoreResultDto};
+use polarbear_vocab_domain::{
+    ArticleDto, BackupStatusDto, BackupVersionDto, LexiconEntryDto, RestoreResultDto,
+};
 
 use crate::{ApplicationError, ArticleRepository, BackupRepository, LexiconRepository};
 
@@ -122,6 +124,15 @@ impl BackupService {
         self.repository.backup_status()
     }
 
+    pub fn ensure_automatic(&self) -> Result<Vec<BackupVersionDto>, ApplicationError> {
+        self.repository
+            .ensure_automatic_backup(env!("CARGO_PKG_VERSION"))
+    }
+
+    pub fn versions(&self) -> Result<Vec<BackupVersionDto>, ApplicationError> {
+        self.repository.list_backup_versions()
+    }
+
     pub fn export(&self, path: &str) -> Result<BackupStatusDto, ApplicationError> {
         validate_backup_path(path)?;
         self.repository
@@ -133,6 +144,12 @@ impl BackupService {
         self.repository
             .import_backup(path, env!("CARGO_PKG_VERSION"))
     }
+
+    pub fn restore_version(&self, id: &str) -> Result<RestoreResultDto, ApplicationError> {
+        validate_backup_id(id)?;
+        self.repository
+            .restore_backup_version(id, env!("CARGO_PKG_VERSION"))
+    }
 }
 
 fn validate_backup_path(path: &str) -> Result<(), ApplicationError> {
@@ -140,6 +157,19 @@ fn validate_backup_path(path: &str) -> Result<(), ApplicationError> {
     if path.is_empty() || !path.ends_with(".polarbear-vocab-backup") {
         return Err(ApplicationError::InvalidInput(
             "backup path must end with .polarbear-vocab-backup".to_owned(),
+        ));
+    }
+    Ok(())
+}
+
+fn validate_backup_id(id: &str) -> Result<(), ApplicationError> {
+    if id.is_empty()
+        || id.len() > 160
+        || id.contains(['/', '\\'])
+        || !id.ends_with(".polarbear-vocab-backup")
+    {
+        return Err(ApplicationError::InvalidInput(
+            "backup version id is invalid".to_owned(),
         ));
     }
     Ok(())

@@ -6,10 +6,10 @@ pub use content_services::{ArticleService, BackupService, LexiconService};
 pub use settings_speech::{SettingsService, SpeechUseCase};
 
 use polarbear_vocab_domain::{
-    AnswerResultDto, AppInfo, ArticleDto, BackupStatusDto, CollectionSession, CollectionSpec,
-    CsvImportPreview, CsvImportResult, DatasetImportPlan, DatasetImportStrategy, DatasetSummary,
-    HomeDto, LexiconEntryDto, QuizQuestionDto, RestoreResultDto, SettingsDto, SpeakRequest,
-    WrongWordDto,
+    AnswerResultDto, AppInfo, ArticleDto, BackupStatusDto, BackupVersionDto, CollectionSession,
+    CollectionSpec, CsvImportPreview, CsvImportResult, DatasetImportPlan, DatasetImportStrategy,
+    DatasetSummary, HomeDto, LexiconEntryDto, QuizQuestionDto, RestoreResultDto, SettingsDto,
+    SpeakRequest, WrongWordDto,
 };
 use thiserror::Error;
 
@@ -111,6 +111,11 @@ pub trait LexiconRepository: Send + Sync {
 
 pub trait BackupRepository: Send + Sync {
     fn backup_status(&self) -> Result<BackupStatusDto, ApplicationError>;
+    fn ensure_automatic_backup(
+        &self,
+        app_version: &str,
+    ) -> Result<Vec<BackupVersionDto>, ApplicationError>;
+    fn list_backup_versions(&self) -> Result<Vec<BackupVersionDto>, ApplicationError>;
     fn export_backup(
         &self,
         path: &str,
@@ -119,6 +124,11 @@ pub trait BackupRepository: Send + Sync {
     fn import_backup(
         &self,
         path: &str,
+        app_version: &str,
+    ) -> Result<RestoreResultDto, ApplicationError>;
+    fn restore_backup_version(
+        &self,
+        id: &str,
         app_version: &str,
     ) -> Result<RestoreResultDto, ApplicationError>;
 }

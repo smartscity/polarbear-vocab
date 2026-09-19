@@ -76,6 +76,40 @@ fn invalid_backup_is_rejected_before_existing_data_is_changed() {
     }));
 }
 
+#[test]
+fn automatic_backups_are_versioned_once_per_day_and_can_be_restored() {
+    let fixture = Fixture::new();
+    let store = fixture.store();
+    let dataset = store.create_dataset("Original").unwrap();
+
+    let first = store.ensure_automatic_backup("0.1.0").unwrap();
+    let second = store.ensure_automatic_backup("0.1.0").unwrap();
+
+    assert_eq!(first.len(), 1);
+    assert_eq!(second.len(), 1);
+    assert_eq!(first[0].reason, "automatic");
+    assert!(first[0].size_bytes > 0);
+    store.rename_dataset(&dataset.id, "Changed").unwrap();
+    store.restore_backup_version(&first[0].id, "0.1.0").unwrap();
+
+    let datasets = polarbear_vocab_application::HomeQueryPort::list_datasets(&store).unwrap();
+    assert_eq!(
+        datasets
+            .iter()
+            .find(|candidate| candidate.id == dataset.id)
+            .unwrap()
+            .name,
+        "Original"
+    );
+    let versions = store.list_backup_versions().unwrap();
+    assert_eq!(versions.len(), 2);
+    assert!(
+        versions
+            .iter()
+            .any(|version| version.reason == "preRestore")
+    );
+}
+
 struct Fixture {
     directory: TempDir,
 }

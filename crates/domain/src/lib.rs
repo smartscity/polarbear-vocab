@@ -239,6 +239,15 @@ pub struct BackupStatusDto {
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
+pub struct BackupVersionDto {
+    pub id: String,
+    pub created_at: String,
+    pub size_bytes: u64,
+    pub reason: String,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RestoreResultDto {
     pub automatic_backup_path: String,
 }

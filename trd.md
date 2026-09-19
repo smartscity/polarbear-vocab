@@ -143,7 +143,9 @@ content.db
 user.db
 ```
 
-The manifest contains `schema_version`, `app_version`, and `created_at`. Export uses SQLite's online backup API so WAL data is included consistently. Import rejects unknown entries, oversized files, invalid manifests, and incompatible database schemas. Before restore, the current databases are automatically exported beside `user.db`; both restored databases remain behind the repository boundary.
+The manifest contains `schema_version`, `app_version`, and `created_at`. Export uses SQLite's online backup API so WAL data is included consistently. Import rejects unknown entries, oversized files, invalid manifests, and incompatible database schemas. Before restore, the current databases are automatically exported; both restored databases remain behind the repository boundary.
+
+Application startup creates at most one managed automatic backup per 24 hours. Settings lists each restorable version with its creation time, size, and reason (`automatic` or `preRestore`) and can restore it directly. Managed versions live in the private `backups` directory and retain the newest 10 files. Manual exports remain user-owned files and are not deleted by retention.
 
 ## 10. iPhone native behavior
 
@@ -161,15 +163,17 @@ The same typed commands and databases are used on desktop and iPhone. Mobile-spe
 
 The app must not copy a live `content.db` or `user.db` over another device. SQLite files cannot safely merge concurrent edits, and the devices may have different bundled content versions. Full Backup/Restore remains disaster recovery and replaces the destination state; sync is a separate merge operation.
 
-The first implementation should use a user-controlled `.polarbear-vocab-sync` ZIP through the existing macOS/iOS document picker. The file can move through AirDrop, Files, or iCloud Drive and requires no Polarbear account or server. Its manifest contains format and schema versions, package UUID, source device UUID, creation time, and SHA-256 digests. Payloads contain:
+The first implementation must be bilateral incremental merge, not a primary-device snapshot copied over the other device. Each installation owns a stable `device_id` and stores, per peer, the last imported change cursor plus applied package UUIDs. During an exchange, macOS exports changes made after iPhone's acknowledged cursor and iPhone exports changes made after macOS's acknowledged cursor. Both packages are imported, so changes created on either side survive. A later exchange advances both acknowledgements; replay remains idempotent.
+
+The transport is a user-controlled `.polarbear-vocab-sync` ZIP through the existing macOS/iOS document picker. Files can move through AirDrop, Files, or iCloud Drive and require no Polarbear account or server. The manifest contains format and schema versions, package UUID, source and target device UUIDs, base cursor, next cursor, creation time, and SHA-256 digests. Payloads contain:
 
 - complete snapshots of changed user-created datasets, including senses and membership;
 - changed articles, including Markdown, translation, content hash, and update metadata;
 - deletion tombstones and the IDs of already applied sync packages.
 
-Preloaded datasets are not copied; both devices receive them from the app bundle and refer to stable dataset and sense IDs. A custom dataset is the merge unit because its current senses do not have independent revision metadata. Articles remain independent merge units. Imports are idempotent by package UUID. Uncontested changes replace older revisions; a concurrent dataset or article edit is preserved as a clearly named conflict copy instead of silently losing either version. Tombstones prevent deleted records from returning.
+Preloaded datasets are not copied; both devices receive them from the app bundle and refer to stable dataset and sense IDs. A custom dataset is the merge unit because its current senses do not have independent revision metadata. Articles remain independent merge units. Immutable `review_event` records merge by event UUID, while rebuildable statistics are recomputed after import. Imports are idempotent by package UUID. Uncontested changes replace older revisions; a concurrent dataset or article edit is preserved as a clearly named conflict copy instead of silently losing either version. Tombstones carry revision metadata and prevent deleted records from returning.
 
-Import first creates recoverable database backups, applies the package to staged copies, validates schema versions, digests, and foreign keys, and only then replaces both live databases. A later automatic Apple-only transport may read and write the same packages from an iCloud Drive app container when the app enters the foreground. That phase requires Apple iCloud entitlements and signing; the merge model and file format remain transport-independent. Local-network peer transfer can be added later without changing the repository contracts.
+Import first creates a recoverable version, applies records through repository merge operations, validates schema versions, digests, and foreign keys, and commits one local transaction. It never replaces either live database with the peer's database. A later automatic Apple-only transport may exchange the same change packages through an iCloud Drive app container when the app enters the foreground. That phase requires Apple iCloud entitlements and signing; the merge model and file format remain transport-independent. Local-network peer transfer can be added later without changing the repository contracts.
 
 ## 12. Verification and release
 

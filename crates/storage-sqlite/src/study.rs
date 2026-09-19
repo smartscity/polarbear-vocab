@@ -257,12 +257,16 @@ impl SqliteStore {
         Ok(resolve_collection(spec, candidates, &progress))
     }
 
-    fn load_progress(&self) -> Result<HashMap<String, WordProgress>, ApplicationError> {
+    pub(crate) fn load_progress(&self) -> Result<HashMap<String, WordProgress>, ApplicationError> {
+        let word_by_sense = {
+            let content = self.content()?;
+            read_model::sense_word_uids(&content).map_err(database_error)?
+        };
         let user = self.user()?;
         let mut statement = user
             .prepare(
                 "SELECT sense_uid, attempt_count, correct_count, wrong_count,
-                    last_result, last_wrong_at
+                    last_result, last_answered_at, last_wrong_at
                  FROM word_stat",
             )
             .map_err(database_error)?;
@@ -275,13 +279,34 @@ impl SqliteStore {
                         correct_count: row.get(2)?,
                         wrong_count: row.get(3)?,
                         last_result: row.get(4)?,
-                        last_wrong_at: row.get(5)?,
+                        last_answered_at: row.get(5)?,
+                        last_wrong_at: row.get(6)?,
                     },
                 ))
             })
             .map_err(database_error)?;
-        rows.collect::<rusqlite::Result<_>>()
-            .map_err(database_error)
+        let stats = rows
+            .collect::<rusqlite::Result<Vec<_>>>()
+            .map_err(database_error)?;
+        let mut progress_by_word = HashMap::new();
+        for (sense_uid, progress) in stats {
+            let Some(word_uid) = word_by_sense.get(&sense_uid) else {
+                continue;
+            };
+            merge_progress(
+                progress_by_word.entry(word_uid.clone()).or_default(),
+                progress,
+            );
+        }
+        Ok(word_by_sense
+            .into_iter()
+            .filter_map(|(sense_uid, word_uid)| {
+                progress_by_word
+                    .get(&word_uid)
+                    .cloned()
+                    .map(|value| (sense_uid, value))
+            })
+            .collect())
     }
 
     fn pending_answer(
@@ -312,4 +337,15 @@ impl SqliteStore {
         }
         Ok(pending)
     }
+}
+
+fn merge_progress(current: &mut WordProgress, incoming: WordProgress) {
+    current.attempt_count += incoming.attempt_count;
+    current.correct_count += incoming.correct_count;
+    current.wrong_count += incoming.wrong_count;
+    if incoming.last_answered_at > current.last_answered_at {
+        current.last_result = incoming.last_result;
+        current.last_answered_at = incoming.last_answered_at;
+    }
+    current.last_wrong_at = current.last_wrong_at.max(incoming.last_wrong_at);
 }

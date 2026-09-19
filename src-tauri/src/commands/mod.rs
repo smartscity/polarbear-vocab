@@ -1,7 +1,8 @@
 use polarbear_vocab_domain::{
-    AnswerResultDto, AppInfo, ArticleDto, BackupStatusDto, CollectionSession, CollectionSpec,
-    CsvImportPreview, CsvImportResult, DatasetImportStrategy, DatasetSummary, HomeDto,
-    LexiconEntryDto, QuizQuestionDto, RestoreResultDto, SettingsDto, SpeakRequest, WrongWordDto,
+    AnswerResultDto, AppInfo, ArticleDto, BackupStatusDto, BackupVersionDto, CollectionSession,
+    CollectionSpec, CsvImportPreview, CsvImportResult, DatasetImportStrategy, DatasetSummary,
+    HomeDto, LexiconEntryDto, QuizQuestionDto, RestoreResultDto, SettingsDto, SpeakRequest,
+    WrongWordDto,
 };
 use tauri::State;
 
@@ -144,6 +145,23 @@ pub fn get_backup_status(runtime: State<'_, AppRuntime>) -> Result<BackupStatusD
 }
 
 #[tauri::command]
+pub fn ensure_automatic_backup(
+    runtime: State<'_, AppRuntime>,
+) -> Result<Vec<BackupVersionDto>, String> {
+    runtime
+        .backup
+        .ensure_automatic()
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn list_backup_versions(
+    runtime: State<'_, AppRuntime>,
+) -> Result<Vec<BackupVersionDto>, String> {
+    runtime.backup.versions().map_err(|error| error.to_string())
+}
+
+#[tauri::command]
 pub fn export_backup(
     runtime: State<'_, AppRuntime>,
     path: String,
@@ -164,6 +182,17 @@ pub fn import_backup(
     runtime
         .backup
         .import(&path)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn restore_backup_version(
+    runtime: State<'_, AppRuntime>,
+    id: String,
+) -> Result<RestoreResultDto, String> {
+    runtime
+        .backup
+        .restore_version(&id)
         .map_err(|error| error.to_string())
 }
 

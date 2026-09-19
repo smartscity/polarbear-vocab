@@ -157,6 +157,13 @@ export interface BackupStatus {
   lastBackupAt?: string;
 }
 
+export interface BackupVersion {
+  id: string;
+  createdAt: string;
+  sizeBytes: number;
+  reason: "automatic" | "preRestore";
+}
+
 export interface RestoreResult {
   automaticBackupPath: string;
 }
@@ -202,8 +209,14 @@ export const addToMyVocabulary = (senseUid: string) =>
 export const removeFromMyVocabulary = (senseUid: string) =>
   invoke<void>("remove_from_my_vocabulary", { senseUid });
 export const getBackupStatus = () => invoke<BackupStatus>("get_backup_status");
+export const ensureAutomaticBackup = () =>
+  invoke<BackupVersion[]>("ensure_automatic_backup");
+export const listBackupVersions = () =>
+  invoke<BackupVersion[]>("list_backup_versions");
 export const exportBackup = (path: string) => invoke<BackupStatus>("export_backup", { path });
 export const importBackup = (path: string) => invoke<RestoreResult>("import_backup", { path });
+export const restoreBackupVersion = (id: string) =>
+  invoke<RestoreResult>("restore_backup_version", { id });
 export const speak = (text: string, locale = "en-US", rate = 1, voice: SpeechVoice = "female") =>
   invoke<void>("speak", { request: { text, locale, rate, voice } });
 export const pauseSpeech = () => invoke<void>("pause_speech");

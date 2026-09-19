@@ -8,10 +8,14 @@ import { Button } from "../../design-system/primitives/Button";
 import { SelectControl } from "../../design-system/primitives/SelectControl";
 import {
   exportBackup,
+  ensureAutomaticBackup,
   getBackupStatus,
   importBackup,
+  listBackupVersions,
+  restoreBackupVersion,
   SPEECH_VOICES,
   type BackupStatus,
+  type BackupVersion,
   type SpeechLocale,
   type UiLanguage,
   type UiTheme,
@@ -20,6 +24,8 @@ import { useI18n } from "../../lib/i18n";
 
 export function SettingsView({ onError }: { onError: (error: unknown) => void }) {
   const [backupStatus, setBackupStatus] = useState<BackupStatus>({});
+  const [backupVersions, setBackupVersions] = useState<BackupVersion[]>([]);
+  const [backupVersionsLoading, setBackupVersionsLoading] = useState(false);
   const [backupBusy, setBackupBusy] = useState(false);
   const [backupMessage, setBackupMessage] = useState("");
   const [backupImportPhase, setBackupImportPhase] = useState<"choosing" | "restoring" | null>(null);
@@ -56,7 +62,14 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
   }));
   useEffect(() => {
     if (!("__TAURI_INTERNALS__" in window)) return;
-    void getBackupStatus().then(setBackupStatus).catch(onError);
+    setBackupVersionsLoading(true);
+    void Promise.all([getBackupStatus(), ensureAutomaticBackup()])
+      .then(([status, versions]) => {
+        setBackupStatus(status);
+        setBackupVersions(versions);
+      })
+      .catch(onError)
+      .finally(() => setBackupVersionsLoading(false));
   }, [onError]);
   const exportData = async () => {
     const path = await save({
@@ -73,6 +86,23 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
       onError(error);
     } finally {
       setBackupBusy(false);
+    }
+  };
+  const restoreVersion = async (version: BackupVersion) => {
+    if (backupBusy || !window.confirm(t("settings.restoreVersionConfirm"))) return;
+    setBackupBusy(true);
+    setBackupImportPhase("restoring");
+    setBackupMessage("");
+    try {
+      const result = await restoreBackupVersion(version.id);
+      window.alert(t("settings.restoreComplete", { path: result.automaticBackupPath }));
+      window.location.reload();
+    } catch (error) {
+      onError(error);
+      setBackupVersions(await listBackupVersions().catch(() => backupVersions));
+    } finally {
+      setBackupBusy(false);
+      setBackupImportPhase(null);
     }
   };
   const importData = async () => {
@@ -132,17 +162,42 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
           </div>
         </SettingsSection>
         <SettingsSection description={t("settings.dataHint")} label={t("settings.data")}>
-          <div className="settings-data-actions">
-            <Button disabled={backupBusy} onClick={() => void exportData()}>{t("settings.exportBackup")}</Button>
-            <Button aria-busy={backupImportPhase !== null} disabled={backupBusy} onClick={() => void importData()}>
-              {backupImportPhase ? t(`settings.importStatus.${backupImportPhase}`) : t("settings.importBackup")}
-            </Button>
+          <div className="settings-data-content">
+            <div className="settings-data-actions">
+              <Button disabled={backupBusy} onClick={() => void exportData()}>{t("settings.exportBackup")}</Button>
+              <Button aria-busy={backupImportPhase !== null} disabled={backupBusy} onClick={() => void importData()}>
+                {backupImportPhase ? t(`settings.importStatus.${backupImportPhase}`) : t("settings.importBackup")}
+              </Button>
+            </div>
+            {backupImportPhase ? <ProgressStatus label={t(`settings.importStatus.${backupImportPhase}`)} /> : null}
+            <p className="pb-muted">
+              {t("settings.lastBackup")}: {formatBackupDate(backupStatus.lastBackupAt, t("settings.never"))}
+            </p>
+            <div className="backup-version-heading">
+              <strong>{t("settings.backupVersions")}</strong>
+              <span className="pb-muted">{t("settings.backupRetention")}</span>
+            </div>
+            {backupVersionsLoading ? <ProgressStatus label={t("settings.backupPreparing")} /> : null}
+            {!backupVersionsLoading && backupVersions.length === 0 ? (
+              <p className="pb-muted">{t("settings.noBackupVersions")}</p>
+            ) : null}
+            <div className="backup-version-list">
+              {backupVersions.map((version) => (
+                <div className="backup-version-row" key={version.id}>
+                  <div>
+                    <strong>{formatBackupTime(version.createdAt, t("settings.never"))}</strong>
+                    <p className="pb-muted">
+                      {t(`settings.backupReason.${version.reason}`)} · {formatBytes(version.sizeBytes)}
+                    </p>
+                  </div>
+                  <Button disabled={backupBusy} onClick={() => void restoreVersion(version)}>
+                    {t("settings.restoreVersion")}
+                  </Button>
+                </div>
+              ))}
+            </div>
+            {backupMessage ? <p role="status">{backupMessage}</p> : null}
           </div>
-          {backupImportPhase ? <ProgressStatus label={t(`settings.importStatus.${backupImportPhase}`)} /> : null}
-          <p className="pb-muted">
-            {t("settings.lastBackup")}: {formatBackupDate(backupStatus.lastBackupAt, t("settings.never"))}
-          </p>
-          {backupMessage ? <p role="status">{backupMessage}</p> : null}
         </SettingsSection>
       </div>
     </section>
@@ -153,4 +208,14 @@ function formatBackupDate(value: string | undefined, fallback: string): string {
   if (!value) return fallback;
   const date = new Date(value);
   return Number.isNaN(date.valueOf()) ? fallback : date.toLocaleDateString();
+}
+
+function formatBackupTime(value: string, fallback: string): string {
+  const date = new Date(value);
+  return Number.isNaN(date.valueOf()) ? fallback : date.toLocaleString();
+}
+
+function formatBytes(value: number): string {
+  if (value < 1024 * 1024) return `${Math.max(1, Math.round(value / 1024))} KB`;
+  return `${(value / (1024 * 1024)).toFixed(1)} MB`;
 }
