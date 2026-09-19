@@ -11,6 +11,7 @@ mod mistakes;
 mod read_model;
 mod schema;
 mod seed_upgrade;
+mod session_random;
 mod settings;
 mod study;
 

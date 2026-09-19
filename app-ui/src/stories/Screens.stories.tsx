@@ -120,7 +120,7 @@ export const Listening: Story = { render: () => <Screen screen="listening"><List
 
 export const Study: Story = { render: () => <Screen screen="study"><StudyView complete={false} onAnswer={async () => true} onExit={noOp} onNext={noOp} onPracticeMistakes={noOp} onSpeak={noOp} question={question} result={null} summary={{ answered: 0, correct: 0, wrong: 0, newWords: 0 }} title="Everyday English" /></Screen> };
 
-export const AnswerResult: Story = { render: () => <Screen screen="study"><StudyView complete={false} onAnswer={async () => true} onExit={noOp} onNext={noOp} onPracticeMistakes={noOp} onSpeak={noOp} question={question} result={answer} summary={{ answered: 1, correct: 0, wrong: 1, newWords: 1 }} title="Everyday English" /></Screen> };
+export const AnswerResult: Story = { render: () => <Screen screen="study"><StudyView complete={false} onAnswer={async () => true} onExit={noOp} onNext={() => { document.body.dataset.studyAdvanced = "true"; }} onPracticeMistakes={noOp} onSpeak={noOp} question={question} result={answer} summary={{ answered: 1, correct: 0, wrong: 1, newWords: 1 }} title="Everyday English" /></Screen> };
 
 export const SessionSetup: Story = { render: () => <Screen screen="session"><SessionSetupView home={home} onCancel={noOp} onStart={noOp} /></Screen> };
 

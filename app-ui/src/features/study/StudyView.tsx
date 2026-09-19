@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 
 import { AnswerOption, AnswerResult, QuestionCard } from "../../design-system/components/Question";
 import { Button } from "../../design-system/primitives/Button";
@@ -47,7 +47,10 @@ export function StudyView(props: StudyViewProps) {
     );
   }
   return (
-    <div className="study-page">
+    <div
+      className={`study-page${props.result ? " study-page--answer-result" : ""}`}
+      onClick={props.result ? (event) => advanceFromResult(event, props.onNext) : undefined}
+    >
       <div className="study-toolbar"><button onClick={props.onExit} type="button">← {props.title}</button><span>{t("study.answered", { count: props.question?.answeredCount ?? 0 })}</span></div>
       {props.result ? <AnswerResult nextLabel={t("study.next")} onNext={props.onNext} onSpeak={props.onSpeak} result={props.result} spaceLabel={t("study.space")} /> : null}
       {!props.result && props.question ? (
@@ -60,6 +63,12 @@ export function StudyView(props: StudyViewProps) {
       {!props.result && !props.question ? <section className="question-card"><p>{t("study.loading")}</p></section> : null}
     </div>
   );
+}
+
+function advanceFromResult(event: MouseEvent<HTMLDivElement>, onNext: () => void) {
+  const target = event.target;
+  if (target instanceof Element && target.closest("button, a, input, select, textarea")) return;
+  onNext();
 }
 
 type StudyKeyboardProps = Pick<StudyViewProps, "onExit" | "onNext" | "onSpeak" | "question" | "result"> & {

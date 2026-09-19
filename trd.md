@@ -4,7 +4,7 @@
 
 Polarbear Vocab is a desktop-first, offline vocabulary app. The package and repository name is `polarbear-vocab`; the product name is **Polarbear Vocab** and the knowledge module is **Polarbear Lexicon**.
 
-This document consolidates the implemented design through v0.17:
+This document consolidates the implemented design through v0.19:
 
 | Version | Delivered scope |
 | --- | --- |
@@ -20,8 +20,9 @@ This document consolidates the implemented design through v0.17:
 | v0.16 | Listening text selection to Lexicon and My Vocabulary |
 | v0.17 | iPhone document-picker, background speech, interruption, checkpoint, and data-transfer behavior |
 | v0.18 | Markdown listening reader, local English-to-Chinese translation, bilingual copy, and deterministic full datasets |
+| v0.19 | Tap-anywhere answer advancement, measured answer latency, and randomized study sessions |
 
-Non-goals: scheduler, spaced repetition, due dates, streaks, daily targets, accounts, cloud sync, remote dataset sources, and online TTS.
+Non-goals: scheduler, spaced repetition, due dates, streaks, daily targets, app accounts, a managed cloud service, remote dataset sources, and online TTS.
 
 ## 2. Architecture
 
@@ -64,7 +65,7 @@ On startup, the app hashes the bundled seed and applies each new seed once to th
 
 ### `user.db`
 
-Stores append-only answer history, study sessions, My Vocabulary, derived progress/statistics, imported articles, UI language, theme, and speech preferences. Correct and mistake collections are derived from history; a later correct answer does not erase an earlier mistake.
+Stores append-only answer history, study sessions, My Vocabulary, derived progress/statistics, imported articles, UI language, theme, and speech preferences. Every accepted answer records `latency_ms` from question presentation to option selection. Correct and mistake collections are derived from history; a later correct answer does not erase an earlier mistake. A future slow-answer collection can therefore query history by a threshold such as `latency_ms > 5000` without changing canonical events.
 
 Stable identifiers use `dataset_id` and `sense_uid`. Current content schema is v3 and user schema is v6. Migrations convert legacy `dataset_uid` columns, add dataset update timestamps, persisted session new-word counts, and article translations, and make a consistent SQLite backup before changing `user.db`.
 
@@ -92,15 +93,15 @@ There is no GitHub import, online catalog, or network request.
 ## 5. Learning flow
 
 1. The user selects Unseen, Mistakes, or All and chooses 10, 20, or 50 words.
-2. Resolve that collection from the selected dataset and answer history, then apply the session limit.
-3. Build a question with one Chinese prompt and exactly four unique English options.
+2. Resolve that collection from the selected dataset and answer history, randomize eligible items with the new session UUID, then apply the session limit. Mistake collections keep severity priority.
+3. Build a question with one Chinese prompt and exactly four unique English options. Option placement is pseudo-random per question but deterministic for submission validation.
 4. Validate the selected option against the active question.
-5. Write one answer-history event and checkpoint transactionally; stale or repeated submissions cannot create duplicates.
+5. Write one answer-history event, measured answer latency, and checkpoint transactionally; stale or repeated submissions cannot create duplicates.
 6. Return correctness, whether the word is new, the correct sense, pronunciation, gloss, and example.
 7. Show answered/correct/wrong/new totals and allow immediate practice of this session's mistakes.
 8. Recompute home and mistake views from recorded history.
 
-Study keyboard controls are `1`–`4`, `Space`, `R`, `S`, and `Esc`. Speech uses the operating system voice and never calls a cloud service.
+After an answer, tapping or clicking any non-action area advances to the next question; pronunciation, example, exit, and explicit Next controls retain their own actions. Study keyboard controls are `1`–`4`, `Space`, `R`, `S`, and `Esc`. Speech uses the operating system voice and never calls a cloud service.
 
 ## 6. UI design
 
@@ -152,11 +153,25 @@ The manifest contains `schema_version`, `app_version`, and `created_at`. Export 
 | Call, Siri, or route interruption | AVFoundation owns interruption and route handling; if speech does not resume, the user can Stop and Play again. Automatic interruption recovery has not been verified on a physical iPhone |
 | Screen lock or background | `AVAudioSessionCategoryPlayback` plus `UIBackgroundModes=audio` makes Listening speech eligible to continue; physical-device verification remains required |
 | Quiz background/termination | Every accepted answer updates `study_session` and `session_item` in the same transaction; Home offers Resume for the newest incomplete session |
-| Desktop/mobile transfer | Export on one device and import the same backup file on the other; there is no cloud sync |
+| Desktop/mobile transfer | Today, export on one device and import the same backup file on the other. Section 11 defines merge-based dataset/article sync without an app account |
 
 The same typed commands and databases are used on desktop and iPhone. Mobile-specific behavior is native integration, not a separate product model.
 
-## 11. Verification and release
+## 11. Cross-device sync plan
+
+The app must not copy a live `content.db` or `user.db` over another device. SQLite files cannot safely merge concurrent edits, and the devices may have different bundled content versions. Full Backup/Restore remains disaster recovery and replaces the destination state; sync is a separate merge operation.
+
+The first implementation should use a user-controlled `.polarbear-vocab-sync` ZIP through the existing macOS/iOS document picker. The file can move through AirDrop, Files, or iCloud Drive and requires no Polarbear account or server. Its manifest contains format and schema versions, package UUID, source device UUID, creation time, and SHA-256 digests. Payloads contain:
+
+- complete snapshots of changed user-created datasets, including senses and membership;
+- changed articles, including Markdown, translation, content hash, and update metadata;
+- deletion tombstones and the IDs of already applied sync packages.
+
+Preloaded datasets are not copied; both devices receive them from the app bundle and refer to stable dataset and sense IDs. A custom dataset is the merge unit because its current senses do not have independent revision metadata. Articles remain independent merge units. Imports are idempotent by package UUID. Uncontested changes replace older revisions; a concurrent dataset or article edit is preserved as a clearly named conflict copy instead of silently losing either version. Tombstones prevent deleted records from returning.
+
+Import first creates recoverable database backups, applies the package to staged copies, validates schema versions, digests, and foreign keys, and only then replaces both live databases. A later automatic Apple-only transport may read and write the same packages from an iCloud Drive app container when the app enters the foreground. That phase requires Apple iCloud entitlements and signing; the merge model and file format remain transport-independent. Local-network peer transfer can be added later without changing the repository contracts.
+
+## 12. Verification and release
 
 Required local gate:
 
@@ -173,7 +188,7 @@ A `vMAJOR.MINOR.PATCH` tag is the release source of truth. CI validates the tag,
 
 The current tag workflow produces an unsigned macOS universal DMG and `.app` ZIP. Apple certificates/notarization are intentionally disabled with `--no-sign`; macOS may show a Gatekeeper warning for downloaded artifacts. iPhone IPA release is paused because device distribution requires Apple signing credentials.
 
-## 12. Run and build
+## 13. Run and build
 
 ```bash
 pnpm install

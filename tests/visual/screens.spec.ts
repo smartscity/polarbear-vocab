@@ -75,6 +75,15 @@ test("listening exposes every offline voice style", async ({ page }) => {
   ]);
 });
 
+test("answer result advances from non-action areas only", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await openStory(page, "answer-result");
+  await page.locator(".speak-title").click();
+  await expect(page.locator("body")).not.toHaveAttribute("data-study-advanced", "true");
+  await page.locator(".result-mark").click();
+  await expect(page.locator("body")).toHaveAttribute("data-study-advanced", "true");
+});
+
 async function waitForDarkThemePaint(page: import("@playwright/test").Page) {
   await expect.poll(() => page.locator("body").evaluate((element) => {
     const styles = getComputedStyle(element);

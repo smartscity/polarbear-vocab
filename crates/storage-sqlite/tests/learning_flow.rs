@@ -38,6 +38,11 @@ fn answer_updates_history_aggregates_and_dynamic_collections() {
         .expect("answer should be recorded");
 
     assert!(!answer.correct);
+    let recorded_latency: Option<u32> = Connection::open(fixture.user_path())
+        .unwrap()
+        .query_row("SELECT latency_ms FROM review_event", [], |row| row.get(0))
+        .unwrap();
+    assert_eq!(recorded_latency, Some(250));
     let home = store.get_home("test").expect("home query should work");
     assert_eq!(home.totals.explored, 1);
     assert_eq!(home.totals.mistakes, 1);
@@ -324,9 +329,13 @@ impl Fixture {
     fn store(&self) -> SqliteStore {
         SqliteStore::open(&DatabasePaths {
             content: self.directory.path().join("content.db"),
-            user: self.directory.path().join("user.db"),
+            user: self.user_path(),
         })
         .expect("fixture store should open")
+    }
+
+    fn user_path(&self) -> std::path::PathBuf {
+        self.directory.path().join("user.db")
     }
 }
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   finishSession,
@@ -41,6 +41,7 @@ export function useStudyFlow(options: StudyFlowOptions) {
   const [summary, setSummary] = useState<SessionSummary>({ answered: 0, correct: 0, wrong: 0, newWords: 0 });
   const [wrongSenseUids, setWrongSenseUids] = useState<string[]>([]);
   const [resumableSession, setResumableSession] = useState<CollectionSession | null>(null);
+  const advancing = useRef(false);
 
   useEffect(() => {
     if (!("__TAURI_INTERNALS__" in window)) return;
@@ -128,7 +129,8 @@ export function useStudyFlow(options: StudyFlowOptions) {
   }, [onError, question, questionStarted, result, session, speechLocale, speechRate, speechVoice]);
 
   const advance = useCallback(async () => {
-    if (!session) return;
+    if (!session || advancing.current) return;
+    advancing.current = true;
     try {
       const upcoming = await nextQuestion(session.collectionId);
       setResult(null);
@@ -137,6 +139,8 @@ export function useStudyFlow(options: StudyFlowOptions) {
       setComplete(upcoming === null);
     } catch (error) {
       onError(error);
+    } finally {
+      advancing.current = false;
     }
   }, [onError, session]);
 

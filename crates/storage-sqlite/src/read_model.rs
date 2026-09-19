@@ -4,6 +4,8 @@ use polarbear_lexicon::SenseDetail;
 use polarbear_vocab_domain::{DatasetSummary, QuestionOption, QuizQuestionDto};
 use rusqlite::{Connection, OptionalExtension};
 
+use crate::session_random;
+
 pub fn list_datasets(connection: &Connection) -> rusqlite::Result<Vec<DatasetSummary>> {
     let mut statement = connection.prepare(
         "SELECT d.id, d.name, d.created_at, d.updated_at, d.preloaded, COUNT(di.sense_uid)
@@ -150,9 +152,10 @@ pub fn build_question(
     if options.len() != 4 {
         return Ok(None);
     }
-    options.rotate_left((ordinal as usize) % 4);
+    let question_id = format!("{session_id}:{ordinal}");
+    session_random::shuffle_question_options(&mut options, &question_id);
     Ok(Some(QuizQuestionDto {
-        question_id: format!("{session_id}:{ordinal}"),
+        question_id,
         sense_uid: sense_uid.to_owned(),
         prompt_zh: detail.prompt_zh,
         options,

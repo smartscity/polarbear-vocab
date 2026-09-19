@@ -7,7 +7,7 @@ use polarbear_vocab_domain::{AnswerResultDto, CollectionSession, CollectionSpec,
 use rusqlite::{OptionalExtension, params};
 use uuid::Uuid;
 
-use crate::{SqliteStore, answer_history, database_error, read_model, schema};
+use crate::{SqliteStore, answer_history, database_error, read_model, schema, session_random};
 
 impl StudyPort for SqliteStore {
     fn start_collection(
@@ -16,13 +16,19 @@ impl StudyPort for SqliteStore {
         limit: Option<u32>,
     ) -> Result<CollectionSession, ApplicationError> {
         let mut sense_uids = self.resolve_collection(spec)?;
+        let session_id = Uuid::new_v4().to_string();
+        if !matches!(
+            spec,
+            CollectionSpec::Wrong { .. } | CollectionSpec::LastWrong { .. }
+        ) {
+            session_random::shuffle_session_items(&mut sense_uids, &session_id);
+        }
         if let Some(limit) = limit {
             sense_uids.truncate(limit as usize);
         }
         if sense_uids.is_empty() {
             return Err(ApplicationError::NotFound("collection is empty".to_owned()));
         }
-        let session_id = Uuid::new_v4().to_string();
         let started_at = Utc::now().timestamp_millis();
         let spec_json = serde_json::to_string(spec)
             .map_err(|error| ApplicationError::Infrastructure(error.to_string()))?;
