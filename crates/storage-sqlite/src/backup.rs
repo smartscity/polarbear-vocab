@@ -125,6 +125,13 @@ impl BackupRepository for SqliteStore {
 }
 
 impl SqliteStore {
+    pub(crate) fn restore_backup_archive(&self, path: &Path) -> Result<(), ApplicationError> {
+        let extracted = tempfile::tempdir().map_err(io_error)?;
+        extract_archive(path, &extracted)?;
+        validate_databases(extracted.path())?;
+        self.restore_databases(extracted.path())
+    }
+
     fn record_last_backup(&self, created_at: &str) -> Result<(), ApplicationError> {
         self.user()?
             .execute(
@@ -278,14 +285,14 @@ fn validate_databases(directory: &Path) -> Result<(), ApplicationError> {
     let content = Connection::open(directory.join("content.db")).map_err(database_error)?;
     check_integrity(&content)?;
     let content_version = schema_version(&content)?;
-    if content_version != "2" && content_version != "3" {
+    if content_version != "2" && content_version != "3" && content_version != "4" {
         return Err(invalid_backup("unsupported content database schema"));
     }
     check_required_tables(&content, &["dataset", "dataset_item", "word", "sense"])?;
     let user = Connection::open(directory.join("user.db")).map_err(database_error)?;
     check_integrity(&user)?;
     let user_version = schema_version(&user)?.parse::<u32>().unwrap_or_default();
-    if user_version == 0 || user_version > 6 {
+    if user_version == 0 || user_version > 7 {
         return Err(invalid_backup("unsupported user database schema"));
     }
     check_required_tables(&user, &["study_session", "review_event", "setting"])?;

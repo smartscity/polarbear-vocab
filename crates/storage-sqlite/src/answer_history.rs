@@ -37,6 +37,7 @@ pub(super) fn record_answer(
             .is_none();
         let is_unique = is_first_attempt_today(transaction, write.sense_uid, &local_date)?;
         insert_review_event(transaction, &write, &event_id, answered_at)?;
+        schema::record_sync_change(transaction, "reviewEvent", &event_id, "upsert", answered_at)?;
         update_word_stat(transaction, &write, answered_at)?;
         update_daily_stat(transaction, &write, &local_date, answered_at, is_unique)?;
         update_session(transaction, &write, was_new)?;

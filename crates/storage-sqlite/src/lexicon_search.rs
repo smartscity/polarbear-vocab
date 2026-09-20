@@ -3,7 +3,7 @@ use polarbear_vocab_application::{ApplicationError, LexiconRepository};
 use polarbear_vocab_domain::LexiconEntryDto;
 use rusqlite::{Connection, OptionalExtension, params};
 
-use crate::{SqliteStore, database_error};
+use crate::{SqliteStore, database_error, schema};
 
 struct ContentEntry {
     sense_uid: String,
@@ -46,23 +46,49 @@ impl LexiconRepository for SqliteStore {
         if !exists {
             return Err(ApplicationError::NotFound(sense_uid.to_owned()));
         }
-        self.user()?
-            .execute(
+        let changed_at = Utc::now().timestamp_millis();
+        let mut user = self.user()?;
+        schema::in_immediate_transaction(&mut user, |transaction| {
+            let changed = transaction.execute(
                 "INSERT INTO my_vocabulary(sense_uid, added_at) VALUES (?1, ?2)
                  ON CONFLICT(sense_uid) DO NOTHING",
-                params![sense_uid, Utc::now().timestamp_millis()],
-            )
-            .map_err(database_error)?;
+                params![sense_uid, changed_at],
+            )?;
+            if changed > 0 {
+                schema::record_sync_change(
+                    transaction,
+                    "vocabulary",
+                    sense_uid,
+                    "upsert",
+                    changed_at,
+                )?;
+            }
+            Ok(())
+        })
+        .map_err(database_error)?;
         Ok(())
     }
 
     fn remove_from_my_vocabulary(&self, sense_uid: &str) -> Result<(), ApplicationError> {
-        self.user()?
-            .execute(
+        let changed_at = Utc::now().timestamp_millis();
+        let mut user = self.user()?;
+        schema::in_immediate_transaction(&mut user, |transaction| {
+            let changed = transaction.execute(
                 "DELETE FROM my_vocabulary WHERE sense_uid = ?1",
                 [sense_uid],
-            )
-            .map_err(database_error)?;
+            )?;
+            if changed > 0 {
+                schema::record_sync_change(
+                    transaction,
+                    "vocabulary",
+                    sense_uid,
+                    "delete",
+                    changed_at,
+                )?;
+            }
+            Ok(())
+        })
+        .map_err(database_error)?;
         Ok(())
     }
 }

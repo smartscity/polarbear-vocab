@@ -21,6 +21,7 @@ import {
   type UiTheme,
 } from "../../lib/commands";
 import { useI18n } from "../../lib/i18n";
+import { SyncPanel } from "./SyncPanel";
 
 export function SettingsView({ onError }: { onError: (error: unknown) => void }) {
   const [backupStatus, setBackupStatus] = useState<BackupStatus>({});
@@ -196,6 +197,7 @@ export function SettingsView({ onError }: { onError: (error: unknown) => void })
                 </div>
               ))}
             </div>
+            <SyncPanel onError={onError} />
             {backupMessage ? <p role="status">{backupMessage}</p> : null}
           </div>
         </SettingsSection>

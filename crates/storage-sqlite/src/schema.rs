@@ -1,19 +1,21 @@
-use rusqlite::{Connection, Transaction, TransactionBehavior};
+use rusqlite::{Connection, OptionalExtension, Transaction, TransactionBehavior, params};
 
 pub fn initialize_user_schema(connection: &mut Connection) -> rusqlite::Result<()> {
+    let previous_version = user_schema_version(connection)?;
     connection.execute_batch(
         "CREATE TABLE IF NOT EXISTS schema_meta (
             key TEXT PRIMARY KEY,
             value TEXT NOT NULL
         );
-        INSERT OR IGNORE INTO schema_meta(key, value) VALUES ('version', '6');
+        INSERT OR IGNORE INTO schema_meta(key, value) VALUES ('version', '7');
 
         CREATE TABLE IF NOT EXISTS article (
             id TEXT PRIMARY KEY,
             title TEXT NOT NULL,
             body TEXT NOT NULL,
             translated_body TEXT,
-            created_at INTEGER NOT NULL
+            created_at INTEGER NOT NULL,
+            updated_at INTEGER NOT NULL
         );
 
         CREATE TABLE IF NOT EXISTS my_vocabulary (
@@ -84,11 +86,43 @@ pub fn initialize_user_schema(connection: &mut Connection) -> rusqlite::Result<(
             key TEXT PRIMARY KEY,
             value_json TEXT NOT NULL,
             updated_at INTEGER NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS sync_change (
+            seq INTEGER PRIMARY KEY AUTOINCREMENT,
+            entity_kind TEXT NOT NULL,
+            entity_id TEXT NOT NULL,
+            operation TEXT NOT NULL CHECK(operation IN ('upsert', 'delete')),
+            changed_at INTEGER NOT NULL
+        );
+        CREATE INDEX IF NOT EXISTS idx_sync_change_entity
+            ON sync_change(entity_kind, entity_id, seq DESC);
+
+        CREATE TABLE IF NOT EXISTS sync_peer (
+            device_id TEXT PRIMARY KEY,
+            received_content_cursor INTEGER NOT NULL DEFAULT 0,
+            received_user_cursor INTEGER NOT NULL DEFAULT 0,
+            acknowledged_content_cursor INTEGER NOT NULL DEFAULT 0,
+            acknowledged_user_cursor INTEGER NOT NULL DEFAULT 0,
+            updated_at INTEGER NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS sync_package (
+            package_id TEXT PRIMARY KEY,
+            source_device_id TEXT NOT NULL,
+            imported_at INTEGER NOT NULL
         );",
     )?;
     migrate_v1_dataset_columns(connection)?;
     if !has_column(connection, LegacyTable::Article, "translated_body")? {
         connection.execute("ALTER TABLE article ADD COLUMN translated_body TEXT", [])?;
+    }
+    if !has_column(connection, LegacyTable::Article, "updated_at")? {
+        connection.execute(
+            "ALTER TABLE article ADD COLUMN updated_at INTEGER NOT NULL DEFAULT 0",
+            [],
+        )?;
+        connection.execute("UPDATE article SET updated_at = created_at", [])?;
     }
     if !has_column(connection, LegacyTable::StudySession, "new_word_count")? {
         connection.execute(
@@ -105,12 +139,69 @@ pub fn initialize_user_schema(connection: &mut Connection) -> rusqlite::Result<(
             [],
         )?;
     }
+    if previous_version.unwrap_or_default() < 7 {
+        bootstrap_sync_changes(connection)?;
+    }
     connection.execute(
-        "INSERT INTO schema_meta(key, value) VALUES ('version', '6')
+        "INSERT INTO schema_meta(key, value) VALUES ('version', '7')
          ON CONFLICT(key) DO UPDATE SET value = excluded.value",
         [],
     )?;
     Ok(())
+}
+
+pub(crate) fn record_sync_change(
+    transaction: &Transaction<'_>,
+    entity_kind: &str,
+    entity_id: &str,
+    operation: &str,
+    changed_at: i64,
+) -> rusqlite::Result<i64> {
+    transaction.execute(
+        "INSERT INTO sync_change(entity_kind, entity_id, operation, changed_at)
+         VALUES (?1, ?2, ?3, ?4)",
+        params![entity_kind, entity_id, operation, changed_at],
+    )?;
+    Ok(transaction.last_insert_rowid())
+}
+
+fn user_schema_version(connection: &Connection) -> rusqlite::Result<Option<u32>> {
+    let exists: bool = connection.query_row(
+        "SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'schema_meta')",
+        [],
+        |row| row.get(0),
+    )?;
+    if !exists {
+        return Ok(None);
+    }
+    connection
+        .query_row(
+            "SELECT value FROM schema_meta WHERE key = 'version'",
+            [],
+            |row| row.get::<_, String>(0),
+        )
+        .optional()
+        .map(|value| value.and_then(|version| version.parse().ok()))
+}
+
+fn bootstrap_sync_changes(connection: &mut Connection) -> rusqlite::Result<()> {
+    let review_has_id = has_column(connection, LegacyTable::ReviewEvent, "id")?;
+    in_immediate_transaction(connection, |transaction| {
+        transaction.execute_batch(
+            "INSERT INTO sync_change(entity_kind, entity_id, operation, changed_at)
+               SELECT 'article', id, 'upsert', updated_at FROM article;
+             INSERT INTO sync_change(entity_kind, entity_id, operation, changed_at)
+               SELECT 'vocabulary', sense_uid, 'upsert', added_at FROM my_vocabulary;",
+        )?;
+        if review_has_id {
+            transaction.execute(
+                "INSERT INTO sync_change(entity_kind, entity_id, operation, changed_at)
+                 SELECT 'reviewEvent', id, 'upsert', answered_at FROM review_event",
+                [],
+            )?;
+        }
+        Ok(())
+    })
 }
 
 fn migrate_v1_dataset_columns(connection: &mut Connection) -> rusqlite::Result<()> {
@@ -136,6 +227,7 @@ fn migrate_v1_dataset_columns(connection: &mut Connection) -> rusqlite::Result<(
     })
 }
 
+#[derive(Clone, Copy)]
 enum LegacyTable {
     Article,
     StudySession,

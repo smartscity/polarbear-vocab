@@ -161,11 +161,33 @@ export interface BackupVersion {
   id: string;
   createdAt: string;
   sizeBytes: number;
-  reason: "automatic" | "preRestore";
+  reason: "automatic" | "preRestore" | "preSync";
 }
 
 export interface RestoreResult {
   automaticBackupPath: string;
+}
+
+export interface SyncStatus {
+  deviceId: string;
+  peerCount: number;
+  pendingChangeCount: number;
+  lastSyncAt?: string;
+}
+
+export interface SyncExportResult {
+  packageId: string;
+  datasetCount: number;
+  articleCount: number;
+  reviewEventCount: number;
+}
+
+export interface SyncImportResult {
+  alreadyApplied: boolean;
+  datasetCount: number;
+  articleCount: number;
+  reviewEventCount: number;
+  conflictCount: number;
 }
 
 export const getAppInfo = () => invoke<AppInfo>("get_app_info");
@@ -217,6 +239,11 @@ export const exportBackup = (path: string) => invoke<BackupStatus>("export_backu
 export const importBackup = (path: string) => invoke<RestoreResult>("import_backup", { path });
 export const restoreBackupVersion = (id: string) =>
   invoke<RestoreResult>("restore_backup_version", { id });
+export const getSyncStatus = () => invoke<SyncStatus>("get_sync_status");
+export const exportSync = (path: string) =>
+  invoke<SyncExportResult>("export_sync", { path });
+export const importSync = (path: string) =>
+  invoke<SyncImportResult>("import_sync", { path });
 export const speak = (text: string, locale = "en-US", rate = 1, voice: SpeechVoice = "female") =>
   invoke<void>("speak", { request: { text, locale, rate, voice } });
 export const pauseSpeech = () => invoke<void>("pause_speech");

@@ -15,6 +15,12 @@ mod seed_upgrade;
 mod session_random;
 mod settings;
 mod study;
+mod sync;
+mod sync_archive;
+mod sync_content;
+mod sync_models;
+mod sync_peer;
+mod sync_user;
 
 use std::path::{Path, PathBuf};
 use std::sync::{Mutex, MutexGuard};
@@ -72,7 +78,7 @@ pub fn ensure_writable_content(
                 )
             })
             .map_err(database_error)?;
-        if version == "2" || version == "3" {
+        if version == "2" || version == "3" || version == "4" {
             seed_upgrade::sync_preloaded_seed(seed, destination)?;
             return Ok(destination.to_path_buf());
         }
@@ -129,7 +135,7 @@ pub(crate) fn migrate_content_schema(connection: &mut Connection) -> Result<(), 
         .optional()
         .map_err(database_error)?
         .is_some();
-    if meta_exists {
+    let version = if meta_exists {
         let version: Option<String> = connection
             .query_row(
                 "SELECT value FROM schema_meta WHERE key = 'version'",
@@ -138,15 +144,19 @@ pub(crate) fn migrate_content_schema(connection: &mut Connection) -> Result<(), 
             )
             .optional()
             .map_err(database_error)?;
-        if let Some(version) = version
+        if let Some(ref version) = version
             && version != "2"
             && version != "3"
+            && version != "4"
         {
             return Err(ApplicationError::Infrastructure(format!(
                 "unsupported content database schema {version}"
             )));
         }
-    }
+        version
+    } else {
+        None
+    };
     let mut statement = connection
         .prepare("PRAGMA table_info(dataset)")
         .map_err(database_error)?;
@@ -169,7 +179,25 @@ pub(crate) fn migrate_content_schema(connection: &mut Connection) -> Result<(), 
         }
         transaction.execute_batch(
             "CREATE TABLE IF NOT EXISTS schema_meta(key TEXT PRIMARY KEY, value TEXT NOT NULL);
-             INSERT INTO schema_meta(key, value) VALUES ('version', '3')
+             CREATE TABLE IF NOT EXISTS sync_change(
+               seq INTEGER PRIMARY KEY AUTOINCREMENT,
+               entity_kind TEXT NOT NULL,
+               entity_id TEXT NOT NULL,
+               operation TEXT NOT NULL CHECK(operation IN ('upsert', 'delete')),
+               changed_at INTEGER NOT NULL
+             );
+             CREATE INDEX IF NOT EXISTS idx_sync_change_entity
+               ON sync_change(entity_kind, entity_id, seq DESC);",
+        )?;
+        if !meta_exists || version.as_deref() != Some("4") {
+            transaction.execute(
+                "INSERT INTO sync_change(entity_kind, entity_id, operation, changed_at)
+                 SELECT 'dataset', id, 'upsert', updated_at FROM dataset WHERE preloaded = 0",
+                [],
+            )?;
+        }
+        transaction.execute_batch(
+            "INSERT INTO schema_meta(key, value) VALUES ('version', '4')
              ON CONFLICT(key) DO UPDATE SET value = excluded.value;",
         )
     })
@@ -232,7 +260,7 @@ fn prepare_user_connection(connection: &mut Connection) -> Result<(), Applicatio
             .map_err(database_error)?;
         if let Some(version) = version {
             let number = version.parse::<u32>().unwrap_or_default();
-            if number == 0 || number > 6 {
+            if number == 0 || number > 7 {
                 return Err(ApplicationError::Infrastructure(format!(
                     "unsupported user database schema {version}"
                 )));

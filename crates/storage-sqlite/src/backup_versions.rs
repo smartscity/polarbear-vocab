@@ -107,6 +107,8 @@ fn reason(id: &str) -> Option<&'static str> {
         Some("automatic")
     } else if id.starts_with("pre-restore-") && id.ends_with(BACKUP_EXTENSION) {
         Some("preRestore")
+    } else if id.starts_with("pre-sync-") && id.ends_with(BACKUP_EXTENSION) {
+        Some("preSync")
     } else {
         None
     }

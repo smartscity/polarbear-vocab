@@ -254,6 +254,34 @@ pub struct RestoreResultDto {
 
 #[derive(Clone, Debug, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
+pub struct SyncStatusDto {
+    pub device_id: String,
+    pub peer_count: u32,
+    pub pending_change_count: u32,
+    pub last_sync_at: Option<String>,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SyncExportResultDto {
+    pub package_id: String,
+    pub dataset_count: u32,
+    pub article_count: u32,
+    pub review_event_count: u32,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SyncImportResultDto {
+    pub already_applied: bool,
+    pub dataset_count: u32,
+    pub article_count: u32,
+    pub review_event_count: u32,
+    pub conflict_count: u32,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ArticleDto {
     pub id: String,
     pub title: String,
@@ -318,7 +346,8 @@ pub struct DatasetImportPlan {
     pub entries: Vec<ImportedSense>,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ImportedSense {
     pub sense_uid: String,
     pub lemma: String,

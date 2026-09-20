@@ -4,7 +4,7 @@ use polarbear_vocab_application::{
     AppService, ArticleRepository, ArticleService, BackupRepository, BackupService, CsvImportPort,
     DatasetRepository, DatasetService, HomeQueryPort, HomeService, LexiconRepository,
     LexiconService, MistakeQueryPort, MistakeService, SettingsPort, SettingsService, SpeechPort,
-    SpeechUseCase, StudyPort, StudyService,
+    SpeechUseCase, StudyPort, StudyService, SyncRepository, SyncService,
 };
 use polarbear_vocab_dataset_import::CsvDatasetImporter;
 use polarbear_vocab_speech::NativeSpeech;
@@ -21,6 +21,7 @@ pub struct AppRuntime {
     pub datasets: DatasetService,
     pub settings: SettingsService,
     pub speech: SpeechUseCase,
+    pub sync: SyncService,
 }
 
 impl AppRuntime {
@@ -34,6 +35,7 @@ impl AppRuntime {
         let article_repository: Arc<dyn ArticleRepository> = store.clone();
         let lexicon_repository: Arc<dyn LexiconRepository> = store.clone();
         let backup_repository: Arc<dyn BackupRepository> = store.clone();
+        let sync_repository: Arc<dyn SyncRepository> = store.clone();
         let csv_import: Arc<dyn CsvImportPort> = Arc::new(CsvDatasetImporter);
         let speech: Arc<dyn SpeechPort> = Arc::new(NativeSpeech::new()?);
         Ok(Self {
@@ -47,6 +49,7 @@ impl AppRuntime {
             datasets: DatasetService::new(dataset_repository, csv_import),
             settings: SettingsService::new(settings_repository),
             speech: SpeechUseCase::new(speech),
+            sync: SyncService::new(sync_repository),
         })
     }
 }

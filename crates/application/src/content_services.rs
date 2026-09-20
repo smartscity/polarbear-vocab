@@ -2,9 +2,12 @@ use std::sync::Arc;
 
 use polarbear_vocab_domain::{
     ArticleDto, BackupStatusDto, BackupVersionDto, LexiconEntryDto, RestoreResultDto,
+    SyncExportResultDto, SyncImportResultDto, SyncStatusDto,
 };
 
-use crate::{ApplicationError, ArticleRepository, BackupRepository, LexiconRepository};
+use crate::{
+    ApplicationError, ArticleRepository, BackupRepository, LexiconRepository, SyncRepository,
+};
 
 #[derive(Clone)]
 pub struct ArticleService {
@@ -170,6 +173,41 @@ fn validate_backup_id(id: &str) -> Result<(), ApplicationError> {
     {
         return Err(ApplicationError::InvalidInput(
             "backup version id is invalid".to_owned(),
+        ));
+    }
+    Ok(())
+}
+
+#[derive(Clone)]
+pub struct SyncService {
+    repository: Arc<dyn SyncRepository>,
+}
+
+impl SyncService {
+    #[must_use]
+    pub fn new(repository: Arc<dyn SyncRepository>) -> Self {
+        Self { repository }
+    }
+
+    pub fn status(&self) -> Result<SyncStatusDto, ApplicationError> {
+        self.repository.sync_status()
+    }
+
+    pub fn export(&self, path: &str) -> Result<SyncExportResultDto, ApplicationError> {
+        validate_sync_path(path)?;
+        self.repository.export_sync(path, env!("CARGO_PKG_VERSION"))
+    }
+
+    pub fn import(&self, path: &str) -> Result<SyncImportResultDto, ApplicationError> {
+        validate_sync_path(path)?;
+        self.repository.import_sync(path, env!("CARGO_PKG_VERSION"))
+    }
+}
+
+fn validate_sync_path(path: &str) -> Result<(), ApplicationError> {
+    if path.trim().is_empty() || !path.ends_with(".polarbear-vocab-sync") {
+        return Err(ApplicationError::InvalidInput(
+            "sync path must end with .polarbear-vocab-sync".to_owned(),
         ));
     }
     Ok(())

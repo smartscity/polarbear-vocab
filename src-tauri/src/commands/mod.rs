@@ -2,7 +2,7 @@ use polarbear_vocab_domain::{
     AnswerResultDto, AppInfo, ArticleDto, BackupStatusDto, BackupVersionDto, CollectionSession,
     CollectionSpec, CsvImportPreview, CsvImportResult, DatasetImportStrategy, DatasetSummary,
     HomeDto, LexiconEntryDto, QuizQuestionDto, RestoreResultDto, SettingsDto, SpeakRequest,
-    WrongWordDto,
+    SyncExportResultDto, SyncImportResultDto, SyncStatusDto, WrongWordDto,
 };
 use tauri::State;
 
@@ -193,6 +193,35 @@ pub fn restore_backup_version(
     runtime
         .backup
         .restore_version(&id)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn get_sync_status(runtime: State<'_, AppRuntime>) -> Result<SyncStatusDto, String> {
+    runtime.sync.status().map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn export_sync(
+    runtime: State<'_, AppRuntime>,
+    path: String,
+) -> Result<SyncExportResultDto, String> {
+    let path = local_path::string_from_dialog(&path)?;
+    runtime
+        .sync
+        .export(&path)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn import_sync(
+    runtime: State<'_, AppRuntime>,
+    path: String,
+) -> Result<SyncImportResultDto, String> {
+    let path = local_path::string_from_dialog(&path)?;
+    runtime
+        .sync
+        .import(&path)
         .map_err(|error| error.to_string())
 }
 

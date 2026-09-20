@@ -21,6 +21,7 @@ impl DatasetRepository for SqliteStore {
                  VALUES (?1, ?2, ?3, ?3, 0)",
                 params![id, name, created_at],
             )?;
+            schema::record_sync_change(transaction, "dataset", &id, "upsert", created_at)?;
             Ok(())
         })
         .map_err(database_error)?;
@@ -58,11 +59,22 @@ impl DatasetRepository for SqliteStore {
 
     fn rename_dataset(&self, dataset_id: &str, name: &str) -> Result<(), ApplicationError> {
         let mut content = self.content()?;
+        let changed_at = Utc::now().timestamp_millis();
         let changed = schema::in_immediate_transaction(&mut content, |transaction| {
-            transaction.execute(
+            let changed = transaction.execute(
                 "UPDATE dataset SET name = ?2, updated_at = ?3 WHERE id = ?1",
-                params![dataset_id, name, Utc::now().timestamp_millis()],
-            )
+                params![dataset_id, name, changed_at],
+            )?;
+            if changed > 0 {
+                schema::record_sync_change(
+                    transaction,
+                    "dataset",
+                    dataset_id,
+                    "upsert",
+                    changed_at,
+                )?;
+            }
+            Ok(changed)
         })
         .map_err(database_error)?;
         require_change(changed, dataset_id)
@@ -70,8 +82,19 @@ impl DatasetRepository for SqliteStore {
 
     fn delete_dataset(&self, dataset_id: &str) -> Result<(), ApplicationError> {
         let mut content = self.content()?;
+        let changed_at = Utc::now().timestamp_millis();
         let changed = schema::in_immediate_transaction(&mut content, |transaction| {
-            transaction.execute("DELETE FROM dataset WHERE id = ?1", [dataset_id])
+            let changed = transaction.execute("DELETE FROM dataset WHERE id = ?1", [dataset_id])?;
+            if changed > 0 {
+                schema::record_sync_change(
+                    transaction,
+                    "dataset",
+                    dataset_id,
+                    "delete",
+                    changed_at,
+                )?;
+            }
+            Ok(changed)
         })
         .map_err(database_error)?;
         require_change(changed, dataset_id)
@@ -119,10 +142,12 @@ impl DatasetRepository for SqliteStore {
                 .map(|entry| entry.sense_uid.clone())
                 .collect();
             distractor_index::refresh_for(transaction, &imported_uids)?;
+            let changed_at = Utc::now().timestamp_millis();
             transaction.execute(
                 "UPDATE dataset SET updated_at = ?2 WHERE id = ?1",
-                params![dataset_id, Utc::now().timestamp_millis()],
+                params![dataset_id, changed_at],
             )?;
+            schema::record_sync_change(transaction, "dataset", dataset_id, "upsert", changed_at)?;
             Ok(CsvImportResult {
                 imported_items: plan.entries.len() as u32,
                 inserted_senses,
@@ -220,7 +245,7 @@ fn ensure_dataset(transaction: &Transaction<'_>, dataset_id: &str) -> rusqlite::
     })
 }
 
-fn ensure_import_source(transaction: &Transaction<'_>) -> rusqlite::Result<i64> {
+pub(crate) fn ensure_import_source(transaction: &Transaction<'_>) -> rusqlite::Result<i64> {
     let existing = transaction
         .query_row(
             "SELECT id FROM source WHERE name = 'User CSV Import'",
@@ -239,7 +264,7 @@ fn ensure_import_source(transaction: &Transaction<'_>) -> rusqlite::Result<i64> 
     Ok(transaction.last_insert_rowid())
 }
 
-fn upsert_sense(
+pub(crate) fn upsert_sense(
     transaction: &Transaction<'_>,
     entry: &ImportedSense,
     source_id: i64,

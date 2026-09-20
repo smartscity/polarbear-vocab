@@ -40,7 +40,7 @@ fn version_two_content_gains_updated_at_without_losing_existing_rows() {
         )
         .unwrap();
     assert_eq!(updated_at, 42);
-    assert_eq!(version, "3");
+    assert_eq!(version, "4");
 }
 
 #[test]

@@ -2,14 +2,14 @@ use std::sync::Arc;
 
 mod content_services;
 mod settings_speech;
-pub use content_services::{ArticleService, BackupService, LexiconService};
+pub use content_services::{ArticleService, BackupService, LexiconService, SyncService};
 pub use settings_speech::{SettingsService, SpeechUseCase};
 
 use polarbear_vocab_domain::{
     AnswerResultDto, AppInfo, ArticleDto, BackupStatusDto, BackupVersionDto, CollectionSession,
     CollectionSpec, CsvImportPreview, CsvImportResult, DatasetImportPlan, DatasetImportStrategy,
     DatasetSummary, HomeDto, LexiconEntryDto, QuizQuestionDto, RestoreResultDto, SettingsDto,
-    SpeakRequest, WrongWordDto,
+    SpeakRequest, SyncExportResultDto, SyncImportResultDto, SyncStatusDto, WrongWordDto,
 };
 use thiserror::Error;
 
@@ -131,6 +131,20 @@ pub trait BackupRepository: Send + Sync {
         id: &str,
         app_version: &str,
     ) -> Result<RestoreResultDto, ApplicationError>;
+}
+
+pub trait SyncRepository: Send + Sync {
+    fn sync_status(&self) -> Result<SyncStatusDto, ApplicationError>;
+    fn export_sync(
+        &self,
+        path: &str,
+        app_version: &str,
+    ) -> Result<SyncExportResultDto, ApplicationError>;
+    fn import_sync(
+        &self,
+        path: &str,
+        app_version: &str,
+    ) -> Result<SyncImportResultDto, ApplicationError>;
 }
 
 pub trait SpeechPort: Send + Sync {

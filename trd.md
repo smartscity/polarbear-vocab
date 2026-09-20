@@ -4,7 +4,7 @@
 
 Polarbear Vocab is a desktop-first, offline vocabulary app. The package and repository name is `polarbear-vocab`; the product name is **Polarbear Vocab** and the knowledge module is **Polarbear Lexicon**.
 
-This document consolidates the implemented design through v0.19:
+This document consolidates the implemented design through v0.20:
 
 | Version | Delivered scope |
 | --- | --- |
@@ -21,6 +21,7 @@ This document consolidates the implemented design through v0.19:
 | v0.17 | iPhone document-picker, background speech, interruption, checkpoint, and data-transfer behavior |
 | v0.18 | Markdown listening reader, local English-to-Chinese translation, bilingual copy, and deterministic full datasets |
 | v0.19 | Tap-anywhere answer advancement, measured answer latency, and randomized study sessions |
+| v0.20 | Offline macOS/iPhone bilateral incremental merge packages, conflict preservation, and pre-sync recovery |
 
 Non-goals: scheduler, spaced repetition, due dates, streaks, daily targets, app accounts, a managed cloud service, remote dataset sources, and online TTS.
 
@@ -67,7 +68,7 @@ On startup, the app hashes the bundled seed and applies each new seed once to th
 
 Stores append-only answer history, study sessions, My Vocabulary, derived progress/statistics, imported articles, UI language, theme, and speech preferences. Every accepted answer records `latency_ms` from question presentation to option selection. Correct and mistake collections are derived from history; a later correct answer does not erase an earlier mistake. A future slow-answer collection can therefore query history by a threshold such as `latency_ms > 5000` without changing canonical events.
 
-Stable identifiers use `dataset_id` and `sense_uid`. Current content schema is v3 and user schema is v6. Migrations convert legacy `dataset_uid` columns, add dataset update timestamps, persisted session new-word counts, and article translations, and make a consistent SQLite backup before changing `user.db`.
+Stable identifiers use `dataset_id` and `sense_uid`. Current content schema is v4 and user schema is v7. Migrations convert legacy `dataset_uid` columns, add dataset update timestamps, persisted session new-word counts, article translations, and append-only sync journals, and make a consistent SQLite backup before changing `user.db`.
 
 ## 4. Dataset import
 
@@ -155,25 +156,27 @@ Application startup creates at most one managed automatic backup per 24 hours. S
 | Call, Siri, or route interruption | AVFoundation owns interruption and route handling; if speech does not resume, the user can Stop and Play again. Automatic interruption recovery has not been verified on a physical iPhone |
 | Screen lock or background | `AVAudioSessionCategoryPlayback` plus `UIBackgroundModes=audio` makes Listening speech eligible to continue; physical-device verification remains required |
 | Quiz background/termination | Every accepted answer updates `study_session` and `session_item` in the same transaction; Home offers Resume for the newest incomplete session |
-| Desktop/mobile transfer | Today, export on one device and import the same backup file on the other. Section 11 defines merge-based dataset/article sync without an app account |
+| Desktop/mobile transfer | Settings exchanges incremental merge packages through the system document picker; full backup import remains a separate replace operation |
 
 The same typed commands and databases are used on desktop and iPhone. Mobile-specific behavior is native integration, not a separate product model.
 
-## 11. Cross-device sync plan
+## 11. Cross-device sync
 
 The app must not copy a live `content.db` or `user.db` over another device. SQLite files cannot safely merge concurrent edits, and the devices may have different bundled content versions. Full Backup/Restore remains disaster recovery and replaces the destination state; sync is a separate merge operation.
 
-The first implementation must be bilateral incremental merge, not a primary-device snapshot copied over the other device. Each installation owns a stable `device_id` and stores, per peer, the last imported change cursor plus applied package UUIDs. During an exchange, macOS exports changes made after iPhone's acknowledged cursor and iPhone exports changes made after macOS's acknowledged cursor. Both packages are imported, so changes created on either side survive. A later exchange advances both acknowledgements; replay remains idempotent.
+The implementation is a bilateral incremental merge, not a primary-device snapshot copied over the other device. Each installation owns a stable `device_id` and stores, per peer, received and acknowledged content/user cursors plus applied package UUIDs. During an exchange, macOS exports changes made after iPhone's acknowledged cursor and iPhone exports changes made after macOS's acknowledged cursor. Both packages are imported, so changes created on either side survive. A later exchange advances both acknowledgements; replay remains idempotent.
 
-The transport is a user-controlled `.polarbear-vocab-sync` ZIP through the existing macOS/iOS document picker. Files can move through AirDrop, Files, or iCloud Drive and require no Polarbear account or server. The manifest contains format and schema versions, package UUID, source and target device UUIDs, base cursor, next cursor, creation time, and SHA-256 digests. Payloads contain:
+The transport is a user-controlled `.polarbear-vocab-sync` ZIP through the macOS/iOS document picker. Files can move through AirDrop, Files, or iCloud Drive and require no Polarbear account or server. The archive contains exactly `manifest.json`, `content.json`, and `user.json`. The manifest contains format and schema versions, package/source-device UUIDs, content/user cursors, peer acknowledgements, creation time, and SHA-256 payload digests. Payloads contain:
 
 - complete snapshots of changed user-created datasets, including senses and membership;
-- changed articles, including Markdown, translation, content hash, and update metadata;
-- deletion tombstones and the IDs of already applied sync packages.
+- changed articles, including Markdown, translation, and update metadata;
+- My Vocabulary membership, immutable review events, and deletion tombstones.
 
-Preloaded datasets are not copied; both devices receive them from the app bundle and refer to stable dataset and sense IDs. A custom dataset is the merge unit because its current senses do not have independent revision metadata. Articles remain independent merge units. Immutable `review_event` records merge by event UUID, while rebuildable statistics are recomputed after import. Imports are idempotent by package UUID. Uncontested changes replace older revisions; a concurrent dataset or article edit is preserved as a clearly named conflict copy instead of silently losing either version. Tombstones carry revision metadata and prevent deleted records from returning.
+Preloaded datasets are not copied; both devices receive them from the app bundle and refer to stable dataset and sense IDs. A custom dataset is the merge unit because its current senses do not have independent revision metadata. Articles remain independent merge units. Immutable `review_event` records merge by event UUID, while rebuildable statistics are recomputed after import. Imports are idempotent by package UUID. Uncontested changes replace older revisions; a concurrent dataset or article edit is preserved as a clearly named conflict copy instead of silently losing either version. Tombstones remain in the change journal until the peer acknowledges their cursors.
 
-Import first creates a recoverable version, applies records through repository merge operations, validates schema versions, digests, and foreign keys, and commits one local transaction. It never replaces either live database with the peer's database. A later automatic Apple-only transport may exchange the same change packages through an iCloud Drive app container when the app enters the foreground. That phase requires Apple iCloud entitlements and signing; the merge model and file format remain transport-independent. Local-network peer transfer can be added later without changing the repository contracts.
+Import first creates a managed `preSync` recovery version, validates archive shape, manifest fields, size limits, and SHA-256 digests, then applies records through repository merge operations. Content and user writes are transactional within their databases; any later failure restores both databases from the recovery version. It never replaces either live database with the peer's database during a successful merge. Settings reports pending changes, known peers, progress, merge counts, and the last sync time.
+
+One complete exchange is: macOS Export Changes → iPhone Import Changes → iPhone Export Changes → macOS Import Changes. The same sequence is repeated after either side changes data. A later automatic Apple-only transport may exchange the identical packages through an iCloud Drive app container when the app enters the foreground. That phase requires Apple iCloud entitlements and signing; the merge model and file format remain transport-independent.
 
 ## 12. Verification and release
 

@@ -49,6 +49,12 @@ Study keys: `1`–`4` answer, `Space` next, `R` speak word, `S` speak example, `
 
 Settings → Data → **Export Backup**. Restore with **Import Backup**. Restore automatically backs up current data first. The app remains offline and has no account or cloud sync.
 
+## Sync macOS and iPhone
+
+Use Settings → Device sync. Export Changes on macOS, transfer the `.polarbear-vocab-sync` file with AirDrop, Files, or iCloud Drive, then Import Changes on iPhone. Export Changes on iPhone and import that file on macOS to complete the two-way merge. Repeat the same two directions after either device changes data.
+
+Sync merges custom datasets, articles and translations, My Vocabulary, and answer history. Preloaded datasets already ship with both apps and are not copied. Re-importing a package is safe. Concurrent dataset or article edits are retained as conflict copies, and each import creates a restorable pre-sync backup. Backup/Restore still replaces all data and is intended for disaster recovery; it is not device sync.
+
 ## Startup issues
 
 - Missing pnpm: run the Corepack commands above.
