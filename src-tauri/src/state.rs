@@ -7,6 +7,7 @@ use polarbear_vocab_application::{
     SpeechUseCase, StudyPort, StudyService, SyncRepository, SyncService,
 };
 use polarbear_vocab_dataset_import::CsvDatasetImporter;
+use polarbear_vocab_domain::BuiltinArticle;
 use polarbear_vocab_speech::NativeSpeech;
 use polarbear_vocab_storage_sqlite::{DatabasePaths, SqliteStore};
 
@@ -25,8 +26,13 @@ pub struct AppRuntime {
 }
 
 impl AppRuntime {
-    pub fn open(paths: &DatabasePaths) -> Result<Self, Box<dyn std::error::Error>> {
-        let store = Arc::new(SqliteStore::open(paths)?);
+    pub fn open(
+        paths: &DatabasePaths,
+        builtin_articles: &[BuiltinArticle],
+    ) -> Result<Self, Box<dyn std::error::Error>> {
+        let store = SqliteStore::open(paths)?;
+        store.ensure_builtin_articles(builtin_articles)?;
+        let store = Arc::new(store);
         let home_repository: Arc<dyn HomeQueryPort> = store.clone();
         let study_repository: Arc<dyn StudyPort> = store.clone();
         let mistake_repository: Arc<dyn MistakeQueryPort> = store.clone();

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "builtin.phrases.everyday",
+    "title": "Everyday Essentials · 日常高频",
+    "body": "# Everyday essentials\n\n1. Hi, how are you?\n2. I'm doing well, thanks.\n3. What have you been up to?\n4. It's good to see you.\n5. Long time no see.\n6. How is everything going?\n7. That sounds great.\n8. I don't think so.\n9. I'm not sure yet.\n10. Let me think about it.\n11. It depends on the situation.\n12. That makes sense.\n13. I totally agree.\n14. I see what you mean.\n15. Could you say that again?",
+    "translatedBody": "# 日常高频\n\n1. 嗨，你好吗？\n2. 我很好，谢谢。\n3. 你最近在忙什么？\n4. 很高兴见到你。\n5. 好久不见。\n6. 一切进展得怎么样？\n7. 听起来很不错。\n8. 我不这么认为。\n9. 我还不确定。\n10. 让我考虑一下。\n11. 这要看具体情况。\n12. 这很有道理。\n13. 我完全同意。\n14. 我明白你的意思。\n15. 你能再说一遍吗？"
+  },
+  {
+    "id": "builtin.phrases.requests",
+    "title": "Requests and Help · 请求与求助",
+    "body": "# Requests and help\n\n1. Could you help me, please?\n2. Can you show me how this works?\n3. Would you mind speaking more slowly?\n4. Could you write it down for me?\n5. What does this word mean?\n6. How do you pronounce this?\n7. Could you give me an example?\n8. May I ask you a question?\n9. Do you have a minute?\n10. Let me know if you need anything.\n11. Is there anything I can do?\n12. Thanks for your help.\n13. I really appreciate it.\n14. No problem at all.\n15. I'm happy to help.",
+    "translatedBody": "# 请求与求助\n\n1. 你能帮帮我吗？\n2. 你能告诉我这个怎么用吗？\n3. 你介意说慢一点吗？\n4. 你能帮我写下来吗？\n5. 这个词是什么意思？\n6. 这个怎么发音？\n7. 你能举个例子吗？\n8. 我可以问你一个问题吗？\n9. 你有一分钟吗？\n10. 如果需要什么，请告诉我。\n11. 有什么我能做的吗？\n12. 谢谢你的帮助。\n13. 我真的很感激。\n14. 完全没问题。\n15. 我很乐意帮忙。"
+  },
+  {
+    "id": "builtin.phrases.travel",
+    "title": "Travel and Dining · 出行与餐饮",
+    "body": "# Travel and dining\n\n1. Where is the nearest station?\n2. How long does it take to get there?\n3. Which line should I take?\n4. Does this train stop downtown?\n5. I'd like a ticket to the airport.\n6. Could you call a taxi for me?\n7. I have a reservation.\n8. Could I see the menu, please?\n9. What do you recommend?\n10. I'd like to order this.\n11. Could we have some water?\n12. Can I get this without onions?\n13. Could I have the bill, please?\n14. Can I pay by card?\n15. Everything was delicious.",
+    "translatedBody": "# 出行与餐饮\n\n1. 最近的车站在哪里？\n2. 到那里需要多长时间？\n3. 我应该坐哪条线路？\n4. 这趟车在市中心停吗？\n5. 我想买一张去机场的票。\n6. 你能帮我叫辆出租车吗？\n7. 我有预订。\n8. 请给我看看菜单好吗？\n9. 你推荐什么？\n10. 我想点这个。\n11. 可以给我们一些水吗？\n12. 这个可以不放洋葱吗？\n13. 请给我账单好吗？\n14. 我可以刷卡吗？\n15. 所有菜都很好吃。"
+  },
+  {
+    "id": "builtin.phrases.work",
+    "title": "Work and Social · 工作与社交",
+    "body": "# Work and social\n\n1. Are you available this afternoon?\n2. Let's schedule a quick meeting.\n3. I'll send you the details.\n4. Could you take a look at this?\n5. I'm working on it right now.\n6. I'll get back to you tomorrow.\n7. We need a little more time.\n8. What do you think about this idea?\n9. Let's keep things simple.\n10. That works for me.\n11. Sorry, I'm running a little late.\n12. Thanks for letting me know.\n13. Would you like to join us?\n14. It was nice talking with you.\n15. Let's stay in touch.",
+    "translatedBody": "# 工作与社交\n\n1. 你今天下午有空吗？\n2. 我们安排一个简短的会议吧。\n3. 我会把详细信息发给你。\n4. 你能看一下这个吗？\n5. 我现在正在处理。\n6. 我明天回复你。\n7. 我们还需要一点时间。\n8. 你觉得这个想法怎么样？\n9. 我们尽量保持简单。\n10. 我觉得可以。\n11. 抱歉，我要晚一点到。\n12. 谢谢你告诉我。\n13. 你愿意加入我们吗？\n14. 很高兴和你聊天。\n15. 保持联系。"
+  }
+]

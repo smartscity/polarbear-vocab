@@ -6,7 +6,7 @@ use polarbear_vocab_domain::{
 };
 use tauri::State;
 
-use crate::{local_path, state::AppRuntime};
+use crate::{desktop_integration, local_path, state::AppRuntime};
 
 #[tauri::command]
 pub fn get_app_info(runtime: State<'_, AppRuntime>) -> AppInfo {
@@ -234,6 +234,22 @@ pub fn create_dataset(
         .datasets
         .create(&name)
         .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn create_vocabulary_dataset(
+    runtime: State<'_, AppRuntime>,
+    name: String,
+) -> Result<DatasetSummary, String> {
+    runtime
+        .datasets
+        .create_from_vocabulary(&name)
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+pub fn take_macos_service_requests() -> Vec<desktop_integration::MacosServiceRequest> {
+    desktop_integration::take_pending_requests()
 }
 
 #[tauri::command]

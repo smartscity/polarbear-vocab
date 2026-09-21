@@ -1,4 +1,6 @@
+mod builtin_listening;
 mod commands;
+mod desktop_integration;
 mod local_path;
 mod state;
 
@@ -16,11 +18,13 @@ pub fn run() {
         .setup(|app| {
             let content = content_database_path(app)?;
             let user = app.path().app_data_dir()?.join("user.db");
-            let runtime = AppRuntime::open(&DatabasePaths { content, user })?;
+            let articles = builtin_listening::load()?;
+            let runtime = AppRuntime::open(&DatabasePaths { content, user }, &articles)?;
             if let Err(error) = runtime.backup.ensure_automatic() {
                 eprintln!("automatic backup failed: {error}");
             }
             app.manage(runtime);
+            desktop_integration::setup(app)?;
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -50,6 +54,7 @@ pub fn run() {
             commands::finish_session,
             commands::list_wrong_words,
             commands::create_dataset,
+            commands::create_vocabulary_dataset,
             commands::rename_dataset,
             commands::reorder_datasets,
             commands::delete_dataset,
@@ -62,7 +67,9 @@ pub fn run() {
             commands::pause_speech,
             commands::resume_speech,
             commands::stop_speech,
+            commands::take_macos_service_requests,
         ])
+        .on_window_event(desktop_integration::handle_window_event)
         .run(tauri::generate_context!())
         .expect("failed to run Polarbear Vocab");
 }

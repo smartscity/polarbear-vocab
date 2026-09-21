@@ -288,6 +288,16 @@ pub struct ArticleDto {
     pub body: String,
     pub translated_body: Option<String>,
     pub created_at: i64,
+    pub builtin: bool,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BuiltinArticle {
+    pub id: String,
+    pub title: String,
+    pub body: String,
+    pub translated_body: String,
 }
 
 #[derive(Clone, Debug, PartialEq, Deserialize)]

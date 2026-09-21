@@ -35,6 +35,13 @@ impl DatasetRepository for SqliteStore {
         })
     }
 
+    fn create_dataset_from_vocabulary(
+        &self,
+        name: &str,
+    ) -> Result<DatasetSummary, ApplicationError> {
+        self.snapshot_vocabulary_as_dataset(name)
+    }
+
     fn reorder_datasets(&self, dataset_ids: &[String]) -> Result<(), ApplicationError> {
         let available: HashSet<String> = {
             let content = self.content()?;

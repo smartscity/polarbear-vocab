@@ -1,6 +1,6 @@
 use chrono::Utc;
 use polarbear_vocab_application::{ApplicationError, ArticleRepository};
-use polarbear_vocab_domain::ArticleDto;
+use polarbear_vocab_domain::{ArticleDto, BuiltinArticle};
 use rusqlite::params;
 use uuid::Uuid;
 
@@ -11,8 +11,10 @@ impl ArticleRepository for SqliteStore {
         let user = self.user()?;
         let mut statement = user
             .prepare(
-                "SELECT id, title, body, translated_body, created_at
-                 FROM article ORDER BY created_at DESC, id DESC",
+                "SELECT id, title, body, translated_body, created_at,
+                    id LIKE 'builtin.%'
+                 FROM article
+                 ORDER BY id LIKE 'builtin.%' DESC, created_at DESC, id",
             )
             .map_err(database_error)?;
         let rows = statement
@@ -23,6 +25,7 @@ impl ArticleRepository for SqliteStore {
                     body: row.get(2)?,
                     translated_body: row.get(3)?,
                     created_at: row.get(4)?,
+                    builtin: row.get(5)?,
                 })
             })
             .map_err(database_error)?;
@@ -36,6 +39,7 @@ impl ArticleRepository for SqliteStore {
             body: body.to_owned(),
             translated_body: None,
             created_at: Utc::now().timestamp_millis(),
+            builtin: false,
         };
         let mut user = self.user()?;
         schema::in_immediate_transaction(&mut user, |transaction| {
@@ -62,6 +66,11 @@ impl ArticleRepository for SqliteStore {
         article_id: &str,
         translated_body: &str,
     ) -> Result<(), ApplicationError> {
+        if article_id.starts_with("builtin.") {
+            return Err(ApplicationError::Conflict(
+                "built-in listening packs cannot be changed".to_owned(),
+            ));
+        }
         let changed_at = Utc::now().timestamp_millis();
         let mut user = self.user()?;
         let changed = schema::in_immediate_transaction(&mut user, |transaction| {
@@ -88,6 +97,11 @@ impl ArticleRepository for SqliteStore {
     }
 
     fn delete_article(&self, article_id: &str) -> Result<(), ApplicationError> {
+        if article_id.starts_with("builtin.") {
+            return Err(ApplicationError::Conflict(
+                "built-in listening packs cannot be deleted".to_owned(),
+            ));
+        }
         let changed_at = Utc::now().timestamp_millis();
         let mut user = self.user()?;
         let changed = schema::in_immediate_transaction(&mut user, |transaction| {
@@ -108,5 +122,34 @@ impl ArticleRepository for SqliteStore {
             return Err(ApplicationError::NotFound("article".to_owned()));
         }
         Ok(())
+    }
+}
+
+impl SqliteStore {
+    pub fn ensure_builtin_articles(
+        &self,
+        articles: &[BuiltinArticle],
+    ) -> Result<(), ApplicationError> {
+        let mut user = self.user()?;
+        schema::in_immediate_transaction(&mut user, |transaction| {
+            for article in articles {
+                transaction.execute(
+                    "INSERT INTO article(
+                       id, title, body, translated_body, created_at, updated_at
+                     ) VALUES (?1, ?2, ?3, ?4, 0, 0)
+                     ON CONFLICT(id) DO UPDATE SET title = excluded.title,
+                       body = excluded.body, translated_body = excluded.translated_body
+                     WHERE article.id LIKE 'builtin.%'",
+                    params![
+                        article.id,
+                        article.title,
+                        article.body,
+                        article.translated_body
+                    ],
+                )?;
+            }
+            Ok(())
+        })
+        .map_err(database_error)
     }
 }

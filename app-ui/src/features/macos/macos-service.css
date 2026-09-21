@@ -1,0 +1,28 @@
+.macos-service-panel {
+  display: grid;
+  gap: var(--pb-space-4);
+}
+
+.macos-service-panel section {
+  padding: var(--pb-space-3);
+  border: 1px solid var(--pb-border);
+  border-radius: var(--pb-radius-md);
+  background: var(--pb-surface-subtle);
+}
+
+.macos-service-panel h3 {
+  margin: 0 0 var(--pb-space-2);
+  font-size: 0.84rem;
+  color: var(--pb-text-muted);
+}
+
+.macos-service-panel p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.macos-service-result h3 span {
+  margin-left: var(--pb-space-2);
+  font-weight: 400;
+}

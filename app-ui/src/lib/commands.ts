@@ -116,6 +116,12 @@ export interface Article {
   body: string;
   translatedBody: string | null;
   createdAt: number;
+  builtin: boolean;
+}
+
+export interface MacosServiceRequest {
+  action: "translate" | "addVocabulary";
+  text: string;
 }
 
 export interface CsvImportPreview {
@@ -256,6 +262,10 @@ export const saveArticleTranslation = (articleId: string, translatedBody: string
 export const deleteArticle = (articleId: string) => invoke<void>("delete_article", { articleId });
 export const createDataset = (name: string) =>
   invoke<DatasetSummary>("create_dataset", { name });
+export const createVocabularyDataset = (name: string) =>
+  invoke<DatasetSummary>("create_vocabulary_dataset", { name });
+export const takeMacosServiceRequests = () =>
+  invoke<MacosServiceRequest[]>("take_macos_service_requests");
 export const renameDataset = (datasetId: string, name: string) =>
   invoke<void>("rename_dataset", { datasetId, name });
 export const reorderDatasets = (datasetIds: string[]) =>

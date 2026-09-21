@@ -27,6 +27,8 @@ export function DatasetsView(props: DatasetsViewProps) {
     csvLabel: t("dataset.csvFormat"),
     successMessage: (count) => t("dataset.csvSuccess", { count }),
     exportMessage: (count) => t("dataset.csvExported", { count }),
+    vocabularyDatasetName: t("dataset.vocabularyDefaultName"),
+    vocabularySuccessMessage: (count) => t("dataset.vocabularyCreated", { count }),
   });
   const submitCreate = (event: FormEvent) => {
     event.preventDefault();
@@ -34,7 +36,7 @@ export function DatasetsView(props: DatasetsViewProps) {
   };
   return (
     <section className="datasets-page">
-      <PageHeader actions={<CreateDatasetForm busy={controller.busy} name={controller.name} onChange={controller.setName} onSubmit={submitCreate} />} eyebrow={t("app.name")} title={t("dataset.title")} />
+      <PageHeader actions={<div className="dataset-header-actions"><Button disabled={controller.busy} onClick={controller.createFromVocabulary}>{t("dataset.fromVocabulary")}</Button><CreateDatasetForm busy={controller.busy} name={controller.name} onChange={controller.setName} onSubmit={submitCreate} /></div>} eyebrow={t("app.name")} title={t("dataset.title")} />
       {controller.importPhase && controller.importPhase !== "importing" ? (
         <ProgressStatus label={t(`dataset.importStatus.${controller.importPhase}`)} />
       ) : null}

@@ -58,6 +58,16 @@
   margin: var(--pb-space-1) 0 0;
 }
 
+.article-builtin-badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: var(--pb-accent-strong);
+  background: var(--pb-accent-soft);
+  font-size: 0.75rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
 .listening-player {
   margin: var(--pb-space-6) 0;
   padding: var(--pb-space-4);

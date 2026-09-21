@@ -3,6 +3,7 @@ import { open, save } from "@tauri-apps/plugin-dialog";
 
 import {
   createDataset,
+  createVocabularyDataset,
   deleteDataset,
   exportDatasetCsv,
   importDatasetCsv,
@@ -22,6 +23,8 @@ export interface DatasetControllerOptions {
   csvLabel: string;
   successMessage: (count: number) => string;
   exportMessage: (count: number) => string;
+  vocabularyDatasetName: string;
+  vocabularySuccessMessage: (count: number) => string;
 }
 
 export interface PendingImport {
@@ -46,6 +49,11 @@ export function useDatasetController(options: DatasetControllerOptions) {
   const create = () => void run(async () => {
     const created = await createDataset(name.trim());
     setName("");
+    await options.onChanged(created.id);
+  });
+  const createFromVocabulary = () => void run(async () => {
+    const created = await createVocabularyDataset(options.vocabularyDatasetName);
+    setNotice(options.vocabularySuccessMessage(created.wordCount));
     await options.onChanged(created.id);
   });
   const chooseCsv = () => void run(async () => {
@@ -108,7 +116,7 @@ export function useDatasetController(options: DatasetControllerOptions) {
     setDeleteOpen(false);
     await options.onChanged();
   });
-  return { beginRename, busy, chooseCsv, confirmDelete, confirmImport, confirmRename, create, deleteOpen, exportCsv, importPhase, importStrategy, name, notice, pendingImport, renameName, renameOpen, reorder, selected, setDeleteOpen, setImportStrategy, setName, setPendingImport, setRenameName, setRenameOpen };
+  return { beginRename, busy, chooseCsv, confirmDelete, confirmImport, confirmRename, create, createFromVocabulary, deleteOpen, exportCsv, importPhase, importStrategy, name, notice, pendingImport, renameName, renameOpen, reorder, selected, setDeleteOpen, setImportStrategy, setName, setPendingImport, setRenameName, setRenameOpen };
 }
 
 function safeFileName(name: string): string {

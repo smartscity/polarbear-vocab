@@ -66,6 +66,10 @@ pub trait MistakeQueryPort: Send + Sync {
 
 pub trait DatasetRepository: Send + Sync {
     fn create_dataset(&self, name: &str) -> Result<DatasetSummary, ApplicationError>;
+    fn create_dataset_from_vocabulary(
+        &self,
+        name: &str,
+    ) -> Result<DatasetSummary, ApplicationError>;
     fn reorder_datasets(&self, dataset_ids: &[String]) -> Result<(), ApplicationError>;
     fn rename_dataset(&self, dataset_id: &str, name: &str) -> Result<(), ApplicationError>;
     fn delete_dataset(&self, dataset_id: &str) -> Result<(), ApplicationError>;
@@ -295,6 +299,11 @@ impl DatasetService {
 
     pub fn create(&self, name: &str) -> Result<DatasetSummary, ApplicationError> {
         self.repository.create_dataset(validate_dataset_name(name)?)
+    }
+
+    pub fn create_from_vocabulary(&self, name: &str) -> Result<DatasetSummary, ApplicationError> {
+        self.repository
+            .create_dataset_from_vocabulary(validate_dataset_name(name)?)
     }
 
     pub fn rename(&self, dataset_id: &str, name: &str) -> Result<(), ApplicationError> {

@@ -1,3 +1,5 @@
+import { searchLexicon, type LexiconEntry } from "../../lib/commands";
+
 export function lexiconLookupCandidates(selected: string): string[] {
   const word = selected.toLowerCase();
   const candidates = [word];
@@ -12,4 +14,13 @@ export function lexiconLookupCandidates(selected: string): string[] {
   if (word.endsWith("es") && word.length > 4) candidates.push(word.slice(0, -2));
   if (word.endsWith("s") && word.length > 3) candidates.push(word.slice(0, -1));
   return [...new Set(candidates)];
+}
+
+export async function findLexiconWord(word: string): Promise<LexiconEntry | null> {
+  for (const candidate of lexiconLookupCandidates(word)) {
+    const results = await searchLexicon(candidate);
+    const found = results.find((entry) => entry.lemma.toLowerCase() === candidate);
+    if (found) return found;
+  }
+  return null;
 }

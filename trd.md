@@ -4,7 +4,7 @@
 
 Polarbear Vocab is a desktop-first, offline vocabulary app. The package and repository name is `polarbear-vocab`; the product name is **Polarbear Vocab** and the knowledge module is **Polarbear Lexicon**.
 
-This document consolidates the implemented design through v0.20:
+This document consolidates the implemented design through v0.21:
 
 | Version | Delivered scope |
 | --- | --- |
@@ -22,6 +22,7 @@ This document consolidates the implemented design through v0.20:
 | v0.18 | Markdown listening reader, local English-to-Chinese translation, bilingual copy, and deterministic full datasets |
 | v0.19 | Tap-anywhere answer advancement, measured answer latency, and randomized study sessions |
 | v0.20 | Offline macOS/iPhone bilateral incremental merge packages, conflict preservation, and pre-sync recovery |
+| v0.21 | Built-in spoken-English listening packs, macOS menu-bar Services, and My Vocabulary dataset snapshots |
 
 Non-goals: scheduler, spaced repetition, due dates, streaks, daily targets, app accounts, a managed cloud service, remote dataset sources, and online TTS.
 
@@ -124,7 +125,7 @@ Themes are `system`, `light`, and `dark`. The initial system theme is applied be
 
 The user imports a UTF-8 `.txt` or `.md` file. The Tauri adapter reads it locally, the application layer validates a 1–160 character title and 1–100,000 character body, and `user.db` stores it in the `article` table. Markdown is rendered as document structure rather than raw syntax.
 
-The Listening screen provides a local article library, readable text, and play, pause, resume, stop, and delete actions. Playback uses `AVSpeechSynthesizer` with exact rates 0.5×, 1×, 1.5×, and 2×. Voice choices are male, female, American English (`en-US`), British English (`en-GB`), Hong Kong English (`en-HK`), Indian English (`en-IN`), and Japanese English (`ja-JP`); unavailable voices fall back to a system voice.
+The Listening screen provides four bundled bilingual spoken-English packs with 60 common sentences, plus the local article library. Built-in packs have deterministic IDs, are refreshed at startup, do not enter the sync journal, and cannot be deleted. The reader provides play, pause, resume, stop, and delete actions. Playback uses `AVSpeechSynthesizer` with exact rates 0.5×, 1×, 1.5×, and 2×. Voice choices are male, female, American English (`en-US`), British English (`en-GB`), Hong Kong English (`en-HK`), Indian English (`en-IN`), and Japanese English (`ja-JP`); unavailable voices fall back to a system voice.
 
 Selecting an English word in an article performs a local Lexicon lookup. The result shows lemma, IPA, and Chinese gloss and can be added to My Vocabulary, which is a practiceable collection.
 
@@ -133,6 +134,14 @@ English-to-Chinese translation runs in the WebView with Bergamot. The compressed
 ## 8. Lexicon search
 
 Search is a prefix lookup over local `word` and `sense` records; exact matches rank first. SQL wildcard characters are escaped. Each result includes IPA, part of speech, Chinese gloss, primary example, dataset memberships, answered/correct/wrong counts, My Vocabulary state, and direct Practice.
+
+Datasets can snapshot the current My Vocabulary membership into a user-named practice dataset. The snapshot keeps stable `sense_uid` references, participates in normal dataset export and bilateral sync, and does not change when My Vocabulary later changes; the user can generate another snapshot when needed.
+
+### macOS menu-bar and Services integration
+
+On macOS, closing the main window hides it while the process remains available from a menu-bar icon. Open and Quit are explicit menu items. The packaged app publishes two standard macOS Services for selected text: **Translate with Polarbear Vocab** and **Add Word to Polarbear Vocab**. A service provider reads only the text explicitly supplied by macOS, queues the request, opens the main WebView, and emits a signal. The UI drains the queue so cold-start requests are not lost.
+
+Translation reuses the bundled offline English-to-Chinese model. Vocabulary insertion resolves the selected token against the local Polarbear Lexicon before writing My Vocabulary. The integration does not monitor the screen, accessibility tree, clipboard, or keystrokes. It is macOS-only; iPhone continues to use selection inside the Listening reader.
 
 ## 9. Backup and restore
 

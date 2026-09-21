@@ -1,4 +1,6 @@
-use polarbear_vocab_application::{DatasetRepository, HomeQueryPort};
+use polarbear_vocab_application::{
+    ApplicationError, DatasetRepository, HomeQueryPort, LexiconRepository,
+};
 use polarbear_vocab_domain::{DatasetImportPlan, DatasetImportStrategy, ImportedSense};
 use polarbear_vocab_storage_sqlite::{DatabasePaths, SqliteStore};
 use rusqlite::{Connection, params};
@@ -131,6 +133,42 @@ fn dataset_order_rejects_incomplete_lists() {
     store.create_dataset("Second").unwrap();
 
     assert!(store.reorder_datasets(&[first.id]).is_err());
+}
+
+#[test]
+fn my_vocabulary_can_be_snapshotted_as_a_dataset() {
+    let fixture = Fixture::new();
+    let store = fixture.store();
+    store.add_to_my_vocabulary("base1.n.01").unwrap();
+    store.add_to_my_vocabulary("base3.n.01").unwrap();
+
+    let dataset = store
+        .create_dataset_from_vocabulary("My Vocabulary Practice")
+        .unwrap();
+
+    assert_eq!(dataset.word_count, 2);
+    let count: u32 = Connection::open(fixture.content_path())
+        .unwrap()
+        .query_row(
+            "SELECT COUNT(*) FROM dataset_item WHERE dataset_id = ?1",
+            [&dataset.id],
+            |row| row.get(0),
+        )
+        .unwrap();
+    assert_eq!(count, 2);
+}
+
+#[test]
+fn empty_vocabulary_cannot_create_a_dataset() {
+    let fixture = Fixture::new();
+    let store = fixture.store();
+
+    assert_eq!(
+        store.create_dataset_from_vocabulary("Empty"),
+        Err(ApplicationError::Conflict(
+            "my vocabulary is empty".to_owned()
+        ))
+    );
 }
 
 fn gloss(path: &std::path::Path, sense_uid: &str) -> String {

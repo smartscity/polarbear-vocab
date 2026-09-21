@@ -18,5 +18,12 @@ polarbear-vocab-dataset-import = { path = "../crates/dataset-import" }
 polarbear-vocab-domain = { path = "../crates/domain" }
 polarbear-vocab-speech = { path = "../crates/speech" }
 polarbear-vocab-storage-sqlite = { path = "../crates/storage-sqlite" }
-tauri = { version = "2", features = [] }
+serde.workspace = true
+serde_json.workspace = true
+tauri = { version = "2", features = ["tray-icon"] }
 tauri-plugin-dialog = "2"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+objc2-app-kit = { version = "0.3", default-features = false, features = ["NSApplication", "NSPasteboard", "NSResponder"] }
+objc2-foundation = "0.3"

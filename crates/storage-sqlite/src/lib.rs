@@ -21,6 +21,7 @@ mod sync_content;
 mod sync_models;
 mod sync_peer;
 mod sync_user;
+mod vocabulary_dataset;
 
 use std::path::{Path, PathBuf};
 use std::sync::{Mutex, MutexGuard};

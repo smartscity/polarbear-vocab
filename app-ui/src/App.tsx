@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from "react";
 import { DatasetsView } from "./features/datasets/DatasetsView";
 import { HomeView } from "./features/home/HomeView";
 import { LexiconView } from "./features/lexicon/LexiconView";
+import { MacosServicePanel } from "./features/macos/MacosServicePanel";
 import { useLexiconSearch } from "./features/lexicon/useLexiconSearch";
 import { ListeningView } from "./features/listening/ListeningView";
 import { useListeningFlow } from "./features/listening/useListeningFlow";
@@ -62,6 +63,7 @@ export function App() {
   return (
     <AppShell appName={data.appInfo.name} footer="Copyright © 2020-2026 smartscity All rights reserved." onNavigate={navigate} screen={screen}>
       {data.error ? <ErrorBanner message={data.error} onClose={() => data.setError(null)} /> : null}
+      <MacosServicePanel onError={data.reportError} />
       <ScreenView
         currentDataset={currentDataset}
         data={data}

@@ -9,7 +9,6 @@ import { ConfirmDialog } from "../../design-system/primitives/Dialogs";
 import { SelectControl } from "../../design-system/primitives/SelectControl";
 import {
   addToMyVocabulary,
-  searchLexicon,
   SPEECH_VOICES,
   type Article,
   type LexiconEntry,
@@ -18,7 +17,7 @@ import {
 import { useI18n } from "../../lib/i18n";
 import { copyText } from "./clipboard";
 import type { ArticleImportPhase, PlaybackState } from "./useListeningFlow";
-import { lexiconLookupCandidates } from "./wordLookup";
+import { findLexiconWord } from "./wordLookup";
 
 interface ListeningViewProps {
   articles: Article[];
@@ -62,7 +61,7 @@ export function ListeningView(props: ListeningViewProps) {
           <ArticleReader {...props} onRequestDelete={() => setDeleteOpen(true)} />
         </div>
       )}
-      <ConfirmDialog
+      {props.selected && !props.selected.builtin ? <ConfirmDialog
         cancelLabel={t("common.cancel")}
         confirmLabel={t("common.delete")}
         description={t("listening.deleteConfirm")}
@@ -70,7 +69,7 @@ export function ListeningView(props: ListeningViewProps) {
         onOpenChange={setDeleteOpen}
         open={deleteOpen}
         title={props.selected?.title ?? t("listening.title")}
-      />
+      /> : null}
     </section>
   );
 }
@@ -82,7 +81,7 @@ function ArticleLibrary(props: Pick<ListeningViewProps, "articles" | "onSelect" 
       {props.articles.map((article) => (
         <button data-active={article.id === props.selected?.id} key={article.id} onClick={() => props.onSelect(article.id)} type="button">
           <strong>{article.title}</strong>
-          <span>{t("listening.characters", { count: article.body.length })}</span>
+          <span>{article.builtin ? `${t("listening.builtin")} · ` : ""}{t("listening.characters", { count: article.body.length })}</span>
         </button>
       ))}
     </aside>
@@ -97,7 +96,7 @@ function ArticleReader(props: ListeningViewProps & { onRequestDelete: () => void
     <article className="article-reader">
       <div className="article-reader__header">
         <div><p className="pb-eyebrow">{t("listening.nowPlaying")}</p><h2 className="pb-display">{article.title}</h2></div>
-        <Button onClick={props.onRequestDelete} variant="danger">{t("common.delete")}</Button>
+        {article.builtin ? <span className="article-builtin-badge">{t("listening.builtin")}</span> : <Button onClick={props.onRequestDelete} variant="danger">{t("common.delete")}</Button>}
       </div>
       <ListeningPlayer {...props} />
       <BilingualArticle article={article} lookup={lookup} {...props} />
@@ -169,7 +168,7 @@ function BilingualArticle(props: ListeningViewProps & { article: Article; lookup
           <TranslationEmpty onTranslate={props.onTranslate} translating={props.translating} />
         )}
       </div>
-      {translated ? <div className="translation-footer"><Button disabled={props.translating} onClick={props.onTranslate}>{t(props.translating ? "listening.translating" : "listening.retranslate")}</Button></div> : null}
+      {translated && !props.article.builtin ? <div className="translation-footer"><Button disabled={props.translating} onClick={props.onTranslate}>{t(props.translating ? "listening.translating" : "listening.retranslate")}</Button></div> : null}
       <p className="copy-status" role="status">{copied ? t("listening.copied", { item: copied }) : ""}</p>
     </section>
   );
@@ -221,7 +220,7 @@ function useWordLookup(articleId: string, onError: (error: unknown) => void): Wo
     if (!word) return;
     setBusy(true);
     try {
-      setSelectedWord(await findWord(word));
+      setSelectedWord(await findLexiconWord(word));
     } catch (error) {
       onError(error);
     } finally {
@@ -241,15 +240,6 @@ function useWordLookup(articleId: string, onError: (error: unknown) => void): Wo
     }
   };
   return { add, busy, inspect, selectedWord };
-}
-
-async function findWord(word: string): Promise<LexiconEntry | null> {
-  for (const candidate of lexiconLookupCandidates(word)) {
-    const results = await searchLexicon(candidate);
-    const found = results.find((entry) => entry.lemma.toLowerCase() === candidate);
-    if (found) return found;
-  }
-  return null;
 }
 
 function bilingualText(article: Article): string {

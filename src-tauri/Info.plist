@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>NSServices</key>
+  <array>
+    <dict>
+      <key>NSMenuItem</key>
+      <dict>
+        <key>default</key>
+        <string>Translate with Polarbear Vocab</string>
+      </dict>
+      <key>NSMessage</key>
+      <string>translateSelection</string>
+      <key>NSPortName</key>
+      <string>Polarbear Vocab</string>
+      <key>NSSendTypes</key>
+      <array>
+        <string>public.utf8-plain-text</string>
+      </array>
+    </dict>
+    <dict>
+      <key>NSMenuItem</key>
+      <dict>
+        <key>default</key>
+        <string>Add Word to Polarbear Vocab</string>
+      </dict>
+      <key>NSMessage</key>
+      <string>addSelectionToVocabulary</string>
+      <key>NSPortName</key>
+      <string>Polarbear Vocab</string>
+      <key>NSSendTypes</key>
+      <array>
+        <string>public.utf8-plain-text</string>
+      </array>
+    </dict>
+  </array>
+</dict>
+</plist>

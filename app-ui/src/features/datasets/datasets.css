@@ -3,6 +3,13 @@
   gap: var(--pb-space-2);
 }
 
+.dataset-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--pb-space-2);
+}
+
 .dataset-layout {
   min-height: 430px;
   display: grid;
@@ -181,6 +188,10 @@
 }
 
 @media (max-width: 639px) {
+  .dataset-header-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
   .create-dataset {
     align-items: stretch;
     flex-direction: column;

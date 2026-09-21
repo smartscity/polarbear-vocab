@@ -30,6 +30,7 @@ impl ArticleRepository for ArticleDouble {
             body: body.to_owned(),
             translated_body: None,
             created_at: 1,
+            builtin: false,
         })
     }
 
@@ -100,6 +101,13 @@ impl DatasetRepository for DatasetDouble {
             preloaded: false,
             word_count: 0,
         })
+    }
+
+    fn create_dataset_from_vocabulary(
+        &self,
+        name: &str,
+    ) -> Result<DatasetSummary, ApplicationError> {
+        self.create_dataset(name)
     }
 
     fn rename_dataset(&self, _: &str, name: &str) -> Result<(), ApplicationError> {

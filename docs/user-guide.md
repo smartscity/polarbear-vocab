@@ -38,12 +38,18 @@ Both commands rebuild and package the same full `content.db` used by macOS. A ne
 
 - Lexicon: search a word, play its pronunciation, view meaning, examples and learning statistics, then practice it or add it to My Vocabulary.
 - Home/Datasets: choose Unseen, Mistakes, or All; choose 10/20/50 words; start. Questions and answer positions vary between sessions. After answering, click or tap any non-action area to continue; pronunciation and example buttons still play audio. The summary can immediately practice mistakes.
-- Datasets: drag the handle to reorder datasets on macOS or iPhone; the arrow keys also work. Import or update CSV with Add only, Update existing, or Replace dataset. Export, rename, and delete are under Manage. Required columns: `lemma`, `quiz_prompt_zh`; template: [`data/examples/dataset-template.csv`](../data/examples/dataset-template.csv).
-- Listening: import UTF-8 `.txt`/`.md`, choose a voice and 0.5×/1×/1.5×/2×. Markdown is rendered as a document. Translate English to Chinese, then copy English, Chinese, or both. Wide screens place both languages side by side; iPhone stacks them. The translation model is bundled and never needs a network connection. Select an English word to look it up and add it to My Vocabulary.
+- Datasets: use **Create from My Vocabulary** to make a practiceable snapshot of saved words. Drag the handle to reorder datasets on macOS or iPhone; the arrow keys also work. Import or update CSV with Add only, Update existing, or Replace dataset. Export, rename, and delete are under Manage. Required columns: `lemma`, `quiz_prompt_zh`; template: [`data/examples/dataset-template.csv`](../data/examples/dataset-template.csv).
+- Listening: open one of the four built-in bilingual spoken-English packs, or import UTF-8 `.txt`/`.md`. Choose a voice and 0.5×/1×/1.5×/2×. Markdown is rendered as a document. Translate English to Chinese, then copy English, Chinese, or both. Wide screens place both languages side by side; iPhone stacks them. Translation is offline. Select an English word to look it up and add it to My Vocabulary.
 - Mistakes: select a filter and choose **Practice this set**.
 - Settings: choose language, appearance, voice, rate, and export/import backup.
 
 Study keys: `1`–`4` answer, `Space` next, `R` speak word, `S` speak example, `Esc` exit.
+
+## macOS menu bar and selected text
+
+Install and launch the packaged `.app` once. Closing its window leaves Polarbear Vocab in the menu bar; click the bear icon to reopen it or choose Quit from its menu.
+
+Select English text in another macOS app, right-click, then choose Services → **Translate with Polarbear Vocab**. For one selected word, choose **Add Word to Polarbear Vocab**. If macOS hides either item, enable it in System Settings → Keyboard → Keyboard Shortcuts → Services. Both actions are offline and only receive the text you selected.
 
 ## Backup
 

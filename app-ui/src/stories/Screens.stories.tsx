@@ -85,6 +85,7 @@ const articles: Article[] = [
     body: "## A quiet morning\n\nThe rain began just after **breakfast**. Maya opened her umbrella and walked toward the station.\n\n> She slowed down to listen to the rhythm of the drops.",
     translatedBody: "## 一个安静的早晨\n\n雨在**早餐**后不久开始下。玛雅撑开雨伞，向车站走去。\n\n> 她放慢脚步，聆听雨滴的节奏。",
     createdAt: 1,
+    builtin: true,
   },
   {
     id: "article-2",
@@ -92,6 +93,7 @@ const articles: Article[] = [
     body: "Small habits become strong routines when we repeat them with care.",
     translatedBody: null,
     createdAt: 2,
+    builtin: false,
   },
 ];
 
