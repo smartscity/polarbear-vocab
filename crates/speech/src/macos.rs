@@ -1,10 +1,12 @@
 use std::sync::mpsc::{self, Sender};
 
+use objc2::rc::Retained;
 #[cfg(target_os = "ios")]
 use objc2_avf_audio::{AVAudioSession, AVAudioSessionCategoryPlayback};
 use objc2_avf_audio::{
     AVSpeechBoundary, AVSpeechSynthesisVoice, AVSpeechSynthesisVoiceGender, AVSpeechSynthesizer,
-    AVSpeechUtterance,
+    AVSpeechUtterance, AVSpeechUtteranceDefaultSpeechRate, AVSpeechUtteranceMaximumSpeechRate,
+    AVSpeechUtteranceMinimumSpeechRate,
 };
 use objc2_foundation::NSString;
 use polarbear_vocab_application::{ApplicationError, SpeechPort};
@@ -92,7 +94,6 @@ impl SpeechPort for NativeSpeech {
 }
 
 fn speak(synthesizer: &AVSpeechSynthesizer, request: &SpeakRequest) {
-    let text = NSString::from_str(request.text.trim());
     let requested_locale = request.locale.as_deref().unwrap_or("en-US");
     let locale = locale_for_voice(requested_locale, request.voice.as_deref());
     let gender = match request.voice.as_deref() {
@@ -100,32 +101,55 @@ fn speak(synthesizer: &AVSpeechSynthesizer, request: &SpeakRequest) {
         Some("female") => Some(AVSpeechSynthesisVoiceGender::Female),
         _ => None,
     };
-    let locale = NSString::from_str(locale);
     unsafe {
         synthesizer.stopSpeakingAtBoundary(AVSpeechBoundary::Immediate);
-        let utterance = AVSpeechUtterance::speechUtteranceWithString(&text);
-        let fallback = || AVSpeechSynthesisVoice::voiceWithLanguage(Some(&locale));
-        let voice = gender
-            .and_then(|expected| {
-                let voices = AVSpeechSynthesisVoice::speechVoices().to_vec();
-                voices
-                    .iter()
-                    .find(|voice| {
-                        voice.gender() == expected
-                            && voice.language().to_string() == requested_locale
-                    })
-                    .cloned()
-                    .or_else(|| {
-                        voices.into_iter().find(|voice| {
-                            voice.gender() == expected
-                                && voice.language().to_string().starts_with("en-")
-                        })
-                    })
+        let voice = best_available_voice(locale, gender);
+        let rate = (AVSpeechUtteranceDefaultSpeechRate * request.rate.unwrap_or(1.0)).clamp(
+            AVSpeechUtteranceMinimumSpeechRate,
+            AVSpeechUtteranceMaximumSpeechRate,
+        );
+        for segment in request
+            .text
+            .split("\n\n")
+            .map(str::trim)
+            .filter(|part| !part.is_empty())
+        {
+            let utterance =
+                AVSpeechUtterance::speechUtteranceWithString(&NSString::from_str(segment));
+            utterance.setVoice(voice.as_deref());
+            utterance.setRate(rate);
+            utterance.setPostUtteranceDelay(0.18);
+            synthesizer.speakUtterance(&utterance);
+        }
+    }
+}
+
+fn best_available_voice(
+    locale: &str,
+    gender: Option<AVSpeechSynthesisVoiceGender>,
+) -> Option<Retained<AVSpeechSynthesisVoice>> {
+    unsafe {
+        let voices = AVSpeechSynthesisVoice::speechVoices();
+        voices
+            .to_vec()
+            .into_iter()
+            .filter(|voice| {
+                let language = voice.language().to_string();
+                language == locale || (locale.starts_with("en-") && language.starts_with("en-"))
             })
-            .or_else(fallback);
-        utterance.setVoice(voice.as_deref());
-        utterance.setRate(request.rate.unwrap_or(1.0) * 0.5);
-        synthesizer.speakUtterance(&utterance);
+            .max_by_key(|voice| {
+                let language = voice.language().to_string();
+                let gender_match = gender.is_none_or(|expected| voice.gender() == expected);
+                (
+                    language == locale && gender_match,
+                    language == locale,
+                    gender_match,
+                    voice.quality(),
+                )
+            })
+            .or_else(|| {
+                AVSpeechSynthesisVoice::voiceWithLanguage(Some(&NSString::from_str(locale)))
+            })
     }
 }
 

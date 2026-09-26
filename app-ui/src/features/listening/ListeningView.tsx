@@ -16,6 +16,7 @@ import {
 } from "../../lib/commands";
 import { useI18n } from "../../lib/i18n";
 import { copyText } from "./clipboard";
+import { LISTENING_CATEGORIES, listeningCategory, type ListeningCategory } from "./listeningCategories";
 import type { ArticleImportPhase, PlaybackState } from "./useListeningFlow";
 import { findLexiconWord } from "./wordLookup";
 
@@ -76,14 +77,29 @@ export function ListeningView(props: ListeningViewProps) {
 
 function ArticleLibrary(props: Pick<ListeningViewProps, "articles" | "onSelect" | "selected">) {
   const { t } = useI18n();
+  const [category, setCategory] = useState<ListeningCategory>(() => listeningCategory(props.selected));
+  useEffect(() => setCategory(listeningCategory(props.selected)), [props.selected]);
+  const categories = LISTENING_CATEGORIES.filter((candidate) =>
+    props.articles.some((article) => listeningCategory(article) === candidate));
+  const visible = props.articles.filter((article) => listeningCategory(article) === category);
+  const chooseCategory = (next: ListeningCategory) => {
+    setCategory(next);
+    const first = props.articles.find((article) => listeningCategory(article) === next);
+    if (first) props.onSelect(first.id);
+  };
   return (
     <aside className="article-list" aria-label={t("listening.library")}>
-      {props.articles.map((article) => (
+      <label className="listening-category-picker">{t("listening.category")}
+        <select className="pb-input" onChange={(event) => chooseCategory(event.target.value as ListeningCategory)} value={category}>
+          {categories.map((candidate) => <option key={candidate} value={candidate}>{t(`listening.category.${candidate}`)}</option>)}
+        </select>
+      </label>
+      <div className="article-list__items">{visible.map((article) => (
         <button data-active={article.id === props.selected?.id} key={article.id} onClick={() => props.onSelect(article.id)} type="button">
           <strong>{article.title}</strong>
           <span>{article.builtin ? `${t("listening.builtin")} · ` : ""}{t("listening.characters", { count: article.body.length })}</span>
         </button>
-      ))}
+      ))}</div>
     </aside>
   );
 }
@@ -121,6 +137,7 @@ function ListeningPlayer(props: ListeningViewProps) {
         <label>{t("settings.voice")}<SelectControl ariaLabel={t("settings.voice")} onValueChange={props.onVoiceChange} options={voiceOptions} value={props.voice} /></label>
         <RateOptions onChange={props.onRateChange} value={props.rate} />
       </div>
+      <p className="voice-quality-hint">{t("listening.voiceQualityHint")}</p>
     </div>
   );
 }

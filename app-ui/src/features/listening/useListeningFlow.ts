@@ -14,6 +14,7 @@ import {
 } from "../../lib/commands";
 import { useI18n } from "../../lib/i18n";
 import { translateEnglishMarkdown } from "./articleTranslation";
+import { markdownToSpeech } from "./speechText";
 
 export type PlaybackState = "idle" | "paused" | "playing";
 export type ArticleImportPhase = "choosing" | "importing";
@@ -71,7 +72,7 @@ export function useListeningFlow(onError: (error: unknown) => void) {
   const play = async () => {
     if (!selected) return;
     try {
-      await speak(selected.body, speechLocale, speechRatePercent / 100, speechVoice);
+      await speak(markdownToSpeech(selected.body, !selected.builtin), speechLocale, speechRatePercent / 100, speechVoice);
       setPlayback("playing");
     } catch (error) {
       onError(error);

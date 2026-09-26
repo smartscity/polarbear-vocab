@@ -75,6 +75,15 @@ test("listening exposes every offline voice style", async ({ page }) => {
   ]);
 });
 
+test("listening switches between service and developer interview scenes", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await openStory(page, "listening");
+  await page.getByRole("combobox", { name: "Practice scene" }).selectOption("travelService");
+  await expect(page.locator(".article-reader h2")).toContainText("Dining out");
+  await page.getByRole("combobox", { name: "Practice scene" }).selectOption("developerInterview");
+  await expect(page.locator(".article-reader h2")).toContainText("Interview: technical");
+});
+
 test("answer result advances from non-action areas only", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openStory(page, "answer-result");

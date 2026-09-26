@@ -4,7 +4,7 @@
 
 Polarbear Vocab is a desktop-first, offline vocabulary app. The package and repository name is `polarbear-vocab`; the product name is **Polarbear Vocab** and the knowledge module is **Polarbear Lexicon**.
 
-This document consolidates the implemented design through v0.21:
+This document consolidates the implemented design through v0.22:
 
 | Version | Delivered scope |
 | --- | --- |
@@ -23,6 +23,7 @@ This document consolidates the implemented design through v0.21:
 | v0.19 | Tap-anywhere answer advancement, measured answer latency, and randomized study sessions |
 | v0.20 | Offline macOS/iPhone bilateral incremental merge packages, conflict preservation, and pre-sync recovery |
 | v0.21 | Built-in spoken-English listening packs, macOS menu-bar Services, and My Vocabulary dataset snapshots |
+| v0.22 | Scenario-based phrase listening, developer work and interview packs, and improved offline speech selection |
 
 Non-goals: scheduler, spaced repetition, due dates, streaks, daily targets, app accounts, a managed cloud service, remote dataset sources, and online TTS.
 
@@ -125,7 +126,9 @@ Themes are `system`, `light`, and `dark`. The initial system theme is applied be
 
 The user imports a UTF-8 `.txt` or `.md` file. The Tauri adapter reads it locally, the application layer validates a 1–160 character title and 1–100,000 character body, and `user.db` stores it in the `article` table. Markdown is rendered as document structure rather than raw syntax.
 
-The Listening screen provides four bundled bilingual spoken-English packs with 60 common sentences, plus the local article library. Built-in packs have deterministic IDs, are refreshed at startup, do not enter the sync journal, and cannot be deleted. The reader provides play, pause, resume, stop, and delete actions. Playback uses `AVSpeechSynthesizer` with exact rates 0.5×, 1×, 1.5×, and 2×. Voice choices are male, female, American English (`en-US`), British English (`en-GB`), Hong Kong English (`en-HK`), Indian English (`en-IN`), and Japanese English (`ja-JP`); unavailable voices fall back to a system voice.
+The Listening screen provides 16 bundled bilingual packs with 267 common sentences, plus the local article library. The scene picker groups everyday speech, dining/stays/shopping, developer work, developer interviews, and personal articles. Developer packs cover daily work, planning, meetings, code review, debugging, common technical terms, experience interviews, technical interviews, and candidate questions. Built-in packs have deterministic IDs, are refreshed at startup, do not enter the sync journal, and cannot be deleted. The reader provides play, pause, resume, stop, and delete actions.
+
+Listening narration converts Markdown to spoken paragraphs, omits list numbers and code blocks, and inserts a short pause between utterances. Native speech chooses the highest-quality locally installed voice that matches the requested locale and gender, then falls back to another available voice. Playback rates 0.5×, 1×, 1.5×, and 2× scale the platform's default rate within its supported range. Voice choices are male, female, American English (`en-US`), British English (`en-GB`), Hong Kong English (`en-HK`), Indian English (`en-IN`), and Japanese-style voice (`ja-JP`); unavailable voices fall back to a system voice. Enhanced or Premium system voices require a separate user download and remain offline at playback time.
 
 Selecting an English word in an article performs a local Lexicon lookup. The result shows lemma, IPA, and Chinese gloss and can be added to My Vocabulary, which is a practiceable collection.
 

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 
 import { DatasetsView } from "../features/datasets/DatasetsView";
 import { HomeView } from "../features/home/HomeView";
@@ -88,6 +89,22 @@ const articles: Article[] = [
     builtin: true,
   },
   {
+    id: "builtin.phrases.dining",
+    title: "Dining out · 餐厅点餐",
+    body: "# Dining out\n\n1. Do you have a table for two?\n2. Could I see the menu, please?",
+    translatedBody: "# 餐厅点餐\n\n1. 请问有两个人的位子吗？\n2. 请给我看一下菜单好吗？",
+    createdAt: 0,
+    builtin: true,
+  },
+  {
+    id: "builtin.phrases.developer-interview-technical",
+    title: "Interview: technical · 技术面试高频表达",
+    body: "# Interview: technical discussion\n\n1. Let me clarify the requirements first.\n2. The time complexity is linear.",
+    translatedBody: "# 面试：技术讨论\n\n1. 我先确认一下需求。\n2. 时间复杂度是线性的。",
+    createdAt: 0,
+    builtin: true,
+  },
+  {
     id: "article-2",
     title: "Small Habits",
     body: "Small habits become strong routines when we repeat them with care.",
@@ -118,7 +135,12 @@ export const DatasetDetail: Story = { render: () => <Screen screen="datasets"><D
 
 export const Lexicon: Story = { render: () => <Screen screen="lexicon"><LexiconView busy={false} onPractice={noOp} onQueryChange={noOp} onSearch={noOp} onSpeak={noOp} onToggleVocabulary={noOp} query="earn" results={lexiconResults} searched /></Screen> };
 
-export const Listening: Story = { render: () => <Screen screen="listening"><ListeningView articles={articles} importPhase={null} onDelete={noOp} onError={noOp} onImport={noOp} onPause={noOp} onPlay={noOp} onRateChange={noOp} onResume={noOp} onSelect={noOp} onStop={noOp} onTranslate={noOp} onVoiceChange={noOp} playback="idle" rate={100} selected={articles[0]} translating={false} voice="female" /></Screen> };
+export const Listening: Story = { render: () => <Screen screen="listening"><ListeningDemo /></Screen> };
+
+function ListeningDemo() {
+  const [selectedId, setSelectedId] = useState(articles[0].id);
+  return <ListeningView articles={articles} importPhase={null} onDelete={noOp} onError={noOp} onImport={noOp} onPause={noOp} onPlay={noOp} onRateChange={noOp} onResume={noOp} onSelect={setSelectedId} onStop={noOp} onTranslate={noOp} onVoiceChange={noOp} playback="idle" rate={100} selected={articles.find((article) => article.id === selectedId)} translating={false} voice="female" />;
+}
 
 export const Study: Story = { render: () => <Screen screen="study"><StudyView complete={false} onAnswer={async () => true} onExit={noOp} onNext={noOp} onPracticeMistakes={noOp} onSpeak={noOp} question={question} result={null} summary={{ answered: 0, correct: 0, wrong: 0, newWords: 0 }} title="Everyday English" /></Screen> };
 
